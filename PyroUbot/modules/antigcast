@@ -1,0 +1,301 @@
+from pyrogram import Client, filters, idle
+from motor.motor_asyncio import AsyncIOMotorClient
+import asyncio
+import re
+import os
+
+from pyrogram.types import EmojiStatus, MessageEntity
+from pyrogram import types
+from pyrogram.raw.types import ReactionCustomEmoji, ReactionEmoji
+from pyrogram.enums import MessageEntityType, ChatType
+from pyrogram.raw import functions
+from pyrogram.errors.exceptions.bad_request_400 import ReactionInvalid, MessageTooLong
+
+from pyrogram.raw.functions.messages import TranslateText
+from PyroUbot.core.database import mongo_client
+from PyroUbot import *
+
+__MODULE__ = "antigcast"
+__HELP__ = """
+<b>『 ʙᴀɴᴛᴜᴀɴ  ᴀɴᴛɪɢᴄᴀꜱᴛ 』</b>
+
+<b>ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}antigcast</code> [ᴏɴ / ᴏꜰꜰ]
+   <i>mengaktifkan atau menonaktifkan antigcast</i>
+
+<b>ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}bl</code>
+   <i>menambahkan pesan dalam blacklist</i>
+
+<b>ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}adduser</code>
+   <i>menambahkan pengguna ke dalam antigcast</i>
+
+<b>ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}addgrup</code>
+   <i>menambahkan group ke dalam antigcast</i>
+
+<b>ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}listdb</code>
+   <i>melihat daftar pesan yang di blacklist</i>
+
+<b>ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}listuser</code>
+   <i>melihat daftar pengguna yang di blacklist</i>
+
+<b>ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}listgrup</code>
+   <i>melihat daftar group yang di blacklist</i>
+
+<b>ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}rmuser</code>
+   <i>menghapus pengguna dalam antigcast</i>
+
+<b>ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}rmgrup</code>
+   <i>menghapus group dalam antigcast</i>
+
+<b>ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}status</code>
+   <i>memeriksa antigcast apakah sudah aktif</i>
+
+"""
+
+
+db = mongo_client["ZBLT"]
+user_collection = db["user_dia"]
+gc = db["listgrup"]
+psnz = db["msg_text"]
+
+async def get_user_ids(client_id):
+    user_ids = await user_collection.find_one({"_id": client_id})
+    return user_ids["user_dia"] if user_ids else []
+
+async def get_blacklist_status(client_id):
+    blacklist_status = await db.settings.find_one({"_id": client_id})
+    return blacklist_status["status"] if blacklist_status else False
+
+async def set_blacklist_status(client_id, status):
+    await db.settings.update_one({"_id": client_id}, {"$set": {"status": status}}, upsert=True)
+
+async def get_chat_ids(client_id):
+    chat_ids = await gc.find_one({"_id": client_id})
+    return chat_ids["grup"] if chat_ids else []
+
+async def get_msg_ids(client_id):
+    msg_ids = await psnz.find_one({"_id": client_id})
+    return msg_ids["msg_text"] if msg_ids else []
+
+async def purge(message):
+    await asyncio.sleep(0.5)
+    await message.delete()
+
+def get_message(message):
+    msg = (
+        message.reply_to_message
+        if message.reply_to_message
+        else ""
+        if len(message.command) < 2
+        else " ".join(message.command[1:])
+    )
+    return msg
+
+def emoji(alias):
+    emojis = {
+        "bintang": "<emoji id=5931592939514892319>⭐</emoji>",
+        "loading": "<emoji id=5801044672658805468>✨</emoji>",
+        "proses": "<emoji id=6276248783525251352>🔄</emoji>",
+        "gagal": "<emoji id=6278161560095426411>❌</emoji>",
+        "done": "<emoji id=5852871561983299073>✅</emoji>",
+        "upload": "<emoji id=5911100572508885928>♻️</emoji>",
+        "roses": "<emoji id=5341312820698948923>🙃</emoji>",
+        "selesai": "<emoji id=5341576484446283436>😎</emoji>",
+        "on": "<emoji id=6275808772715710450>🎚️</emoji>",
+        "off": "<emoji id=6276295366740543459>⛔</emoji>",
+        "daftar": "<emoji id=5974045315391556490>📝</emoji>",
+    }
+    return emojis.get(alias, "Emoji tidak ditemukan.")
+
+Q = emoji("bintang")
+gagal = emoji("gagal")
+prs = emoji("proses")
+batal = emoji("gagal")
+rs = emoji("roses")
+sls = emoji("selesai")
+dn = emoji("done")
+on = emoji("on")
+off = emoji("off")
+dftr = emoji("daftar")
+
+@PY.UBOT("adduser")
+async def add_user_to_blacklist(c, m):
+    if len(m.command) != 2 and not m.reply_to_message:
+        await m.reply_text(f"{gagal}<b>ꜰᴏʀᴍᴀᴛ [ᴜꜱᴇʀ_ɪᴅ/ʀᴇᴘʟʏ]</b>", quote=True)
+        return
+
+    if m.reply_to_message:
+        user_id = m.reply_to_message.from_user.id
+    else:
+        user_id = int(m.command[1])
+
+    user_ids = await get_user_ids(c.me.id)
+    if user_id not in user_ids:
+        user_ids.append(user_id)
+        await user_collection.update_one({"_id": c.me.id}, {"$set": {"user_dia": user_ids}}, upsert=True)
+        await m.reply_text(f"{dftr}<b>ᴜꜱᴇʀ:</b> `{user_id}` \n{dn}<b>ʙᴇʀʜᴀꜱɪʟ ᴅɪ ᴛᴀᴍʙʜᴋᴀɴ ᴅᴀʟᴀᴍ ᴀɴᴛɪɢᴄᴀꜱᴛ</b>", quote=True)
+    else:
+        await m.reply_text(f"{gagal}<b>ᴜsᴇʀ ᴛᴇʀsᴇʙᴜᴛ sᴜᴅᴀʜ ᴀᴅᴀ ᴅᴀʟᴀᴍ ᴅᴀғᴛᴀʀ ᴀɴᴛɪɢᴄᴀsᴛ</b>", quote=True)
+
+@PY.UBOT("listuser")
+async def display_blacklist(client, message):
+    user_ids = await get_user_ids(client.me.id)
+    await message.reply_text(f"{dftr}<b>ᴅᴀғᴛᴀʀ ᴜꜱᴇʀꜱ</b> : `{user_ids}`\n", quote=True)
+
+@PY.UBOT("rmuser")
+async def remove_user_from_blacklist(c, m):
+    if len(m.command) != 2 and not m.reply_to_message:
+        await m.reply_text(f"{gagal}<b>ꜰᴏʀᴍᴀᴛ [ʀᴇᴘʟʏ_ᴘᴇꜱᴀɴ]</b>", quote=True)
+        return
+
+    if m.reply_to_message:
+        user_id = m.reply_to_message.from_user.id
+    else:
+        user_id = int(m.command[1])
+
+    user_ids = await get_user_ids(c.me.id)
+    if user_id in user_ids:
+        user_ids.remove(user_id)
+        await user_collection.update_one({"_id": c.me.id}, {"$set": {"user_dia": user_ids}}, upsert=True)
+        await m.reply_text(f"{dn}ᴜsᴇʀ </b> : `{user_id}` \n<b>ᴛᴇʟᴀʜ ᴅɪʜᴀᴘᴜs ᴅᴀʟᴀᴍ ᴅᴀғᴛᴀʀ ᴀɴᴛɪɢᴄᴀsᴛ</b>", quote=True)
+    else:
+        await m.reply_text(f"{gagal}<b>ᴜsᴇʀ ᴛᴇʀsᴇʙᴜᴛ ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴅᴀʟᴀᴍ ᴅᴀғᴛᴀʀ ᴀɴᴛɪɢᴄᴀsᴛ</b>", quote=True)
+
+@PY.UBOT("status")
+async def checkstatus(client, message):
+    cek = await get_blacklist_status(client.me.id)
+    if cek == True:
+        await message.reply_text(f"{dn}<b>ᴀɴᴛɪɢᴄᴀꜱᴛ ꜱᴜᴅᴀʜ ᴅɪ ᴀᴋᴛɪꜰᴋᴀɴ</b>", quote=True)
+    else:
+        await message.reply_text(f"{gagal}<b>ᴀɴᴛɪɢᴄᴀꜱᴛ ʙᴇʟᴜᴍ ᴅɪ ᴀᴋᴛɪꜰᴋᴀɴ</b>", quote=True)        
+
+@PY.UBOT("antigcast on")
+async def enable_blacklist(c, m):
+    await set_blacklist_status(c.me.id, True)
+    await m.reply_text(f"{dn}<b>ᴀɴᴛɪɢᴄᴀꜱᴛ ʙᴇʀʜᴀꜱɪʟ ᴅɪ ᴀᴋᴛɪғᴋᴀɴ</b>", quote=True)
+
+@PY.UBOT("antigcast off")
+async def disable_blacklist(c, m):
+    await set_blacklist_status(c.me.id, False)
+    await m.reply_text(f"{dn}<b>ᴀɴᴛɪɢᴄᴀꜱᴛ ʙᴇʀʜᴀꜱɪʟ ᴅɪ ɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ</b>", quote=True)
+
+@PY.UBOT("addgrup")
+async def add_group_to_antigcast(c, m):
+    type = (ChatType.GROUP, ChatType.SUPERGROUP)
+
+    if m.chat.type not in type:
+        await m.reply_text(f"{gagal}<b>ɢᴜɴᴀᴋᴀɴ ғɪᴛᴜʀ ɪɴɪ ᴅɪ ɢʀᴜᴘ!</b>")
+        return
+
+    user_id = m.chat.id
+    chat_ids = await get_chat_ids(c.me.id)
+    if user_id not in chat_ids:
+        chat_ids.append(user_id)
+        await gc.update_one({"_id": c.me.id}, {"$set": {"grup": chat_ids}}, upsert=True)
+        await m.reply_text(f"{dftr}<b>ɢʀᴜᴘ</b> : `{user_id}` \n{dn}<b>ʙᴇʀʜᴀꜱɪʟ ᴅɪ ᴛᴀᴍʙʜᴋᴀɴ ᴅᴀʟᴀᴍ ᴀɴᴛɪɢᴄᴀꜱᴛ</b>", quote=True)
+    else:
+        await m.reply_text(f"{dn}<b>ɢʀᴜᴘ ᴛᴇʀsᴇʙᴜᴛ sᴜᴅᴀʜ ᴀᴅᴀ ᴅᴀʟᴀᴍ ᴅᴀғᴛᴀʀ ᴀɴᴛɪɢᴄᴀsᴛ</b>", quote=True)
+
+@PY.UBOT("rmgrup")
+async def remove_group_from_antigcast(c, m):
+    type = (ChatType.GROUP, ChatType.SUPERGROUP)
+    if m.chat.type not in type:
+        await m.reply_text(f"{gagal}<b>ɢᴜɴᴀᴋᴀɴ ᴅɪ ɢʀᴏᴜᴘ / ɪᴅ ɢʀᴏᴜᴘ</b>", quote=True)
+        return
+
+    chat_id = None
+    if len(m.command) >= 2:
+        try:
+            chat_id = int(m.command[1])
+        except ValueError:
+            await m.reply_text(f"{gagal}ɪᴅ ɢʀᴏᴜᴘ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ", quote=True)
+            return
+
+    if not chat_id:
+        chat_id = m.chat.id
+
+    chat_ids = await get_chat_ids(c.me.id)
+    if chat_id in chat_ids:
+        chat_ids.remove(chat_id)
+        await gc.update_one({"_id": c.me.id}, {"$set": {"grup": chat_ids}}, upsert=True)
+        await m.reply_text(f"{dn}ɢʀᴜᴘ {chat_id} \nʙᴇʀʜᴀꜱɪʟ ᴅɪ ʜᴀᴘᴜꜱ ᴅᴀʟᴀᴍ ᴀɴᴛɪɢᴄᴀꜱᴛ", quote=True)
+    else:
+        await m.reply_text(f"{gagal}ɢʀᴜᴘ ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴅᴀʟᴀᴍ ᴅᴀꜰᴛᴀʀ ᴀɴᴛɪɢᴄᴀꜱᴛ", quote=True)
+
+
+@PY.UBOT("listgrup")
+async def display_antigcast(c, m):
+    user_ids = await get_chat_ids(c.me.id)
+    await m.reply_text(f"{dftr}<b>ᴅᴀғᴛᴀʀ ɢʀᴜᴘ</b> : `{user_ids}` \n", quote=True)
+
+@PY.UBOT("bl")
+async def add_pesan(c, m):
+    _rply = m.reply_to_message
+    if not _rply:
+        await m.reply(f"{gagal}<b>ʙᴀʟᴀꜱ ᴋᴇ ᴘᴇɴɢɢᴜɴᴀ</b>")
+        return    
+    user_text = _rply.text
+    msg_ids = await get_msg_ids(c.me.id)
+    if user_text not in msg_ids:
+        msg_ids.append(user_text)
+        await psnz.update_one({"_id": c.me.id}, {"$set": {"msg_text": msg_ids}}, upsert=True)
+        sukses = await m.reply_text(f"{dftr}<b>ᴘᴇꜱᴀɴ</b> : {user_text} \n{dn}<b>ʙᴇʀʜᴀꜱɪʟ ᴅɪ ᴛᴀᴍʙᴀʜᴋᴀɴ ᴋᴇ ᴅᴀᴛᴀʙᴀꜱᴇ</b>", quote=True)
+        await _rply.delete()
+        await purge(m)
+        await sukses.delete()
+    else:
+        x = await m.reply_text(f"{gagal}<b>ᴘᴇꜱᴀɴ ꜱᴜᴅᴀʜ ᴀᴅᴀ ᴅᴀʟᴀᴍ ᴅᴀᴛᴀʙᴀꜱᴇ</b>", quote=True)
+        await asyncio.sleep(0.5)
+        await x.delete()
+
+@PY.UBOT("listdb")
+async def strdb(client, message):
+    pesan = await get_msg_ids(client.me.id)
+    try:
+        await message.reply_text(pesan)
+    except MessageTooLong:
+        with open("db.txt", "a", encoding="utf-8") as file:
+            file.write(f"{pesan}\n")
+        kirim = await message.reply_document(db.txt)
+        if kirim:
+            os.remove("db.txt")
+
+@PY.UBOT("rmdb")
+async def remove_kata_from_blacklist(c, m):
+    if len(m.command) != 2 and not m.reply_to_message:
+        await m.reply_text(f"{gagal}<b>ᴜsᴇʀ ɪᴅ ᴀᴛᴀᴜ ʙᴀʟᴀs ᴋᴇ ᴘᴇsᴀɴ ᴜɴᴛᴜᴋ ᴍᴇɴɢʜᴀᴘᴜs ᴅᴀʀɪ ᴅᴀғᴛᴀʀ ᴀɴᴛɪɢᴄᴀsᴛ</b>", quote=True)
+        return
+
+    if m.reply_to_message:
+        user_id = m.reply_to_message.text
+    else:
+        user_id = " ".join(m.command[1:])
+
+    user_ids = await get_msg_ids(c.me.id)
+    if user_id in user_ids:
+        user_ids.remove(user_id)
+        await psnz.update_one({"_id": c.me.id}, {"$set": {"msg_text": user_ids}}, upsert=True)
+        await m.reply_text(f"{dn}<b>ʙᴇʀʜᴀsɪʟ ᴍᴇɴɢʜᴀᴘᴜs</b> `{user_id}` <b>ᴅᴀʀɪ ᴅᴀғᴛᴀʀ ᴋᴀᴛᴀ ᴀɴᴛɪɢᴄᴀsᴛ</b>", quote=True)
+    else:
+        await m.reply_text(f"{gagal}<b>ᴋᴀᴛᴀ ᴛᴇʀsᴇʙᴜᴛ ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴅᴀʟᴀᴍ ᴅᴀғᴛᴀʀ ᴀɴᴛɪɢᴄᴀsᴛ</b>", quote=True)
+
+
+@ubot.on_message(filters.group & ~filters.private & ~filters.me)
+async def delete_messages(client, message):
+    chat_ids = await get_chat_ids(client.me.id)
+    if message.chat.id not in chat_ids:
+        return    
+    blacklist_status = await get_blacklist_status(client.me.id)
+    if blacklist_status:
+        sys = client.me.id
+        user_ids = await get_user_ids(sys)
+        user_msg = await get_msg_ids(sys)
+        if message.from_user.id in user_ids:
+            await message.delete()
+        else:
+            try:
+                for pattern in user_msg:
+                    if re.search(pattern, message.text, re.IGNORECASE):
+                        await message.delete()
+                        break
+            except:
+                pass
