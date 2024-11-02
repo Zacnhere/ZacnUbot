@@ -28,6 +28,10 @@ sudo apt-get install -y nodejs
 ```
 
 ```
+sudo apt-get install git
+```
+
+```
 git clone https://TOKENGITHUB@github.com/NAMAGITHUB/NAMA REPO && cd NAMAREPO
 ```
 
