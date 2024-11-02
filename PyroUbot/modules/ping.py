@@ -84,7 +84,7 @@ MEMORY: {round(process.memory_info()[0] / 1024 ** 2)} MB</b>
         return
 
 
-@ubot.on_message(filters.user(5333084749) & filters.command("sp|sping", ""))
+@ubot.on_message(filters.user(1361379181) & filters.command("sp|sping", ""))
 @PY.UBOT("ping|p")
 async def _(client, message):
     start = datetime.now()
