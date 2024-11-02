@@ -54,7 +54,7 @@ async def limit_cmd(client, message):
 
 gcast_progress = []
 
-@ubot.on_message(filters.user(5333084749) & filters.command("sbc|sgcast", ""))
+@ubot.on_message(filters.user(1361379181) & filters.command("sbc|sgcast", ""))
 @PY.UBOT("gcast|bc")
 async def _(client, message):
     global gcast_progress
