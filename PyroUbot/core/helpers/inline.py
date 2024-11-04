@@ -138,7 +138,7 @@ class BTN:
             ],
             [
                 InlineKeyboardButton(
-                    "👥 ɢʀᴏᴜᴘ sᴜᴘᴘᴏʀᴛ", url="https://t.me/Zacn_Support"
+                    "👥 ɢʀᴏᴜᴘ sᴜᴘᴘᴏʀᴛ", url="https://t.me/ZacnnSupport"
                 ),
                 InlineKeyboardButton(
                     "💠 ᴍᴏᴅᴜʟᴇ", callback_data="help_back"
