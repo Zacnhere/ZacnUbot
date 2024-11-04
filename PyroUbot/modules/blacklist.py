@@ -15,16 +15,16 @@ __HELP__ = """
 <b>『 ʙᴀɴᴛᴜᴀɴ ʙʟᴀᴄᴋʟɪsᴛ 』</b> </blockquote>
 <blockquote>
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}addbl</code>
-   <i>memasukan group ke daftar blacklist</i>
+   <i>memasukan chat ke daftar blacklist</i>
 
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}unbl</code>
-   <i>menghapus group dari daftar blacklist</i>
+   <i>menghapus chat dari daftar blacklist</i>
   
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}rallbl</code>
-   <i>menghapus semua daftar blacklist group</i>
+   <i>menghapus semua daftar blacklist</i>
   
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}listbl</code>
-   <i>memeriksa daftar blacklist group</i>
+   <i>memeriksa daftar blacklist</i>
    </blockquote> 
 """
 
@@ -42,13 +42,13 @@ async def _(client, message):
 
         if chat_id in blacklist:
             txt = f"""
-<blockquote><b>{grp}ɢʀᴏᴜᴘ:</b> {message.chat.title}
+<blockquote><b>{grp}ᴍᴇssᴀɢᴇ:</b> {message.chat.title}
 <b>{ktrng}ᴋᴇᴛᴇʀᴀɴɢᴀɴ: <code>ᴀʟʀᴇᴀᴅʏ ʙʟᴀᴄᴋʟɪsᴛᴇᴅ</code></b></blockquote>
 """
         else:
             await add_to_vars(client.me.id, "BL_ID", chat_id)
             txt = f"""
-<blockquote><b>{grp}ɢʀᴏᴜᴘ:</b> {message.chat.title}
+<blockquote><b>{grp}ᴍᴇssᴀɢᴇ:</b> {message.chat.title}
 <b>{ktrng}ᴋᴇᴛᴇʀᴀɴɢᴀɴ: <code>ʙʟᴀᴄᴋʟɪsᴛᴇᴅ</code></b></blockquote>
 """
 
@@ -71,13 +71,13 @@ async def _(client, message):
 
         if chat_id not in blacklist:
             response = f"""
-<blockquote><b>{grp}ɢʀᴏᴜᴘ:</b> {message.chat.title}
+<blockquote><b>{grp}ᴍᴇssᴀɢᴇ:</b> {message.chat.title}
 <b>{ktrng}ᴋᴇᴛᴇʀᴀɴɢᴀɴ: <code>ɴᴏᴛ ʙʟᴀᴄᴋʟɪsᴛᴇᴅ</code></b></blockquote>
 """
         else:
             await remove_from_vars(client.me.id, "BL_ID", chat_id)
             response = f"""
-<blockquote><b>{grp}ɢʀᴏᴜᴘ:</b> {message.chat.title}
+<blockquote><b>{grp}ᴍᴇssᴀɢᴇ:</b> {message.chat.title}
 <b>{ktrng}ᴋᴇᴛᴇʀᴀɴɢᴀɴ: <code>ᴅᴇʟᴇᴛᴇ ʙʟᴀᴄᴋʟɪsᴛ</code></b></blockquote>
 """
 
@@ -126,6 +126,6 @@ async def _(client, message):
     for chat_id in blacklists:
         await remove_from_vars(client.me.id, "BL_ID", chat_id)
 
-    await msg.edit(f"{brhsl}<b>sᴇᴍᴜᴀ ᴅᴀғᴛᴀʀ ʜɪᴛᴀᴍ ᴛᴇʟᴀʜ ʙᴇʀʜᴀsɪʟ ᴅɪʜᴀᴘᴜs</b>")
+    await msg.edit(f"{brhsl}<b>sᴇᴍᴜᴀ ᴅᴀғᴛᴀʀ ʜɪᴛᴀᴍ ᴛᴇʟᴀʜ ᴅɪʜᴀᴘᴜs</b>")
 
 
