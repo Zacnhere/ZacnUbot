@@ -205,45 +205,39 @@ async def play_handler(client: Client, message: Message):
 @PY.UBOT("lvc")
 @PY.GROUP
 async def _(client, message):
-    if len(message.command) > 1:
-        input_identifier = message.command[1]
-    else:
-        input_identifier = message.chat.id
-
-    chat_id = await extract_id(message, input_identifier)
-    if not chat_id:
-        return await message.reply(f"<b>{await EMO.GAGAL(client)}Invalid id!</b>")
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
+    prs = await EMO.PROSES(client)
+    grp = await EMO.BL_GROUP(client)
     try:
-        await client.call_py.leave_call(chat_id)
-        return await message.reply(f"<b>{await EMO.BERHASIL(client)}Successfully leave voice chat</b>")
-    except GroupCallNotFound:
-        return await message.reply(f"<b>{await EMO.GAGAL(client)}Not currently in voice chat!</b>")
-    except Exception as e:
-        return await message.reply(f"<b>Error:</b> {e}")
+        mex = await message.reply(f"{prs}<b>ᴘʀᴏᴄᴄᴇsɪɴɢ...</b>")
+        cc = await client.call_py.leave_call(message.chat.id)
+        await mex.edit(f"<blockquote>{brhsl}<b>╭sᴜᴄᴄᴇss ʟᴇᴀᴠᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ</b>\n{grp}<b>╰ɢʀᴏᴜᴘs :</b><code>{message.chat.title}</code></blockquote>")
+    except NotInCallError:
+        await mex.edit(f"<blockquote>{ggl}<b>ʜᴀᴠᴇɴ'ᴛ ᴊᴏɪɴᴇᴅ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ʏᴇᴛ</b></blockquote>")
+    except UserBannedInChannel:
+        pass
+    except Exception as r:
+        print(r)
 
 @PY.UBOT("jvc")
 @PY.GROUP
 async def _(client, message):
-    if len(message.command) > 1:
-        input_identifier = message.command[1]
-    else:
-        input_identifier = message.chat.id
-
-    chat_id = await extract_id(message, input_identifier)
-    a_calls = await client.call_py.calls
-    if_chat = a_calls.get(chat_id)
-    if not chat_id:
-        return await message.reply(f"<b>{await EMO.GAGAL(client)}Invalid id!</b>")
-    if if_chat:
-        return await message.reply(f"<b>{await EMO.GAGAL(client)}Already on voice chat</b>")
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
+    prs = await EMO.PROSES(client)
+    grp = await EMO.BL_GROUP(client)
     try:
-        await client.call_py.play(chat_id)
-        await client.call_py.mute_stream(chat_id)
-        return await message.reply(f"<b>{await EMO.BERHASIL(client)}Successfully joined voice chat</b>")
-    except NoActiveGroupCall:
-        return await message.reply(f"<b>{await EMO.GAGAL(client)}There is no voice chat in the group!</b>")
-    except Exception as e:
-        return await message.reply(f"<b>Error:</b> {e}")
+        mex = await message.reply(f"{prs}<b>ᴘʀᴏᴄᴄᴇsɪɴɢ...</b>")
+        await client.call_py.play(message.chat.id, MediaStream("storage/vc.mp3"))
+        await client.call_py.mute_stream(message.chat.id)
+        await mex.edit(f"<blockquote>{brhsl}<b>╭sᴜᴄᴄᴇss ᴊᴏɪɴ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ</b>\n{grp}<b>╰ɢʀᴏᴜᴘs :</b><code>{message.chat.title}</code></blockquote>")        
+    except ChatAdminRequired:
+        await mex.edit(f"<blockquote>{gg}<b>sᴏʀʀʏ, ɪ ᴄᴀɴ'ᴛ ᴊᴏɪɴ ᴛʜᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ</b></blockquote>")
+    except UserBannedInChannel:
+        pass
+    except Exception as r:
+        print(r)
 
 @PY.UBOT("stream")
 @PY.ULTRA
