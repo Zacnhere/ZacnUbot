@@ -29,7 +29,6 @@ __HELP__ = """
 """
 
 @PY.UBOT("addbl")
-@PY.GROUP
 async def _(client, message):
     prs = await EMO.PROSES(client)
     grp = await EMO.BL_GROUP(client)
@@ -59,7 +58,6 @@ async def _(client, message):
 
 
 @PY.UBOT("unbl")
-@PY.GROUP
 async def _(client, message):
     prs = await EMO.PROSES(client)
     grp = await EMO.BL_GROUP(client)
