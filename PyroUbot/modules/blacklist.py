@@ -42,13 +42,13 @@ async def _(client, message):
 
         if chat_id in blacklist:
             txt = f"""
-<blockquote><b>{grp}ᴍᴇssᴀɢᴇ:</b> {message.chat.title}
+<blockquote><b>{msg}ᴍᴇssᴀɢᴇ:</b> {message.chat.title}
 <b>{ktrng}ᴋᴇᴛᴇʀᴀɴɢᴀɴ: <code>ᴀʟʀᴇᴀᴅʏ ʙʟᴀᴄᴋʟɪsᴛᴇᴅ</code></b></blockquote>
 """
         else:
             await add_to_vars(client.me.id, "BL_ID", chat_id)
             txt = f"""
-<blockquote><b>{grp}ᴍᴇssᴀɢᴇ:</b> {message.chat.title}
+<blockquote><b>{msg}ᴍᴇssᴀɢᴇ:</b> {message.chat.title}
 <b>{ktrng}ᴋᴇᴛᴇʀᴀɴɢᴀɴ: <code>ʙʟᴀᴄᴋʟɪsᴛᴇᴅ</code></b></blockquote>
 """
 
