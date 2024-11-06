@@ -70,7 +70,7 @@ async def _(client, message):
 
     command, text = extract_type_and_msg(message)
 
-    if command not in ["gc", "users", "all"] or not text:
+    if command not in ["group", "users", "all"] or not text:
         return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴛʏᴘᴇ] [ᴛᴇxᴛ/ʀᴇᴘʟʏ]</b>")
     haku = await client.get_prefix(client.me.id)
     anjai = haku[0]
