@@ -171,29 +171,38 @@ async def _(client, message):
 @PY.UBOT("tg")
 async def _(client, message):
     XD = await message.reply("<b><emoji id=6161365963204726449>⏳</emoji>sᴇᴅᴀɴɢ ᴍᴇᴍᴘʀᴏsᴇs . . .</b>")
+    
+    # Check if the message is a reply
     if not message.reply_to_message:
         return await XD.edit(
             "<b><emoji id=6161479118413106534>❌</emoji>ᴍᴏʜᴏɴ ʙᴀʟᴀs ᴋᴇ ᴘᴇsᴀɴ, ᴜɴᴛᴜᴋ ᴍᴇɴᴅᴀᴘᴀᴛᴋᴀɴ ʟɪɴᴋ ᴅᴀʀɪ ᴛᴇʟᴇɢʀᴀᴘʜ.</b>"
         )
+
     telegraph = Telegraph()
+
+    # Handle media (image, video, etc.)
     if message.reply_to_message.media:
         m_d = await dl_pic(client, message.reply_to_message)
         try:
             media_url = upload_file(m_d)
         except exceptions.TelegraphException as exc:
-            return await XD.edit(f"<code>{exc}</code>")
+            return await XD.edit(f"<code>Failed to upload media: {exc}</code>")
+        
         U_done = f"<emoji id=4976558436708778794>✅</emoji><b>ʙᴇʀʜᴀsɪʟ ᴅɪᴜᴘʟᴏᴀᴅ ᴋᴇ</b> <a href='https://telegra.ph/{media_url[0]}'>ᴛᴇʟᴇɢʀᴀᴘʜ</a>"
         await XD.edit(U_done)
+
+    # Handle text upload
     elif message.reply_to_message.text:
-        page_title = f"{client.me.first_name} {client.me.last_name or ''}"
-        page_text = message.reply_to_message.text
-        page_text = page_text.replace("\n", "<br>")
+        page_title = f"{client.me.first_name} {client.me.last_name or 'Telegram Bot'}"
+        page_text = message.reply_to_message.text.replace("\n", "<br>")
         try:
             response = telegraph.create_page(page_title, html_content=page_text)
         except exceptions.TelegraphException as exc:
-            return await XD.edit(f"<code>{exc}</code>")
+            return await XD.edit(f"<code>Failed to create page: {exc}</code>")
+        
         wow_graph = f"<emoji id=4976558436708778794>✅</emoji><b>ʙᴇʀʜᴀsɪʟ ᴅɪᴜᴘʟᴏᴀᴅ ᴋᴇ</b> <a href='https://telegra.ph/{response['path']}'>ᴛᴇʟᴇɢʀᴀᴘʜ</a>"
         await XD.edit(wow_graph)
+         
 
   
 @PY.UBOT("font")
