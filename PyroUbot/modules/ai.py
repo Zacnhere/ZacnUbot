@@ -24,27 +24,79 @@ async def chat_gpt(client, message):
     ggl = await EMO.GAGAL(client)
    
     try:
-        await client.send_chat_action(message.chat.id, ChatAction.TYPING)
+        # Show typing action
+        
+   
+await client.send_chat_action(message.chat.id, ChatAction.TYPING)
 
+        # Check if the command includes a question
         if len(message.command) < 2:
-            await message.reply_text(
-                f"<blockquote>{ggl}<b>ᴍᴏʜᴏɴ ɢᴜɴᴀᴋᴀɴ ғᴏʀᴍᴀᴛ\nᴄᴏɴᴛᴏʜ :</b> <code>ask bagaimana membuat donat?</code></blockquote>"
-            )
-        else:
-            prs = await message.reply_text(f"{prs}<b>ᴘʀᴏᴄᴄᴇsɪɴɢ....</b>")
-            a = message.text.split(' ', 1)[1]
-            response = requests.get(f'https://chatgpt.apinepdev.workers.dev/?question={a}')
+            
+          
+await message.reply_text(
+                
+           
 
-            try:
-                if "answer" in response.json():
-                    x = response.json()["answer"]                  
-                    await prs.edit(
-                      f"<blockquote>{x}</blockquote>\n\n<blockquote>{xbot} **ᴅɪᴊᴀᴡᴀʙ ᴏʟᴇʜ** {bot.me.mention}</blockquote>"
-                    )
-                else:
-                    await message.reply_text("No 'results' key found in the response.")
-            except KeyError:
-                await message.reply_text("Error accessing the response.")
-    except Exception as e:
-        await message.reply_text(f"{e}")
+    
+f"<blockquote>{ggl}<b>ᴍᴏʜᴏɴ ɢᴜɴᴀᴋᴀɴ ғᴏʀᴍᴀᴛ\nᴄᴏɴᴛᴏʜ :</b> <code>ask bagaimana membuat donat?</code></blockquote>"
+            )
+            
+            )
+        
+return
+
+        # Processing message
+        prs_msg = 
+   
+await message.reply_text(f"{prs}<b>ᴘʀᴏᴄᴇssɪɴɢ....</b>")
+        
+        
+        
+# Extract question from the message
+        question = message.text.split(
+        question = mess
+' ', 1)[1]
+        
+        
+   
+# Make the API request
+        try:
+            response = requests.get(
+            response = r
+f'https://chatgpt.apinepdev.workers.dev/?question={question}')
+            response.raise_for_status()  
+     
+# Raises an HTTPError for non-200 responses
+            
+            
+   
+# Parse the response JSON
+            json_response = response.json()
+            
+            json_response = response.json()
+if "answer" in json_response:
+                answer = json_response[
+               
+"answer"]
+                await prs_msg.edit(
+                    
       
+f"<blockquote>{answer}</blockquote>\n\n<blockquote>{xbot} **ᴅɪᴊᴀᴡᴀʙ ᴏʟᴇʜ** {client.me.mention}</blockquote>"
+                )
+            
+                )
+ 
+else:
+                await prs_msg.edit("Error: No 'answer' key found in the API response.")
+
+        except requests.exceptions.RequestException as req_error:
+            await prs_msg.edit(f"Request error: {req_error}")
+        
+        exc
+except ValueError:
+            await prs_msg.edit("Error: Received an invalid JSON response from the API.")
+            
+    
+        
+except Exception as e:
+        await message.reply_text(f"An unexpected error occurred: {e}")
