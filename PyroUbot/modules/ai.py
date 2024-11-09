@@ -5,7 +5,7 @@ from pyrogram.enums import ChatAction, ParseMode
 from pyrogram import filters
 from pyrogram.types import Message
 
-API_KEY = "http://chat.openai.com"
+API_KEY = "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"
 
 __MODULE__ = "Ai"
 __HELP__ = """
