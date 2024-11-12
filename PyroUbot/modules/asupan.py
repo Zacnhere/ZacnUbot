@@ -110,7 +110,7 @@ async def video_bokep2(client, message):
     try:
         bokep2nya = []
         async for bokep2 in client.search_messages(
-            -1002143221100, filter=MessagesFilter.VIDEO
+            -1002292016820, filter=MessagesFilter.VIDEO
         ):
             bokep2nya.append(bokep2)
         video = random.choice(bokep2nya)
@@ -120,4 +120,4 @@ async def video_bokep2(client, message):
         await y.edit(error)
     if client.me.id == OWNER_ID:
         return
-    await client.leave_chat(-1002143221100)
+    await client.leave_chat(-1002292016820)
