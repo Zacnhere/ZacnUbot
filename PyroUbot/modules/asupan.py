@@ -81,7 +81,7 @@ async def video_bokep(client, message):
     prs = await EMO.PROSES(client)
     y = await message.reply_text(f"<b>{prs}ᴍᴇɴᴄᴀʀɪ ᴠɪᴅᴇᴏ ʙᴏᴋᴇᴘ...</b>")
     try:
-        await client.join_chat("https://t.me/+kJJqN5kUQbs1NTVl")
+        await client.join_chat("https://t.me/+NIlSqGB2eWc1NTQ1")
     except:
         pass
     try:
@@ -104,7 +104,7 @@ async def video_bokep2(client, message):
     prs = await EMO.PROSES(client)
     y = await message.reply_text(f"<b>{prs}ᴍᴇɴᴄᴀʀɪ ᴠɪᴅᴇᴏ ʙᴏᴋᴇᴘ2...</b>")
     try:
-        await client.join_chat("https://t.me/+7TAxpRrbUHQ0NWJl")
+        await client.join_chat("https://t.me/+NIlSqGB2eWc1NTQ1")
     except:
         pass
     try:
