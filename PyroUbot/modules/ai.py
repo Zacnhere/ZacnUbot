@@ -103,7 +103,7 @@ async def _(client, message):
         # Kirim hasil transkripsi, atau sebagai dokumen jika terlalu panjang
         if len(response) > 4096:
             with io.BytesIO(response.encode()) as out_file:
-                out_file.name = "transcription.txt"
+                out_file.name = "openAi.txt"
                 await message.reply_document(document=out_file)
         else:
             msg = reply or message
