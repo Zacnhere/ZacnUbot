@@ -350,6 +350,22 @@ async def _(client, message):
         await Tm.edit(f"<blockquote>{ggl}<b>ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴀᴋᴜɴ ᴛᴇʀʜᴀᴘᴜs ᴅɪ ɢʀᴏᴜᴘ ɪɴɪ</b></blockquote>")
 
 
+DEFAULT_ADMIN_TITLE = "Admin"  # Default value if not set yet
+
+@PY.UBOT("setadmintitle")
+@PY.GROUP
+async def set_admin_title(client: Client, message: Message):
+    global DEFAULT_ADMIN_TITLE
+    
+    # Extract new title from the command
+    command_args = message.text.split(maxsplit=1)
+    if len(command_args) > 1:
+        DEFAULT_ADMIN_TITLE = command_args[1]
+        await message.reply(f"<b>Admin title set to:</b> {DEFAULT_ADMIN_TITLE}", parse_mode="html")
+    else:
+        await message.reply("<b>Please provide a new title.</b>", parse_mode="html")
+
+
 @PY.UBOT("admin")
 @PY.GROUP
 async def _(client: Client, message: Message):
@@ -360,7 +376,7 @@ async def _(client: Client, message: Message):
     # Extract user ID and custom name from the message
     user_id = await extract_user(message)
     command_args = message.text.split(maxsplit=2)
-    custom_admin_name = command_args[2] if len(command_args) > 2 else "Admin"
+    custom_admin_name = command_args[2] if len(command_args) > 2 else DEFAULT_ADMIN_TITLE
     
     biji = await eor(message, f"<b>{prs}ᴘʀᴏᴄᴇꜱꜱɪɴɢ...</b>")
     
