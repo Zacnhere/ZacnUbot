@@ -34,6 +34,12 @@ __HELP__ = """
 
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}zombies</code>
    <i>mengeluarkan akun terhapus dari group</i>
+
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}pin</code>
+<i>memasang sematan pesan di group/chat</i>
+
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}unpin</code>
+<i>melepas sematan pesan di group/chat</i>
    
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}lock</code>
    <i>mengunci izin group</i>
