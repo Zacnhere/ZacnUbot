@@ -35,7 +35,7 @@ __HELP__ = """
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|lock |unlock |locks</code>
    <i>mengunci melepas dan melihat izin group</i>
 
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|addadmin |deladmin</code>
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|admin |deladmin</code>
    <i>menambahkan dan menghapus admin group</i>
 
   <b>ᴛʏᴘᴇ:</b>
@@ -350,7 +350,7 @@ async def _(client, message):
         await Tm.edit(f"<blockquote>{ggl}<b>ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴀᴋᴜɴ ᴛᴇʀʜᴀᴘᴜs ᴅɪ ɢʀᴏᴜᴘ ɪɴɪ</b></blockquote>")
 
 
-@PY.UBOT("addadmin")
+@PY.UBOT("admin")
 @PY.GROUP
 async def _(client: Client, message: Message):
     prs = await EMO.PROSES(client)
