@@ -360,7 +360,7 @@ async def _(client: Client, message: Message):
     # Extract user ID and custom name from the message
     user_id = await extract_user(message)
     command_args = message.text.split(maxsplit=2)
-    custom_admin_name = command_args[ custom_admin_name = 1] await message.reply(f"<b>Admin title set to:</b> {custom_admin_name}") else: await message.reply("<b>Please provide a new title.</b>")
+    custom_admin_name = command_args[2] if len(command_args) > 2 else "Admin"
     
     biji = await eor(message, f"<b>{prs}ᴘʀᴏᴄᴇꜱꜱɪɴɢ...</b>")
     
