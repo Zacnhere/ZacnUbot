@@ -410,7 +410,6 @@ async def _(client: Client, message: Message):
         user = await client.get_users(user_id)
         user_mention = user.mention
         await biji.edit(f"<b>{brhsl}{user_mention} [{user_id}] ᴅɪ ᴛᴀᴍʙᴀʜ ᴋᴇ ᴀᴅᴍɪɴ!</b>\n ᴛɪᴛʟᴇ: {custom_admin_name}")
-        await biji.delete()
         
     except ChatAdminRequired:
         await biji.edit(f"<b>{ggl}ᴀɴᴅᴀ ʙᴜᴋᴀɴ ᴀᴅᴍɪɴ ɢʀᴏᴜᴘ ɪɴɪ!</b>")
