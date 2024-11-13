@@ -356,11 +356,23 @@ async def _(client: Client, message: Message):
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
     ggl = await EMO.GAGAL(client)
+    
+    # Extract user ID and custom name from the message
     user_id = await extract_user(message)
+    command_args = message.text.split(maxsplit=2)
+    custom_admin_name = command_args[2] if len(command_args) > 2 else "Admin"
+    
     biji = await eor(message, f"<b>{prs}ᴘʀᴏᴄᴇꜱꜱɪɴɢ...</b>")
+    
     if not user_id:
         return await biji.edit(f"<b>{ggl}ᴘᴇɴɢɢᴜɴᴀ ᴛɪᴅᴀᴋ ᴅɪ ᴛᴇᴍᴜᴋᴀɴ</b>")
-    (await client.get_chat_member(message.chat.id, client.me.id)).privileges
+    
+    # Check bot privileges
+    try:
+        privileges = (await client.get_chat_member(message.chat.id, client.me.id)).privileges
+    except Exception as e:
+        return await biji.edit(f"<b>{ggl}ɢᴀɢᴀʟ ᴍᴇɴᴅᴀᴘᴀᴛᴋᴀɴ ᴘʀɪᴠɪʟᴇɢᴇ!</b> {e}")
+    
     try:
         if message.command[0][0] == "f":
             await message.chat.promote_member(
@@ -377,9 +389,9 @@ async def _(client: Client, message: Message):
                 ),
             )
             await asyncio.sleep(1)
-            # await biji.delete()
-            umention = (await client.get_users(user_id)).mention
-            return await biji.edit(f"<b>{brhsl}ғᴜʟʟ ᴀᴋsᴇs!</b> {umention}")
+            user = await client.get_users(user_id)
+            user_mention = user.mention
+            return await biji.edit(f"<b>{brhsl}ғᴜʟʟ ᴀᴋsᴇs!</b>")
 
         await message.chat.promote_member(
             user_id,
@@ -395,11 +407,11 @@ async def _(client: Client, message: Message):
             ),
         )
         await asyncio.sleep(1)
-        # await biji.delete()
-        umention = (await client.get_users(user_id)).mention
-        await biji.edit(f"<b>{brhsl}ᴅɪ ᴛᴀᴍʙᴀʜ ᴋᴇ ᴀᴅᴍɪɴ!</b> {umention}")
-        await biji.edit(biji)
+        user = await client.get_users(user_id)
+        user_mention = user.mention
+        await biji.edit(f"<b>{brhsl}{user_mention} [{user_id}] ᴅɪ ᴛᴀᴍʙᴀʜ ᴋᴇ ᴀᴅᴍɪɴ!</b>\n ᴛɪᴛʟᴇ: {custom_admin_name}")
         await biji.delete()
+        
     except ChatAdminRequired:
         await biji.edit(f"<b>{ggl}ᴀɴᴅᴀ ʙᴜᴋᴀɴ ᴀᴅᴍɪɴ ɢʀᴏᴜᴘ ɪɴɪ!</b>")
 
