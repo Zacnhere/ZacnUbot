@@ -28,54 +28,29 @@ async def chat_gpt(client, message):
     ggl = await EMO.GAGAL(client)
    
     try:
-        # Show typing action to let the user know the bot is processing
         await client.send_chat_action(message.chat.id, ChatAction.TYPING)
 
-        # Check if the command includes a question
         if len(message.command) < 2:
             await message.reply_text(
                 f"<blockquote>{ggl}<b>ᴍᴏʜᴏɴ ɢᴜɴᴀᴋᴀɴ ғᴏʀᴍᴀᴛ\nᴄᴏɴᴛᴏʜ :</b> <code>ask bagaimana membuat donat?</code></blockquote>"
             )
-            return
+        else:
+            prs = await message.reply_text(f"{prs}<b>ᴘʀᴏᴄᴄᴇsɪɴɢ....</b>")
+            a = message.text.split(' ', 1)[1]
+            response = requests.get(f'https://chatgpt.apinepdev.workers.dev/?question={a}')
 
-        # Processing message
-        prs_msg = await message.reply_text(f"{prs}<b>ᴘʀᴏᴄᴇssɪɴɢ....</b>")
-        
-        # Extract the user's question
-        question = message.text.split(' ', 1)[1]
-        
-        # OpenAI API request setup
-        headers = {
-            "Authorization": f"Bearer {API_KEY}",
-            "Content-Type": "application/json"
-        }
-        data = {
-            "model": "gpt-3.5-turbo",
-            "messages": [{"role": "user", "content": question}]
-        }
-
-        try:
-            # Send a request to the OpenAI API
-            response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=data)
-            response.raise_for_status()  # Raises an HTTPError if the response code is 4xx or 5xx
-
-            # Parse the response JSON
-            json_response = response.json()
-            if "choices" in json_response and json_response["choices"]:
-                answer = json_response["choices"][0]["message"]["content"]
-                await prs_msg.edit(
-                    f"<blockquote>{answer}</blockquote>\n\n<blockquote>{xbot} **ᴅɪᴊᴀᴡᴀʙ ᴏʟᴇʜ** {client.me.mention}</blockquote>"
-                )
-            else:
-                await prs_msg.edit("Error: Could not retrieve an answer from the API.")
-
-        except requests.exceptions.RequestException as req_error:
-            await prs_msg.edit(f"Request error: {req_error}")
-        except ValueError:
-            await prs_msg.edit("Error: Received an invalid JSON response from the API.")
-            
+            try:
+                if "answer" in response.json():
+                    x = response.json()["answer"]                  
+                    await prs.edit(
+                      f"<blockquote>{x}</blockquote>\n\n<blockquote>{xbot} **ᴅɪᴊᴀᴡᴀʙ ᴏʟᴇʜ** {bot.me.mention}</blockquote>"
+                    )
+                else:
+                    await message.reply_text("No 'results' key found in the response.")
+            except KeyError:
+                await message.reply_text("Error accessing the response.")
     except Exception as e:
-        await message.reply_text(f"An unexpected error occurred: {e}")
+        await message.reply_text(f"{e}")
 
 
 @PY.UBOT("photo")
