@@ -23,32 +23,35 @@ __HELP__ = """
 
 
 @PY.UBOT("ask")
-async def _(client, message):
-    random_number = random.randint(1000000, 9999999)
+async def chat_gpt(client, message):
+    prs = await EMO.PROSES(client)
+    xbot = await EMO.UBOT(client)
+    ggl = await EMO.GAGAL(client)
+   
     try:
         await client.send_chat_action(message.chat.id, ChatAction.TYPING)
 
         if len(message.command) < 2:
-            await message.reply(
-                f"Give me a question fot chatgpt!"
+            await message.reply_text(
+                f"<blockquote>{ggl}<b>ᴍᴏʜᴏɴ ɢᴜɴᴀᴋᴀɴ ғᴏʀᴍᴀᴛ\nᴄᴏɴᴛᴏʜ :</b> <code>ask bagaimana membuat donat?</code></blockquote>"
             )
         else:
-            prs = await message.reply(f"Processing...")
+            prs = await message.reply_text(f"{prs}<b>ᴘʀᴏᴄᴄᴇsɪɴɢ....</b>")
             a = message.text.split(' ', 1)[1]
             response = requests.get(f'https://api.botcahx.eu.org/api/search/openai-chat?text={a}&apikey=enakaja')
 
             try:
-                if "message" in response.json():
-                    x = response.json()["message"]                  
+                if "answer" in response.json():
+                    x = response.json()["answer"]                  
                     await prs.edit(
-                      f"{x}"
+                      f"<blockquote>{x}</blockquote>\n\n<blockquote>{xbot} ᴅɪᴊᴀᴡᴀʙ ᴏʟᴇʜ {bot.me.mention}</blockquote>"
                     )
                 else:
-                    return await prs.edit("No 'results' key found in the response!")
+                    await message.reply_text("No 'results' key found in the response.")
             except KeyError:
-                return await prs.edit("Error accessing the response!")
+                await message.reply_text("Error accessing the response.")
     except Exception as e:
-        return await prs.edit(f"Error!\n{e}")
+        await message.reply_text(f"{e}")
 
 
 @PY.UBOT("photo")
