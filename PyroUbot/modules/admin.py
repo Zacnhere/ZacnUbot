@@ -20,28 +20,22 @@ __HELP__ = """
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}kick</code>
    <i>menendang anggota dari group</i>
 
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}unmute</code>
-   <i>melepas pembisuan anggota dari group</i>
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|mute |unmute</code>
+   <i>membisukan dan melepas pembisuan anggota group</i>
 
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}unban</code>
-   <i>melepas pemblokiran anggota dari group</i>
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|ban |unban</code>
+   <i>memblokir dan melepas blokiran anggota group</i>
 
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}zombies</code>
    <i>mengeluarkan akun terhapus dari group</i>
 
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}pin</code>
-<i>memasang sematan pesan di group/chat</i>
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|pin |unpin</code>
+<i>memasang dan melepas sematan pesan di group/chat</i>
 
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}unpin</code>
-<i>melepas sematan pesan di group/chat</i>
-   
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}lock</code>
-   <i>mengunci izin group</i>
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|lock |unlock</code>
+   <i>mengunci dan membuka izin group</i>
 
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}unlock</code>
-   <i>membuka izin group</i>
-
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}locks</code>
+</b> <code>{0}locks</code>
    <i>melihat izin pada group saat ini</i>
 
   <b>ᴛʏᴘᴇ:</b>
