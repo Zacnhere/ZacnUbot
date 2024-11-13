@@ -35,7 +35,7 @@ __HELP__ = """
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|lock |unlock</code>
    <i>mengunci dan membuka izin group</i>
 
-</b> <code>{0}locks</code>
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}locks</code>
    <i>melihat izin pada group saat ini</i>
 
   <b>ᴛʏᴘᴇ:</b>
