@@ -30,10 +30,13 @@ __HELP__ = """
    <i>mengeluarkan akun terhapus dari group</i>
 
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|pin |unpin</code>
-<i>memasang dan melepas sematan pesan</i>
+   <i>memasang dan melepas sematan pesan</i>
 
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|lock |unlock |locks</code>
-   <i>mengunci membuka dan melihat izin group</i>
+   <i>mengunci melepas dan melihat izin group</i>
+
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|addadmin |deladmin</code>
+   <i>menambahkan dan menghapus admin group</i>
 
   <b>ᴛʏᴘᴇ:</b>
    <code>|msg |media |stickers |polls |info</code>
@@ -376,7 +379,7 @@ async def _(client: Client, message: Message):
             await asyncio.sleep(1)
             # await biji.delete()
             umention = (await client.get_users(user_id)).mention
-            return await biji.edit(f"<b>{brhsl}ᴅɪ ᴛᴀᴍʙᴀʜ ᴋᴇ ᴀᴅᴍɪɴ!</b> {umention}")
+            return await biji.edit(f"<b>{brhsl}ғᴜʟʟ ᴀᴋsᴇs!</b> {umention}")
 
         await message.chat.promote_member(
             user_id,
