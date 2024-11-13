@@ -3,7 +3,6 @@ import os
 import io
 import random
 import requests
-from OpenAi import OpenAi
 from pyrogram.enums import ChatAction, ParseMode
 from pyrogram import filters
 from pyrogram.types import Message
