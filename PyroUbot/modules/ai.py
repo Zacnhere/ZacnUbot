@@ -24,50 +24,62 @@ __HELP__ = """
 
 
 @PY.UBOT("ask")
-async def chat_gpt(client, message):
-    prs = await EMO.PROSES(client)
-    xbot = await EMO.UBOT(client)
-    ggl = await EMO.GAGAL(client)
-   
+async def _(client, message):
+    random_number = random.randint(1000000, 9999999)
     try:
         await client.send_chat_action(message.chat.id, ChatAction.TYPING)
 
         if len(message.command) < 2:
-            await message.reply_text(
-                f"<blockquote>{ggl}<b>ᴍᴏʜᴏɴ ɢᴜɴᴀᴋᴀɴ ғᴏʀᴍᴀᴛ\nᴄᴏɴᴛᴏʜ :</b> <code>ask bagaimana membuat donat?</code></blockquote>"
+            await message.reply(
+                f"Give me a question fot chatgpt!"
             )
         else:
-            prs = await message.reply_text(f"{prs}<b>ᴘʀᴏᴄᴄᴇsɪɴɢ....</b>")
+            prs = await message.reply(f"Processing...")
             a = message.text.split(' ', 1)[1]
             response = requests.get(f'https://api.botcahx.eu.org/api/search/openai-chat?text={a}&apikey=enakaja')
 
             try:
-                if "answer" in response.json():
-                    x = response.json()["answer"]                  
+                if "message" in response.json():
+                    x = response.json()["message"]                  
                     await prs.edit(
-                      f"<blockquote>{x}</blockquote>\n\n<blockquote>{xbot} ᴅɪᴊᴀᴡᴀʙ ᴏʟᴇʜ {bot.me.mention}</blockquote>"
+                      f"{x}"
                     )
                 else:
-                    await message.reply_text("No 'results' key found in the response.")
+                    return await prs.edit("No 'results' key found in the response!")
             except KeyError:
-                await message.reply_text("Error accessing the response.")
+                return await prs.edit("Error accessing the response!")
     except Exception as e:
-        await message.reply_text(f"{e}")
+        return await prs.edit(f"Error!\n{e}")
 
 
 @PY.UBOT("photo")
 async def _(client, message):
-    Tm = await message.reply("<code>ᴍᴇᴍᴘʀᴏsᴇs...</code>")
-    if len(message.command) < 2:
-        return await Tm.edit(f"<b><code>{message.text}</code> [ǫᴜᴇʀʏ]</b>")
+    random_number = random.randint(1000000, 9999999)  
     try:
-        response = await OpenAi.ImageDalle(message.text.split(None, 1)[1])
-        msg = message.reply_to_message or message
-        await client.send_photo(message.chat.id, response, reply_to_message_id=msg.id)
-        return await Tm.delete()
-    except Exception as error:
-        await message.reply(error)
-        return await Tm.delete()
+        if len(message.command) < 2:
+            return await message.reply(f"Give me a name for an image!")
+        
+        prs = await message.reply(f"Processing...")
+        search_query = message.text.replace(" ", ",")
+        async with aiohttp.ClientSession() as session:
+            try:
+                url = f'https://api.botcahx.eu.org/api/maker/text2img?text={search_query}&apikey=enakaja'
+                async with session.get(url) as response:
+                    if response.status == 200:
+                        image_path = f"temp_image_{random_number}.png"
+                        with open(image_path, 'wb') as f:
+                            f.write(await response.read())
+
+                        await prs.delete()
+                        await message.reply_photo(image_path)
+                        os.remove(image_path)
+                    else:
+                        await prs.edit(f"Error: Received non-200 response status {response.status}")
+            except Exception as e:
+                return await prs.edit(f"Error during API request!\n{e}")
+
+    except Exception as e:
+        return await prs.edit(f"Error!\n{e}")
 
 @PY.UBOT("stt")
 async def _(client, message):
