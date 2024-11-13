@@ -5,7 +5,6 @@ import requests
 
 from pyrogram.enums import MessagesFilter
 
-API_KEY = "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"
 
 class API:
     async def wall(client):
