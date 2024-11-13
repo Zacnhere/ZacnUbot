@@ -1,4 +1,5 @@
 import asyncio
+import openai
 import random
 import requests
 
