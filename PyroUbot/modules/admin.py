@@ -17,7 +17,7 @@ __HELP__ = """
 <blockquote>
 <b>『 ʙᴀɴᴛᴜᴀɴ ᴀᴅᴍɪɴ 』</b> </blockquote>
 <blockquote>
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}kick</code></b> <code>{0}ban</code></b> <code>{0}mute</code>
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|kick |ban |mute</code>
    <i>menendang anggota dari group</i>
 
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}ban</code>
