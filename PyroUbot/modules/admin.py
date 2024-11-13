@@ -35,8 +35,9 @@ __HELP__ = """
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|lock |unlock |locks</code>
    <i>mengunci melepas dan melihat izin group</i>
 
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|admin |deladmin</code>
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|admin |deladmin |settitle</code>
    <i>menambahkan dan menghapus admin group</i>
+   <i>settitle untuk merubah nama admin group</i>
 
   <b>ᴛʏᴘᴇ:</b>
    <code>|msg |media |stickers |polls |info</code>
@@ -352,7 +353,7 @@ async def _(client, message):
 
 DEFAULT_ADMIN_TITLE = "Admin"  # Default value if not set yet
 
-@PY.UBOT("setadmintitle")
+@PY.UBOT("settitle")
 @PY.GROUP
 async def set_admin_title(client: Client, message: Message):
     global DEFAULT_ADMIN_TITLE
