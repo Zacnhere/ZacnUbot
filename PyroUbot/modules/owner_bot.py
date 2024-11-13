@@ -8,7 +8,7 @@ from PyroUbot import *
 
 
 
-@PY.UBOT("prem")
+@PY.UBOT("rasacoklat")
 async def _(client, message):
     prs = await EMO.PROSES(client)
     ggl = await EMO.GAGAL(client)
