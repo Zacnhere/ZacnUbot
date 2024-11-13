@@ -47,8 +47,8 @@ class OpenAi:
 
     @staticmethod
     async def SpeechToText(file):
-        # audio_file = open(file, "rb")
-        # response = await asyncio.to_thread(
-            # openai.Audio.transcribe, "whisper-1", audio_file
-        # )
-        # return response["text"]
+        audio_file = open(file, "rb")
+        response = await asyncio.to_thread(
+            openai.Audio.transcribe, "whisper-1", audio_file
+        )
+        return response["text"]
