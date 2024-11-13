@@ -391,7 +391,7 @@ async def _(client: Client, message: Message):
             await asyncio.sleep(1)
             user = await client.get_users(user_id)
             user_mention = user.mention
-            return await biji.edit(f"<b>{brhsl}ғᴜʟʟ ᴀᴋsᴇs!</b>")
+            return await biji.edit(f"<b>{brhsl}{user_mention} [{user_id}] ᴅɪ ᴛᴀᴍʙᴀʜ ᴋᴇ ᴀᴅᴍɪɴ!</b>\n ᴛɪᴛʟᴇ: {custom_admin_name}")
 
         await message.chat.promote_member(
             user_id,
