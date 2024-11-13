@@ -24,28 +24,31 @@ __HELP__ = """
 
 @PY.UBOT("ask")
 async def _(client, message):
-    Tm = await message.reply("<code>ᴍᴇᴍᴘʀᴏsᴇs...</code>")
-    args = get_text(message)
-    if not args:
-        return await Tm.edit(f"<b><code>{message.text}</code> [ᴘᴇʀᴛᴀɴʏᴀᴀɴ]</b>")
+    random_number = random.randint(1000000, 9999999)
     try:
-        response = await OpenAi.ChatGPT(args)
-        if int(len(str(response))) > 4096:
-            with io.BytesIO(str.encode(str(response))) as out_file:
-                out_file.name = "openAi.txt"
-                await message.reply_document(
-                    document=out_file,
-                )
-                return await Tm.delete()
-        else:
-            msg = message.reply_to_message or message
-            await client.send_message(
-                message.chat.id, response, reply_to_message_id=msg.id
+        await client.send_chat_action(message.chat.id, ChatAction.TYPING)
+
+        if len(message.command) < 2:
+            await message.reply(
+                f"Give me a question fot chatgpt!"
             )
-            return await Tm.delete()
-    except Exception as error:
-        await message.reply(error)
-        return await Tm.delete()
+        else:
+            prs = await message.reply(f"Processing...")
+            a = message.text.split(' ', 1)[1]
+            response = requests.get(f'https://api.botcahx.eu.org/api/search/openai-chat?text={a}&apikey=enakaja')
+
+            try:
+                if "message" in response.json():
+                    x = response.json()["message"]                  
+                    await prs.edit(
+                      f"{x}"
+                    )
+                else:
+                    return await prs.edit("No 'results' key found in the response!")
+            except KeyError:
+                return await prs.edit("Error accessing the response!")
+    except Exception as e:
+        return await prs.edit(f"Error!\n{e}")
 
 
 @PY.UBOT("photo")
