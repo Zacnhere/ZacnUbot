@@ -33,3 +33,4 @@ wget
 python-dateutil
 emoji
 python-dotenv
+aiohttp
