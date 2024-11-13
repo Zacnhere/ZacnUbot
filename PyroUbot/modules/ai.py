@@ -9,12 +9,14 @@ API_KEY = "sk-proj-Fm7XNDy0vy1ex4fVQ31kDxngfLtgjizZE4eJ_mGOEYA3SZ8x7y1vZjp0xaYW-
 
 __MODULE__ = "Ai"
 __HELP__ = """
-<blockquote>
-<b>『 ᴄʜᴀᴛ ɢᴘᴛ 』</b> </blockquote>
   <blockquote>
   <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}ask</code>
       <i>buat pertanyaan</i>
       <b>ᴄᴏɴᴛᴏʜ:</b> <code>{0}ask</code> <i>dimana letak Antartika</i>
+  <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}photo</code>
+      <i>buat foto dengan ai</i>
+  <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}stt</code>
+      <i>merubah audio filter</i>
       </blockquote>
 """
 
@@ -74,3 +76,56 @@ async def chat_gpt(client, message):
             
     except Exception as e:
         await message.reply_text(f"An unexpected error occurred: {e}")
+
+
+@PY.UBOT("photo")
+async def _(client, message):
+    Tm = await message.reply("<code>ᴍᴇᴍᴘʀᴏsᴇs...</code>")
+    if len(message.command) < 2:
+        return await Tm.edit(f"<b><code>{message.text}</code> [ǫᴜᴇʀʏ]</b>")
+    try:
+        response = await OpenAi.ImageDalle(message.text.split(None, 1)[1])
+        msg = message.reply_to_message or message
+        await client.send_photo(message.chat.id, response, reply_to_message_id=msg.id)
+        return await Tm.delete()
+    except Exception as error:
+        await message.reply(error)
+        return await Tm.delete()
+
+
+@PY.UBOT("stt")
+async def _(client, message):
+    Tm = await message.reply("<code>ᴍᴇᴍᴘʀᴏsᴇs...</code>")
+    reply = message.reply_to_message
+    if reply:
+        if reply.voice or reply.audio or reply.video:
+            file = await client.download_media(
+                message=message.reply_to_message,
+                file_name=f"sst_{message.reply_to_message.id}",
+            )
+            audio_file = f"{file}.mp3"
+            cmd = f"ffmpeg -i {file} -q:a 0 -map a {audio_file}"
+            await run_cmd(cmd)
+            os.remove(file)
+            try:
+                response = await OpenAi.SpeechToText(audio_file)
+            except Exception as error:
+                await message.reply(error)
+                return await Tm.delete()
+            if int(len(str(response))) > 4096:
+                with io.BytesIO(str.encode(str(response))) as out_file:
+                    out_file.name = "openAi.txt"
+                    await message.reply_document(
+                        document=out_file,
+                    )
+                    return await Tm.delete()
+            else:
+                msg = message.reply_to_message or message
+                await client.send_message(
+                    message.chat.id, response, reply_to_message_id=msg.id
+                )
+                return await Tm.delete()
+        else:
+            return await Tm.edit(
+                f"<b><code>{message.text}</code> [ʀᴇᴘʟʏ ᴠᴏɪᴄᴇ_ᴄʜᴀᴛ/ᴀᴜᴅɪᴏ/ᴠɪᴅᴇᴏ]</b>"
+              )
