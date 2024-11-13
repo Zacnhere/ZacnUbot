@@ -207,23 +207,23 @@ async def _(client, message):
     brhsl = await EMO.BERHASIL(client)
     ggl = await EMO.GAGAL(client)
     if not message.reply_to_message:
-        return await message.edit(f"<b>{ggl}ʀᴇᴘʟʏ ᴛᴇxᴛ</b>")
+        return await message.edit(f"<blockquote><b>{ggl}ʀᴇᴘʟʏ ᴛᴇxᴛ</b></blockquote>")
     r = message.reply_to_message
     await message.edit(f"{prs}<b>ᴘʀᴏᴄᴇꜱꜱɪɴɢ...</b>")
     if message.command[0][0] == "u":
         await r.unpin()
         return await message.edit(
-            f"<b>{brhsl}ᴜɴᴘɪɴɴᴇᴅ</b> [ᴛʜɪꜱ]({r.link}) <b>ᴍᴇꜱꜱᴀɢᴇ</b>",
+            f"<blockquote><b>{brhsl}ᴜɴᴘɪɴɴᴇᴅ</b> [ᴛʜɪꜱ]({r.link}) <b>ᴍᴇꜱꜱᴀɢᴇ</b></blockquote>",
             disable_web_page_preview=True,
         )
     try:
         await r.pin(disable_notification=True)
         await message.edit(
-            f"<b>{brhsl}ᴘɪɴɴᴇᴅ</b> [ᴛʜɪꜱ]({r.link}) <b>ᴍᴇꜱꜱᴀɢᴇ</b>",
+            f"<blockquote><b>{brhsl}ᴘɪɴɴᴇᴅ</b> [ᴛʜɪꜱ]({r.link}) <b>ᴍᴇꜱꜱᴀɢᴇ</b></blockquote>",
             disable_web_page_preview=True,
         )
     except ChatAdminRequired:
-        await message.edit(f"<b>{ggl}ᴀɴᴅᴀ ʙᴜᴋᴀɴ ᴀᴅᴍɪɴ ɢʀᴏᴜᴘ ɪɴɪ!</b>")
+        await message.edit(f"<blockquote><b>{ggl}ᴀɴᴅᴀ ʙᴜᴋᴀɴ ᴀᴅᴍɪɴ ɢʀᴏᴜᴘ ɪɴɪ!</b></blockquote>")
         await message.delete()
 
 
