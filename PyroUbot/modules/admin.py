@@ -194,6 +194,33 @@ async def _(client, message):
     await message.reply(perms)
 
 
+@PY.UBOT("pin|unpin")
+@PY.GROUP
+async def _(client, message):
+    prs = await EMO.PROSES(client)
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
+    if not message.reply_to_message:
+        return await message.edit(f"<b>{ggl}ʀᴇᴘʟʏ ᴛᴇxᴛ</b>")
+    r = message.reply_to_message
+    await message.edit(f"{prs}<b>ᴘʀᴏᴄᴇꜱꜱɪɴɢ...</b>")
+    if message.command[0][0] == "u":
+        await r.unpin()
+        return await message.edit(
+            f"<b>{brhsl}ᴜɴᴘɪɴɴᴇᴅ</b> [ᴛʜɪꜱ]({r.link}) <b>ᴍᴇꜱꜱᴀɢᴇ</b>",
+            disable_web_page_preview=True,
+        )
+    try:
+        await r.pin(disable_notification=True)
+        await message.edit(
+            f"<b>{brhsl}ᴘɪɴɴᴇᴅ</b> [ᴛʜɪꜱ]({r.link}) <b>ᴍᴇꜱꜱᴀɢᴇ</b>",
+            disable_web_page_preview=True,
+        )
+    except ChatAdminRequired:
+        await message.edit(f"<b>{ggl}ᴀɴᴅᴀ ʙᴜᴋᴀɴ ᴀᴅᴍɪɴ ɢʀᴏᴜᴘ ɪɴɪ!</b>")
+        await message.delete()
+
+
 @PY.UBOT("kick|ban|mute|unmute|unban")
 @PY.GROUP
 async def _(client, message):
