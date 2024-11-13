@@ -21,35 +21,29 @@ __HELP__ = """
 
 
 @PY.UBOT("ask")
-async def chat_gpt(client, message):
-    prs = await EMO.PROSES(client)
-    xbot = await EMO.UBOT(client)
-    ggl = await EMO.GAGAL(client)
-   
+async def _(client, message):
+    Tm = await message.reply("<code>ᴍᴇᴍᴘʀᴏsᴇs...</code>")
+    args = get_text(message)
+    if not args:
+        return await Tm.edit(f"<b><code>{message.text}</code> [ᴘᴇʀᴛᴀɴʏᴀᴀɴ]</b>")
     try:
-        await client.send_chat_action(message.chat.id, ChatAction.TYPING)
-
-        if len(message.command) < 2:
-            await message.reply_text(
-                f"<blockquote>{ggl}<b>ᴍᴏʜᴏɴ ɢᴜɴᴀᴋᴀɴ ғᴏʀᴍᴀᴛ\nᴄᴏɴᴛᴏʜ :</b> <code>ask bagaimana membuat donat?</code></blockquote>"
-            )
+        response = await OpenAi.ChatGPT(args)
+        if int(len(str(response))) > 4096:
+            with io.BytesIO(str.encode(str(response))) as out_file:
+                out_file.name = "openAi.txt"
+                await message.reply_document(
+                    document=out_file,
+                )
+                return await Tm.delete()
         else:
-            prs = await message.reply_text(f"{prs}<b>ᴘʀᴏᴄᴄᴇsɪɴɢ....</b>")
-            a = message.text.split(' ', 1)[1]
-            response = requests.get(f'https://chatgpt.apinepdev.workers.dev/?question={a}')
-
-            try:
-                if "answer" in response.json():
-                    x = response.json()["answer"]                  
-                    await prs.edit(
-                      f"<blockquote>{x}</blockquote>\n\n<blockquote>{xbot} **ᴅɪᴊᴀᴡᴀʙ ᴏʟᴇʜ** {bot.me.mention}</blockquote>"
-                    )
-                else:
-                    await message.reply_text("No 'results' key found in the response.")
-            except KeyError:
-                await message.reply_text("Error accessing the response.")
-    except Exception as e:
-        await message.reply_text(f"{e}")
+            msg = message.reply_to_message or message
+            await client.send_message(
+                message.chat.id, response, reply_to_message_id=msg.id
+            )
+            return await Tm.delete()
+    except Exception as error:
+        await message.reply(error)
+        return await Tm.delete()
 
 
 @PY.UBOT("photo")
