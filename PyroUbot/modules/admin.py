@@ -345,3 +345,89 @@ async def _(client, message):
         await Tm.edit(f"<blockquote>{brhsl}<b>ʙᴇʀʜᴀsɪʟ ᴍᴇɴɢᴇʟᴜᴀʀᴋᴀɴ {banned_users} ᴀᴋᴜɴ ᴛᴇʀʜᴀᴘᴜs</b></blockquote>")
     else:
         await Tm.edit(f"<blockquote>{ggl}<b>ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴀᴋᴜɴ ᴛᴇʀʜᴀᴘᴜs ᴅɪ ɢʀᴏᴜᴘ ɪɴɪ</b></blockquote>")
+
+
+@PY.UBOT("addadmin")
+@PY.GROUP
+async def _(client: Client, message: Message):
+    prs = await EMO.PROSES(client)
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
+    user_id = await extract_user(message)
+    biji = await eor(message, f"<b>{prs}ᴘʀᴏᴄᴇꜱꜱɪɴɢ...</b>")
+    if not user_id:
+        return await biji.edit(f"<b>{ggl}ᴘᴇɴɢɢᴜɴᴀ ᴛɪᴅᴀᴋ ᴅɪ ᴛᴇᴍᴜᴋᴀɴ</b>")
+    (await client.get_chat_member(message.chat.id, client.me.id)).privileges
+    try:
+        if message.command[0][0] == "f":
+            await message.chat.promote_member(
+                user_id,
+                privileges=ChatPrivileges(
+                    can_manage_chat=True,
+                    can_delete_messages=True,
+                    can_manage_video_chats=True,
+                    can_restrict_members=True,
+                    can_change_info=True,
+                    can_invite_users=True,
+                    can_pin_messages=True,
+                    can_promote_members=True,
+                ),
+            )
+            await asyncio.sleep(1)
+            # await biji.delete()
+            umention = (await client.get_users(user_id)).mention
+            return await biji.edit(f"<b>{brhsl}ᴅɪ ᴛᴀᴍʙᴀʜ ᴋᴇ ᴀᴅᴍɪɴ!</b> {umention}")
+
+        await message.chat.promote_member(
+            user_id,
+            privileges=ChatPrivileges(
+                can_manage_chat=True,
+                can_delete_messages=True,
+                can_manage_video_chats=True,
+                can_restrict_members=True,
+                can_change_info=False,
+                can_invite_users=True,
+                can_pin_messages=True,
+                can_promote_members=False,
+            ),
+        )
+        await asyncio.sleep(1)
+        # await biji.delete()
+        umention = (await client.get_users(user_id)).mention
+        await biji.edit(f"<b>{brhsl}ᴅɪ ᴛᴀᴍʙᴀʜ ᴋᴇ ᴀᴅᴍɪɴ!</b> {umention}")
+        await biji.edit(biji)
+        await biji.delete()
+    except ChatAdminRequired:
+        await biji.edit(f"<b>{ggl}ᴀɴᴅᴀ ʙᴜᴋᴀɴ ᴀᴅᴍɪɴ ɢʀᴏᴜᴘ ɪɴɪ!</b>")
+
+
+@PY.UBOT("deladmin")
+@PY.GROUP
+async def _(client: Client, message: Message):
+    prs = await EMO.PROSES(client)
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
+    user_id = await extract_user(message)
+    sempak = await eor(message, f"<b>{prs}ᴘʀᴏᴄᴇꜱꜱɪɴɢ...</b>")
+    if not user_id:
+        return await sempak.edit(f"<b>{ggl}ᴘᴇɴɢɢᴜɴᴀ ᴛɪᴅᴀᴋ ᴅɪ ᴛᴇᴍᴜᴋᴀɴ</b>")
+    if user_id == client.me.id:
+        return await sempak.edit(f"<b>{ggl}ᴛɪᴅᴀᴋ ʙɪꜱᴀ ᴜɴᴀᴅᴍɪɴ ᴅɪʀɪ ꜱᴇɴᴅɪʀɪ</b>")
+    await message.chat.promote_member(
+        user_id,
+        privileges=ChatPrivileges(
+            can_manage_chat=False,
+            can_delete_messages=False,
+            can_manage_video_chats=False,
+            can_restrict_members=False,
+            can_change_info=False,
+            can_invite_users=False,
+            can_pin_messages=False,
+            can_promote_members=False,
+        ),
+    )
+    await asyncio.sleep(1)
+    umention = (await client.get_users(user_id)).mention
+    await sempak.edit(f"<b>{brhsl}ᴅɪ ʜᴀᴘᴜs ᴅᴀʀɪ ᴀᴅᴍɪɴ!</b> {umention}")
+    await sempak.edit(sempak)
+    await sempak.delete()
