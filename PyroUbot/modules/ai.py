@@ -106,58 +106,48 @@ async def _(client, message):
             )
 
 
-@PY.UBOT("tts")
-async def _(client, message):
-    # Memberi notifikasi bahwa proses sedang berjalan
-    Tm = await message.reply("<code>Memproses...</code>")
-    reply = message.reply_to_message
+
+@PY.UBOT("stt")
+async def voice_tools(client, message):
+    TM = await message.reply("<b>Sedang memproses audio...</b>")
+
+    if not message.reply_to_message or not message.reply_to_message.voice:
+        return await TM.edit("<b>Reply vnya</b>")
+
+recognizer = sr.Recognizer()
+    try:
+        with sr.AudioFile(voice_file) as source:
+            audio = recognizer.record(source)  
+            text = recognizer.recognize_google(audio)  
+            await TM.edit(f"{text}")
+    except sr.UnknownValueError:
+        await TM.edit("-")
+    except sr.RequestError:
+        await TM.edit("-")
+    except Exception as e:
+        await TM.edit(f"Error: {str(e)}")
     
-    # Periksa apakah ada pesan yang di-reply dan apakah berisi media
-    if reply and (reply.voice or reply.audio or reply.video):
-        # Unduh file media yang di-reply
-        file = await client.download_media(
-            message=reply,
-            file_name=f"sst_{reply.id}",
-        )
-        
-        # Tentukan nama file audio yang akan diubah ke format mp3
-        audio_file = f"{file}.mp3"
-        
-        # Konversi ke format mp3 jika file bukan mp3 (misalnya dari pesan suara atau video)
-        if not file.endswith(".mp3"):
-            cmd = f"ffmpeg -i {file} -q:a 0 -map a {audio_file}"
-            await run_cmd(cmd)
-            os.remove(file)  # Hapus file asli setelah konversi
-        else:
-            audio_file = file  # Jika sudah mp3, langsung gunakan file tersebut
-        
-        # Proses transkripsi menggunakan Whisper
-        try:
-            response = await OpenAi.SpeechToText(audio_file)
-        except Exception as error:
-            # Jika terjadi error, kirim pesan error
-            await message.reply(f"Error: {str(error)}")
-            return await Tm.delete()
-        finally:
-            # Bersihkan file audio setelah selesai
-            os.remove(audio_file)
-        
-        # Kirim hasil transkripsi, atau sebagai dokumen jika terlalu panjang
-        if len(response) > 4096:
-            with io.BytesIO(response.encode()) as out_file:
-                out_file.name = "openAi.txt"
-                await message.reply_document(document=out_file)
-        else:
-            msg = reply or message
-            await client.send_message(
-                message.chat.id, response, reply_to_message_id=msg.id
-            )
-        
-        # Hapus pesan notifikasi setelah selesai
-        return await Tm.delete()
+    try:
+        os.remove(voice_file)
+    except FileNotFoundError:
+        pass
+
+voice_file = await client.download_media(message.reply_to_message.voice)
+
+recognizer = sr.Recognizer()
+    try:
+        with sr.AudioFile(voice_file) as source:
+            audio = recognizer.record(source)  
+            text = recognizer.recognize_google(audio)  
+            await TM.edit(f"{text}")
+    except sr.UnknownValueError:
+        await TM.edit("-")
+    except sr.RequestError:
+        await TM.edit("-")
+    except Exception as e:
+        await TM.edit(f"Error: {str(e)}")
     
-    # Jika tidak ada balasan yang berisi media, beri informasi ke pengguna
-    return await Tm.edit(
-        f"<b>Gunakan perintah ini sebagai balasan pada pesan suara, audio, atau video</b>"
-      )
-  
+    try:
+        os.remove(voice_file)
+    except FileNotFoundError:
+        pass
