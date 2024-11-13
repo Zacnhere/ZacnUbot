@@ -21,7 +21,7 @@ __HELP__ = """
    <i>menendang anggota dari group</i>
 
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|mute |unmute</code>
-   <i>membisukan dan melepas pembisuan anggota group</i>
+   <i>membisukan dan melepas bisuan anggota group</i>
 
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|ban |unban</code>
    <i>memblokir dan melepas blokiran anggota group</i>
@@ -30,13 +30,10 @@ __HELP__ = """
    <i>mengeluarkan akun terhapus dari group</i>
 
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|pin |unpin</code>
-<i>memasang dan melepas sematan pesan di group/chat</i>
+<i>memasang dan melepas sematan pesan</i>
 
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|lock |unlock</code>
-   <i>mengunci dan membuka izin group</i>
-
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}locks</code>
-   <i>melihat izin pada group saat ini</i>
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}|lock |unlock |locks</code>
+   <i>mengunci membuka dan melihat izin group</i>
 
   <b>ᴛʏᴘᴇ:</b>
    <code>|msg |media |stickers |polls |info</code>
