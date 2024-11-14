@@ -5,9 +5,15 @@ __HELP__ = """
  <blockquote>
  <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}jvc</code>
    <i>untuk bergabung ke voice chat group</i>
-
+   
  <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}lvc</code>
    <i>untuk meninggalkan dari voice chat group</i>
+   
+ <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}startvc</code>
+   <i>untuk memulai voice chat group</i>
+
+ <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}stopvc</code>
+   <i>untuk mengakhiri voice chat group</i>
    </blockquote>
 """
 from pyrogram import Client
@@ -254,3 +260,54 @@ async def _(c, m):
         ),
     )
     print(cukimay)
+
+
+@PY.UBOT("startvc")
+@PY.GROUP
+async def _(client, message):
+    prs = await EMO.PROSES(client)
+    brhsl = await EMO.BERHASIL(client)
+   
+    flags = " ".join(message.command[1:])
+    _msg = f"<b>{prs}ᴘʀᴏᴄᴇꜱꜱɪɴɢ...</b>"
+
+    msg = await message.reply(_msg)
+    vctitle = get_arg(message)
+    chat_id = message.chat.title if flags == ChatType.CHANNEL else message.chat.id
+
+    args = f"<b>{brhsl}ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴀᴋᴛɪꜰ\nᴄʜᴀᴛ :</b> {chat_id}"
+
+    try:
+        if vctitle:
+            args += f"\n<b>ᴛɪᴛʟᴇ :</b>  {vctitle}"
+
+        await client.invoke(
+            CreateGroupCall(
+                peer=(await client.resolve_peer(chat_id)),
+                random_id=randint(10000, 999999999),
+                title=vctitle if vctitle else None,
+            )
+        )
+        await msg.edit(args)
+    except Exception as e:
+        await msg.edit(f"INFO: {e}")
+
+
+@PY.UBOT("stopvc")
+@PY.GROUP
+async def _(client, message):
+    prs = await EMO.PROSES(client)
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
+    _msg = f"<b>{prs}ᴘʀᴏᴄᴇꜱꜱɪɴɢ...</b>"
+
+    msg = await message.reply(_msg)
+    group_call = await get_group_call(client, message)
+
+    if not group_call:
+        return await msg.edit("<b>{ggl}ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴏʙʀᴏʟᴀɴ ᴅɪ ɢʀᴏᴜᴘ ɪɴɪ</b>")
+
+    await client.invoke(DiscardGroupCall(call=group_call))
+    await msg.edit(
+        f"<b>{brhsl}ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴇɴᴅ\nᴄʜᴀᴛ :</b> {message.chat.title}"
+ )
