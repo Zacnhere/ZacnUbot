@@ -1,8 +1,3 @@
-from pyrogram.raw.functions.phone import CreateGroupCall, DiscardGroupCall, GetGroupCall
-from pyrogram.raw.types import InputGroupCall
-from random import randint
-from pyrogram.enums import ChatType
-
 __MODULE__ = "vctools"
 __HELP__ = """
 <blockquote>
@@ -39,6 +34,9 @@ from pytgcalls.types import MediaStream
 from pytgcalls.types import VideoQuality
 from pytgcalls.types import Update
 from pyrogram.errors.exceptions.bad_request_400 import UserBannedInChannel
+from pyrogram.raw.functions.phone import CreateGroupCall, DiscardGroupCall, GetGroupCall
+from pyrogram.raw.types import InputGroupCall
+from random import randint
 
 import asyncio
 import math
