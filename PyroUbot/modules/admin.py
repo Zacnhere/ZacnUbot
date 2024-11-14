@@ -367,98 +367,110 @@ async def set_admin_title(client: Client, message: Message):
         await message.reply("<b>Please provide a new title.</b>", parse_mode="html")
 
 
-@PY.UBOT("admin")
+@PY.UBOT("promote")
 @PY.GROUP
 async def _(client: Client, message: Message):
+    chat = message.chat
+    user = message.from_user
+    args = message.command[1:]  
+
     prs = await EMO.PROSES(client)
-    brhsl = await EMO.BERHASIL(client)
-    ggl = await EMO.GAGAL(client)
-    
-    # Extract user ID and custom name from the message
-    user_id = await extract_user(message)
-    command_args = message.text.split(maxsplit=2)
-    custom_admin_name = command_args[2] if len(command_args) > 2 else DEFAULT_ADMIN_TITLE
-    
-    biji = await eor(message, f"<b>{prs}ᴘʀᴏᴄᴇꜱꜱɪɴɢ...</b>")
+    user_id = await extract_user_id(client, message, args)
     
     if not user_id:
-        return await biji.edit(f"<b>{ggl}ᴘᴇɴɢɢᴜɴᴀ ᴛɪᴅᴀᴋ ᴅɪ ᴛᴇᴍᴜᴋᴀɴ</b>")
-    
-    # Check bot privileges
-    try:
-        privileges = (await client.get_chat_member(message.chat.id, client.me.id)).privileges
-    except Exception as e:
-        return await biji.edit(f"<b>{ggl}ɢᴀɢᴀʟ ᴍᴇɴᴅᴀᴘᴀᴛᴋᴀɴ ᴘʀɪᴠɪʟᴇɢᴇ!</b> {e}")
-    
-    try:
-        if message.command[0][0] == "f":
-            await message.chat.promote_member(
-                user_id,
-                privileges=ChatPrivileges(
-                    can_manage_chat=True,
-                    can_delete_messages=True,
-                    can_manage_video_chats=True,
-                    can_restrict_members=True,
-                    can_change_info=True,
-                    can_invite_users=True,
-                    can_pin_messages=True,
-                    can_promote_members=True,
-                ),
-            )
-            await asyncio.sleep(1)
-            user = await client.get_users(user_id)
-            user_mention = user.mention
-            return await biji.edit(f"<b>{brhsl}{user_mention} ᴅɪ ᴛᴀᴍʙᴀʜ ᴋᴇ ᴀᴅᴍɪɴ!</b>\n ᴛɪᴛʟᴇ: {custom_admin_name}")
+        await message.reply(f"{prs} You don't seem to be referring to a user.")
+        return
 
-        await message.chat.promote_member(
-            user_id,
-            privileges=ChatPrivileges(
-                can_manage_chat=True,
-                can_delete_messages=True,
-                can_manage_video_chats=True,
-                can_restrict_members=True,
-                can_change_info=False,
-                can_invite_users=True,
-                can_pin_messages=True,
-                can_promote_members=False,
-            ),
+    user_member = await client.get_chat_member(chat.id, user_id)
+
+    if user_member.status in ['administrator', 'creator']:
+        await message.reply(f"{prs} This user is already an admin or the creator.")
+        return
+
+    if user_id == client.me.id:
+        await message.reply(f"{prs} I can't promote myself! Please ask another admin.")
+        return
+
+    bot_member = await client.get_chat_member(chat.id, client.me.id)
+    if not bot_member.can_promote_members:
+        await message.reply(f"{prs} I don't have permission to promote members.")
+        return
+
+    try:
+        await client.promote_chat_member(
+            chat_id=chat.id,
+            user_id=user_id,
+            can_change_info=bot_member.can_change_info,
+            can_post_messages=bot_member.can_post_messages,
+            can_edit_messages=bot_member.can_edit_messages,
+            can_delete_messages=bot_member.can_delete_messages,
+            can_restrict_members=bot_member.can_restrict_members,
+            can_pin_messages=bot_member.can_pin_messages,
+            can_promote_members=bot_member.can_promote_members
         )
-        await asyncio.sleep(1)
-        user = await client.get_users(user_id)
-        user_mention = user.mention
-        await biji.edit(f"<b>{brhsl}{user_mention} ᴅɪ ᴛᴀᴍʙᴀʜ ᴋᴇ ᴀᴅᴍɪɴ!</b>\n ᴛɪᴛʟᴇ: {custom_admin_name}")
-        
-    except ChatAdminRequired:
-        await biji.edit(f"<b>{ggl}ᴀɴᴅᴀ ʙᴜᴋᴀɴ ᴀᴅᴍɪɴ ɢʀᴏᴜᴘ ɪɴɪ!</b>")
+        brhsl = await EMO.BERHASIL(client)
+        await message.reply(f"{brhsl} Successfully promoted!")
+    except Exception as e:
+        ggl = await EMO.GAGAL(client)
+        await message.reply(f"{ggl} Error promoting user: {e}")
 
 
 @PY.UBOT("deladmin")
 @PY.GROUP
 async def _(client: Client, message: Message):
+    chat = message.chat
+    user = message.from_user
+    args = message.command[1:]
+
     prs = await EMO.PROSES(client)
-    brhsl = await EMO.BERHASIL(client)
-    ggl = await EMO.GAGAL(client)
-    user_id = await extract_user(message)
-    sempak = await eor(message, f"<b>{prs}ᴘʀᴏᴄᴇꜱꜱɪɴɢ...</b>")
+    user_id = await extract_user_id(client, message, args)
+    
     if not user_id:
-        return await sempak.edit(f"<b>{ggl}ᴘᴇɴɢɢᴜɴᴀ ᴛɪᴅᴀᴋ ᴅɪ ᴛᴇᴍᴜᴋᴀɴ</b>")
+        await message.reply(f"{prs} You don't seem to be referring to a user.")
+        return
+
+    user_member = await client.get_chat_member(chat.id, user_id)
+
+    if user_member.status == 'creator':
+        await message.reply(f"{prs} This user is the creator and cannot be demoted.")
+        return
+
+    if user_member.status != 'administrator':
+        await message.reply(f"{prs} Cannot demote a user who is not an admin.")
+        return
+
     if user_id == client.me.id:
-        return await sempak.edit(f"<b>{ggl}ᴛɪᴅᴀᴋ ʙɪꜱᴀ ᴜɴᴀᴅᴍɪɴ ᴅɪʀɪ ꜱᴇɴᴅɪʀɪ</b>")
-    await message.chat.promote_member(
-        user_id,
-        privileges=ChatPrivileges(
-            can_manage_chat=False,
-            can_delete_messages=False,
-            can_manage_video_chats=False,
-            can_restrict_members=False,
+        await message.reply(f"{prs} I can't demote myself! Please ask another admin.")
+        return
+
+    try:
+        await client.promote_chat_member(
+            chat_id=chat.id,
+            user_id=user_id,
             can_change_info=False,
+            can_post_messages=False,
+            can_edit_messages=False,
+            can_delete_messages=False,
             can_invite_users=False,
+            can_restrict_members=False,
             can_pin_messages=False,
-            can_promote_members=False,
-        ),
-    )
-    await asyncio.sleep(1)
-    umention = (await client.get_users(user_id)).mention
-    await sempak.edit(f"<b>{brhsl}ᴅɪ ʜᴀᴘᴜs ᴅᴀʀɪ ᴀᴅᴍɪɴ!</b> {umention}")
-    await sempak.edit(sempak)
-    await sempak.delete()
+            can_promote_members=False
+        )
+        brhsl = await EMO.BERHASIL(client)
+        await message.reply(f"{brhsl} Successfully demoted!")
+    except Exception as e:
+        ggl = await EMO.GAGAL(client)
+        await message.reply(f"{ggl} Error demoting user: {e}")
+
+
+async def extract_user_id(client: Client, message: Message, args: Optional[list]) -> Optional[int]:
+    if args:
+        try:
+            user = await client.get_users(args[0])
+            return user.id
+        except Exception:
+            return None
+    elif message.reply_to_message:
+        return message.reply_to_message.from_user.id
+    return None
+                
