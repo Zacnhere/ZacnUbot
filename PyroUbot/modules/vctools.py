@@ -1,3 +1,8 @@
+from pyrogram.raw.functions.phone import CreateGroupCall, DiscardGroupCall, GetGroupCall
+from pyrogram.raw.types import InputGroupCall
+from random import randint
+from pyrogram.enums import ChatType
+
 __MODULE__ = "vctools"
 __HELP__ = """
 <blockquote>
