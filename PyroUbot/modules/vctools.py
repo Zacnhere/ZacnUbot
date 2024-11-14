@@ -264,22 +264,22 @@ async def _(c, m):
 
 @PY.UBOT("startvc")
 @PY.GROUP
-async def _(client, message):
+async def start_vc(client: Client, message: Message):
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
    
     flags = " ".join(message.command[1:])
-    _msg = f"<b>{prs}ᴘʀᴏᴄᴇꜱꜱɪɴɢ...</b>"
+    _msg = f"<b>{prs} Processing...</b>"
 
     msg = await message.reply(_msg)
-    vctitle = get_arg(message)
-    chat_id = message.chat.title if flags == ChatType.GROUP else message.chat.id
+    vctitle = get_arg(message)  # Fungsi ini diasumsikan mengambil judul dari argumen pesan
+    chat_id = message.chat.id if message.chat.type == ChatType.GROUP else message.chat.title
 
-    args = f"<b>{brhsl}ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴀᴋᴛɪꜰ\nᴄʜᴀᴛ :</b> {chat_id}"
+    args = f"<b>{brhsl} Voice Chat Started\nChat:</b> {chat_id}"
 
     try:
         if vctitle:
-            args += f"\n<b>ᴛɪᴛʟᴇ :</b>  {vctitle}"
+            args += f"\n<b>Title:</b>  {vctitle}"
 
         await client.invoke(
             CreateGroupCall(
@@ -295,19 +295,25 @@ async def _(client, message):
 
 @PY.UBOT("stopvc")
 @PY.GROUP
-async def _(client, message):
+async def stop_vc(client: Client, message: Message):
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
     ggl = await EMO.GAGAL(client)
-    _msg = f"<b>{prs}ᴘʀᴏᴄᴇꜱꜱɪɴɢ...</b>"
+    _msg = f"<b>{prs} Processing...</b>"
 
     msg = await message.reply(_msg)
-    group_call = await get_group_call(client, message)
+    
+    # Dapatkan panggilan grup saat ini
+    group_call = await get_group_call(client, message)  # Fungsi ini diasumsikan memeriksa panggilan grup
 
     if not group_call:
-        return await msg.edit("<b>{ggl}ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴏʙʀᴏʟᴀɴ ᴅɪ ɢʀᴏᴜᴘ ɪɴɪ</b>")
+        await msg.edit(f"<b>{ggl} No ongoing voice chat in this group.</b>")
+        return
 
-    await client.invoke(DiscardGroupCall(call=group_call))
-    await msg.edit(
-        f"<b>{brhsl}ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴇɴᴅ\nᴄʜᴀᴛ :</b> {message.chat.title}"
- )
+    try:
+        await client.invoke(DiscardGroupCall(call=group_call))
+        await msg.edit(
+            f"<b>{brhsl} Voice Chat Ended\nChat:</b> {message.chat.title}"
+        )
+    except Exception as e:
+        await msg.edit(f"ERROR: {e}")
