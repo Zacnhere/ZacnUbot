@@ -461,16 +461,3 @@ async def _(client: Client, message: Message):
     except Exception as e:
         ggl = await EMO.GAGAL(client)
         await message.reply(f"{ggl} Error demoting user: {e}")
-
-
-async def extract_user_id(client: Client, message: Message, args: Optional[list]) -> Optional[int]:
-    if args:
-        try:
-            user = await client.get_users(args[0])
-            return user.id
-        except Exception:
-            return None
-    elif message.reply_to_message:
-        return message.reply_to_message.from_user.id
-    return None
-                
