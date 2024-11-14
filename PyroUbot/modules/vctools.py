@@ -273,7 +273,7 @@ async def _(client, message):
 
     msg = await message.reply(_msg)
     vctitle = get_arg(message)
-    chat_id = message.chat.title if flags == ChatType.CHANNEL else message.chat.id
+    chat_id = message.chat.title if flags == ChatType.GROUP else message.chat.id
 
     args = f"<b>{brhsl}ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴀᴋᴛɪꜰ\nᴄʜᴀᴛ :</b> {chat_id}"
 
