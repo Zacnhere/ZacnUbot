@@ -37,6 +37,11 @@ from pyrogram.errors.exceptions.bad_request_400 import UserBannedInChannel
 from pyrogram.raw.functions.phone import CreateGroupCall, DiscardGroupCall, GetGroupCall
 from pyrogram.raw.types import InputGroupCall
 from random import randint
+from pyrogram.raw.functions.channels import GetFullChannel
+from pyrogram.raw.functions.messages import GetFullChat
+from pyrogram.raw.functions.phone import CreateGroupCall, DiscardGroupCall
+from pyrogram.raw.types import InputPeerChannel, InputPeerChat
+from pyrogram.errors import FloodWait, MessageNotModified
 
 import asyncio
 import math
@@ -276,7 +281,7 @@ async def start_vc(client: Client, message: Message):
 
     msg = await message.reply(_msg)
     vctitle = get_arg(message)  # Fungsi ini diasumsikan mengambil judul dari argumen pesan
-    chat_id = message.chat.id if message.chat.type == ChatType.GROUP else message.chat.title
+    chat_id = message.chat.id if message.chat.type == ChatType.CHANNEL else message.chat.title
 
     args = f"<b>{brhsl} Voice Chat Started\nChat:</b> {chat_id}"
 
