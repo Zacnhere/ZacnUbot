@@ -278,6 +278,9 @@ async def _(c, m):
 PY.UBOT("startvc")
 @PY.GROUP
 async def _(client, message):
+    prs = await EMO.PROSES(client)
+    brhsl = await EMO.BERHASIL(client)
+   
     flags = " ".join(message.command[1:])
     _msg = "<b>...</b>"
 
