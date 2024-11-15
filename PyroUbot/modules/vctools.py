@@ -275,20 +275,20 @@ async def _(c, m):
     print(cukimay)
 
 
-PY.UBOT("startvc")
+@PY.UBOT("startvc")
 @PY.GROUP
 async def _(client, message):
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
    
     flags = " ".join(message.command[1:])
-    _msg = "<b>...</b>"
+    _msg = f"<b>{prs} Processing...</b>"
 
     msg = await message.reply(_msg)
-    vctitle = get_arg(message)
-    chat_id = message.chat.title if flags == ChatType.CHANNEL else message.chat.id
+    vctitle = get_arg(message)  
+    chat_id = message.chat.id if message.chat.type == ChatType.CHANNEL else message.chat.title
 
-    args = f"<b>sukses!\nChat:</b> {chat_id}"
+    args = f"<b>{brhsl} Voice Chat Started\nChat:</b> {chat_id}"
 
     try:
         if vctitle:
@@ -304,7 +304,7 @@ async def _(client, message):
         await msg.edit(args)
     except Exception as e:
         await msg.edit(f"INFO: {e}")
-
+     
 
 @PY.UBOT("stopvc")
 @PY.GROUP
