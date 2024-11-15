@@ -15,12 +15,12 @@ class STR:
 
     async def UBOT(client):
         str_pong = await get_vars(client.me.id, "STRING_UBOT")
-        string_pong = str_pong if str_pong else "ᴢᴀᴄɴ ᴜʙᴏᴛ"
+        string_pong = str_pong if str_pong else "ᴢᴀᴄɴʙᴏᴛ"
         result = f"{string_pong}"
         return result
 
     async def DEVS(client):
         str_pong = await get_vars(client.me.id, "STRING_DEVS")
-        string_pong = str_pong if str_pong else "ʀᴇᴀᴅʏ ᴛᴏ sᴇʀᴠᴇ"  #bot.me.mention
+        string_pong = str_pong if str_pong else "sɪᴀᴘ sᴀʏᴀɴɢ"  #bot.me.mention
         result = f"{string_pong}"
         return result
