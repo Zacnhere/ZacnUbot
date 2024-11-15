@@ -285,9 +285,9 @@ async def _(client, message):
     _msg = f"<b>{prs} Processing...</b>"
 
     msg = await message.reply(_msg)
-    vctitle = get_arg(message)  
-    chat_id = message.chat.id if message.chat.type == ChatType.CHANNEL else message.chat.title
-
+    vctitle = get_arg(message)
+    chat_id = message.chat.title if flags == ChatType.CHANNEL else message.chat.id
+ 
     args = f"<b>{brhsl} Voice Chat Started\nChat:</b> {chat_id}"
 
     try:
