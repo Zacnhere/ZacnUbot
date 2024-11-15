@@ -156,6 +156,11 @@ async def progress(current, total, message, start, type_of_ps, file_name=None):
             except MessageNotModified:
                 pass
 
+async def check_admin_permissions(client, chat_id):
+    member = await client.get_chat_member(chat_id, client.me.id)
+    return member.status == "administrator" and member.can_manage_voice_chats
+ 
+
 @PY.UBOT("play")
 @PY.GROUP
 @PY.ULTRA
