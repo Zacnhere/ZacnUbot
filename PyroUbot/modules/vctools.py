@@ -308,22 +308,22 @@ async def _(client, message):
 
 @PY.UBOT("stopvc")
 @PY.GROUP
-async def stop_vc(client: Client, message: Message):
+async def _(client: Client, message: Message):
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
     ggl = await EMO.GAGAL(client)
     _msg = f"<b>{prs} Processing...</b>"
 
     msg = await message.reply(_msg)
-    
-    # Dapatkan panggilan grup saat ini
-    group_call = await get_group_call(client, message)  # Fungsi ini diasumsikan memeriksa panggilan grup
 
+    # Dapatkan panggilan grup aktif
+    group_call = await get_group_call(client, message)
     if not group_call:
         await msg.edit(f"<b>{ggl} No ongoing voice chat in this group.</b>")
         return
 
     try:
+        # Hentikan panggilan grup
         await client.invoke(DiscardGroupCall(call=group_call))
         await msg.edit(
             f"<b>{brhsl} Voice Chat Ended\nChat:</b> {message.chat.title}"
