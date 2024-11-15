@@ -308,7 +308,7 @@ async def _(client, message):
 
 @PY.UBOT("stopvc")
 @PY.GROUP
-async def _(client: Client, message: Message):
+async def _(client, message):
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
     ggl = await EMO.GAGAL(client)
@@ -316,7 +316,8 @@ async def _(client: Client, message: Message):
 
     msg = await message.reply(_msg)
     group_call = await get_group_call(client, message)
-    
+    chat_id = message.chat.title if flags == ChatType.CHANNEL else message.chat.id
+ 
     if not group_call:
         await msg.edit(f"<b>{ggl} No ongoing voice chat in this group.</b>")
         return
