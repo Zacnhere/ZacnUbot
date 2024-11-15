@@ -320,8 +320,7 @@ async def _(client, message):
  
     if not group_call:
         return await msg.edit(f"<b>{ggl} No ongoing voice chat in this group.</b>")
-
-    try:
+        
         await client.invoke(DiscardGroupCall(call=group_call))
         await msg.edit(
             f"<b>{brhsl} Voice Chat Ended\nChat:</b> {message.chat.title}"
