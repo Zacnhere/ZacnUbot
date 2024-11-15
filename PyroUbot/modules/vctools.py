@@ -275,20 +275,17 @@ async def _(c, m):
     print(cukimay)
 
 
-@PY.UBOT("startvc")
+PY.UBOT("startvc")
 @PY.GROUP
-async def start_vc(client: Client, message: Message):
-    prs = await EMO.PROSES(client)
-    brhsl = await EMO.BERHASIL(client)
-   
+async def _(client, message):
     flags = " ".join(message.command[1:])
-    _msg = f"<b>{prs} Processing...</b>"
+    _msg = "<b>...</b>"
 
     msg = await message.reply(_msg)
-    vctitle = get_arg(message)  # Fungsi ini diasumsikan mengambil judul dari argumen pesan
-    chat_id = message.chat.id if message.chat.type == ChatType.CHANNEL else message.chat.title
+    vctitle = get_arg(message)
+    chat_id = message.chat.title if flags == ChatType.CHANNEL else message.chat.id
 
-    args = f"<b>{brhsl} Voice Chat Started\nChat:</b> {chat_id}"
+    args = f"<b>sukses!\nChat:</b> {chat_id}"
 
     try:
         if vctitle:
