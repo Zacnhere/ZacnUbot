@@ -325,5 +325,3 @@ async def _(client, message):
         await msg.edit(
             f"<b>{brhsl} Voice Chat Ended\nChat:</b> {message.chat.title}"
         )
-    except Exception as e:
-        await msg.edit(f"ERROR: {e}")
