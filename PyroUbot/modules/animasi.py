@@ -845,5 +845,12 @@ async def nahlove(client, message):
     await asyncio.sleep(2)
     await e.edit("<blockquote>`\n(\\_/)`" "`\n(●_●)`" "\n🩷<\\  **Tapi Boong HeHeHe**</blockquote>")
 
-
-    
+@PY.UBOT("ahh")
+async def nakall(client, message):
+    e = await message.edit("<b>Ahhhh Yamete</b>")
+    await asyncio.sleep(2)
+    await e.edit("<b>Emm Shitt Baby</b>")
+    await asyncio.sleep(2)
+    await e.edit("<b>Yamete Kudasai</b>")
+    await asyncio.sleep(2)
+    await e.edit("<b>Baka Baka Baka</b>")
