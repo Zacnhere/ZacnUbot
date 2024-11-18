@@ -221,6 +221,22 @@ async def play_handler(client: Client, message: Message):
         if files and os.path.exists(files):
             os.remove(files)
 
+async def get_group_call(client, message):
+    chat_peer = await client.resolve_peer(message.chat.id)
+    if isinstance(chat_peer, (InputPeerChannel, InputPeerChat)):
+        if isinstance(chat_peer, InputPeerChannel):
+            full_chat = (
+                await client.invoke(GetFullChannel(channel=chat_peer))
+            ).full_chat
+        elif isinstance(chat_peer, InputPeerChat):
+            full_chat = (
+                await client.invoke(GetFullChat(chat_id=chat_peer.chat_id))
+            ).full_chat
+        if full_chat is not None:
+            return full_chat.call
+    await message.reply("<b>ɴᴏ ɢʀᴏᴜᴘ ᴄᴀʟʟ</b>")
+    return False
+
 @PY.UBOT("lvc")
 @PY.GROUP
 async def _(client, message):
@@ -309,19 +325,15 @@ async def _(client, message):
 @PY.UBOT("stopvc")
 @PY.GROUP
 async def _(client, message):
-    prs = await EMO.PROSES(client)
-    brhsl = await EMO.BERHASIL(client)
-    ggl = await EMO.GAGAL(client)
-    _msg = f"<b>{prs} Processing...</b>"
+    _msg = "<b>ᴍᴇᴍᴘʀᴏsᴇs...</b>"
 
     msg = await message.reply(_msg)
     group_call = await get_group_call(client, message)
-    chat_id = message.chat.title if flags == ChatType.CHANNEL else message.chat.id
- 
+
     if not group_call:
-        return await msg.edit(f"<b>{ggl} No ongoing voice chat in this group.</b>")
-        
-        await client.invoke(DiscardGroupCall(call=group_call))
-        await msg.edit(
-            f"<b>{brhsl} Voice Chat Ended\nChat:</b> {message.chat.title}"
-        )
+        return await msg.edit("<b>ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴏʙʀᴏʟᴀɴ ᴅɪ ɢʀᴏᴜᴘ ɪɴɪ</b>")
+
+    await client.invoke(DiscardGroupCall(call=group_call))
+    await msg.edit(
+        f"<b>ᴏʙʀᴏʟᴀɴ ꜱᴜᴀʀᴀ ᴅɪᴀᴋʜɪʀɪ\nᴄʜᴀᴛ :</b> {message.chat.title}"
+    )
