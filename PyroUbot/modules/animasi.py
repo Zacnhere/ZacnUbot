@@ -54,6 +54,9 @@ __HELP__ = """
 
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}gabut</code> <b>ᴏʀ</b> <code>{0}terkadang</code>
               <i>coba aja sendiri</i>
+
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}ahh</code> <b>ᴏʀ</b> <code>{0}wlc</code>
+            <i>coba aja sendiri</i>
               </blockquote>
 
 """
