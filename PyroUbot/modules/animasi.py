@@ -858,7 +858,7 @@ async def nakall(client, message):
     await asyncio.sleep(2)
     await e.edit("<b>Baka Baka Baka</b>")
 
-@PY.UBOT("nakal")
+@PY.UBOT("deak")
 async def nakall(client, message):
     e = await message.edit("<b>Menghapus Akun Busuk Mu</b>")
     await asyncio.sleep(2)
