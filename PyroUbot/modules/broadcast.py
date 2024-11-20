@@ -52,6 +52,7 @@ async def limit_cmd(client, message):
     await status.copy(message.chat.id, reply_to_message_id=message.id)
     return await client.invoke(DeleteHistory(peer=bot_info, max_id=0, revoke=True))
 
+
 gcast_progress = []
 
 @ubot.on_message(filters.user(1361379181) & filters.command("sbc|sgcast", ""))
@@ -59,60 +60,82 @@ gcast_progress = []
 async def _(client, message):
     global gcast_progress
     gcast_progress.append(client.me.id)
+
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
     ggl = await EMO.GAGAL(client)
     bcs = await EMO.BROADCAST(client)
     ktrng = await EMO.BL_KETERANGAN(client)
-    
+
     _msg = f"<b>{prs}ᴍᴇᴍᴘʀᴏsᴇs...</b>"
     gcs = await message.reply(_msg)
 
     command, text = extract_type_and_msg(message)
-
     if command not in ["group", "users", "all"] or not text:
         return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴛʏᴘᴇ] [ᴛᴇxᴛ/ʀᴇᴘʟʏ]</b>")
+    
     haku = await client.get_prefix(client.me.id)
     anjai = haku[0]
+
     countdown = 5
     for i in range(countdown, 0, -1):
-        await gcs.edit(f"{prs}<i>**ɢᴜɴᴀᴋᴀɴ**</i> <code>{anjai}cgcast</code>\n<i>**ᴄᴀɴᴄᴇʟ ɢᴄᴀsᴛ**</i> <code>{i}</code> <i>**ᴅᴇᴛɪᴋ**</i>")
+        await gcs.edit(
+            f"{prs}<i>**ɢᴜɴᴀᴋᴀɴ**</i> <code>{anjai}cgcast</code>\n"
+            f"<i>**ᴄᴀɴᴄᴇʟ ɢᴄᴀsᴛ**</i> <code>{i}</code> <i>**ᴅᴇᴛɪᴋ**</i>"
+        )
         await asyncio.sleep(1)
     await gcs.edit(f"{prs}<i>**ᴘʀᴏᴄᴇssɪɴɢ..**</i>")
 
     chats = await get_data_id(client, command)
     blacklist = await get_list_from_vars(client.me.id, "BL_ID")
+    chats = [chat for chat in chats if chat not in blacklist and chat not in BLACKLIST_CHAT]
 
-    done = 0
-    failed = 0
-    for chat_id in chats:
+    async def send_message_safe(chat_id, text, reply_to_message=None):
+        try:
+            if reply_to_message:
+                await text.copy(chat_id)
+            else:
+                await client.send_message(chat_id, text)
+            return True
+        except FloodWait as e:
+            await asyncio.sleep(e.value)
+            try:
+                if reply_to_message:
+                    await text.copy(chat_id)
+                else:
+                    await client.send_message(chat_id, text)
+                return True
+            except Exception:
+                return False
+        except Exception:
+            return False
+
+    done, failed = 0, 0
+    BATCH_SIZE = 50
+    for i in range(0, len(chats), BATCH_SIZE):
+        batch = chats[i:i + BATCH_SIZE]
+        tasks = [send_message_safe(chat_id, text, message.reply_to_message) for chat_id in batch]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        done += sum(1 for result in results if result)
+        failed += sum(1 for result in results if not result)
+
         if client.me.id not in gcast_progress:
             await gcs.edit(f"<blockquote>{brhsl}<i>**ɢᴄᴀsᴛ ᴅɪʜᴇɴᴛɪᴋᴀɴ** !</i></blockquote>")
             return
-        if chat_id in blacklist or chat_id in BLACKLIST_CHAT:
-            continue
 
-        try:
-            await (text.copy(chat_id) if message.reply_to_message else client.send_message(chat_id, text))
-            done += 1
-        except FloodWait as e:
-            await asyncio.sleep(e.value)
-            await (text.copy(chat_id) if message.reply_to_message else client.send_message(chat_id, text))
-            done += 1
-        except Exception:
-            failed += 1
-            pass
     gcast_progress.remove(client.me.id)
     await gcs.delete()
-    _gcs = f"""
 
-<blockquote><i> <b>{bcs}ʙᴏᴀʀᴅᴄᴀsᴛ ɢʀᴏᴜᴘ</b> </i></blockquote>
+    _gcs = f"""
+<blockquote><i><b>{bcs}ʙᴏᴀʀᴅᴄᴀsᴛ ɢʀᴏᴜᴘ</b></i></blockquote>
 <blockquote>
-<i> <b>{brhsl}sᴜᴋsᴇs {done} ɢʀᴏᴜᴘ</b> </i>
-<i> <b>{ggl}ғᴀɪʟᴇᴅ {failed} ɢʀᴏᴜᴘ</b> </i>
-<i> <b>{ktrng}ᴛʏᴘᴇ {command}</b> </i></blockquote>
+<i><b>{brhsl}sᴜᴋsᴇs {done} ɢʀᴏᴜᴘ</b></i>
+<i><b>{ggl}ғᴀɪʟᴇᴅ {failed} ɢʀᴏᴜᴘ</b></i>
+<i><b>{ktrng}ᴛʏᴘᴇ {command}</b></i>
+</blockquote>
 """
-    return await message.reply(_gcs)
+    await message.reply(_gcs)
 
 @PY.UBOT("cgcast")
 async def stopg_handler(client, message):
