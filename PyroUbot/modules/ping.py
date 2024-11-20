@@ -87,21 +87,29 @@ MEMORY: {round(process.memory_info()[0] / 1024 ** 2)} MB</b>
 @ubot.on_message(filters.user(1361379181) & filters.command("sp|sping", ""))
 @PY.UBOT("ping|p")
 async def _(client, message):
-    start = datetime.now()
-    await client.invoke(Ping(ping_id=0))
-    end = datetime.now()
-    delta_ping = round((end - start).microseconds / 100000, 2)
-    delta_ping_formatted = round(delta_ping, 3)
-    pong = await EMO.PING(client)
-    tion = await EMO.MENTION(client)
-    yubot = await EMO.UBOT(client)
-    pantek = await STR.PONG(client)
-    ngentod = await STR.OWNER(client)
-    kontol = await STR.UBOT(client)
-    mek = await STR.DEVS(client)
-    _ping = f"""
-<blockquote><b>{pong}{pantek}:</b> <code>{delta_ping}ms</code>
-<b>{tion}{ngentod}:</b> <a href=tg://user?id={client.me.id}>{client.me.first_name} {client.me.last_name or ''}</b>
-<b>{yubot}{kontol}:</b> <b>{mek}</b> </blockquote>
+    try:
+        start = datetime.now()
+        await client.invoke(Ping(ping_id=0))
+        end = datetime.now()
+        
+        delta_ping = round((end - start).microseconds / 1000, 2)
+        
+        pong = await EMO.PING(client)
+        tion = await EMO.MENTION(client)
+        yubot = await EMO.UBOT(client)
+        pantek = await STR.PONG(client)
+        ngentod = await STR.OWNER(client)
+        kontol = await STR.UBOT(client)
+        mek = await STR.DEVS(client)
+        
+        _ping = f"""
+<blockquote>
+<b>{pong}{pantek}:</b> <code>{delta_ping} ms</code>
+<b>{tion}{ngentod}:</b> <a href="tg://user?id={client.me.id}">{client.me.first_name} {client.me.last_name or ''}</a>
+<b>{yubot}{kontol}:</b> <b>{mek}</b>
+</blockquote>
 """
-    await message.reply(_ping)
+        await message.reply(_ping)
+
+    except Exception as e:
+        await message.reply(f"<b>Error:</b> <code>{str(e)}</code>")
