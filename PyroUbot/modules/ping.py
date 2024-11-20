@@ -91,7 +91,6 @@ async def _(client, message):
     await client.invoke(Ping(ping_id=0))
     end = datetime.now()
     delta_ping = round((end - start).microseconds / 1000000, 1)
-    delta_ping_formatted = round(delta_ping, 3)
     pong = await EMO.PING(client)
     tion = await EMO.MENTION(client)
     yubot = await EMO.UBOT(client)
