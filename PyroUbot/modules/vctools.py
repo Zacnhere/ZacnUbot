@@ -294,21 +294,18 @@ async def _(c, m):
 @PY.UBOT("startvc")
 @PY.GROUP
 async def _(client, message):
-    prs = await EMO.PROSES(client)
-    brhsl = await EMO.BERHASIL(client)
-   
     flags = " ".join(message.command[1:])
-    _msg = f"<b>{prs} Processing...</b>"
+    _msg = "<b>ᴍᴇᴍᴘʀᴏsᴇs...</b>"
 
     msg = await message.reply(_msg)
     vctitle = get_arg(message)
     chat_id = message.chat.title if flags == ChatType.CHANNEL else message.chat.id
- 
-    args = f"<b>{brhsl} Voice Chat Started\nChat:</b> {chat_id}"
+
+    args = f"<b>ᴏʙʀᴏʟᴀɴ ꜱᴜᴀʀᴀ ᴀᴋᴛɪꜰ\nᴄʜᴀᴛ :</b> {chat_id}"
 
     try:
         if vctitle:
-            args += f"\n<b>Title:</b>  {vctitle}"
+            args += f"\n<b>ᴛɪᴛʟᴇ :</b>  {vctitle}"
 
         await client.invoke(
             CreateGroupCall(
