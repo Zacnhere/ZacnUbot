@@ -3,7 +3,6 @@ import os
 import io
 import random
 import requests
-import recognition as sr
 from pyrogram.enums import ChatAction, ParseMode
 from pyrogram import filters
 from pyrogram.types import Message
