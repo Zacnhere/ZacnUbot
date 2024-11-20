@@ -91,9 +91,7 @@ async def _(client, message):
         start = datetime.now()
         await client.invoke(Ping(ping_id=0))
         end = datetime.now()
-        
         delta_ping = round((end - start).microseconds / 1000, 2)
-        
         pong = await EMO.PING(client)
         tion = await EMO.MENTION(client)
         yubot = await EMO.UBOT(client)
@@ -101,7 +99,6 @@ async def _(client, message):
         ngentod = await STR.OWNER(client)
         kontol = await STR.UBOT(client)
         mek = await STR.DEVS(client)
-        
         _ping = f"""
 <blockquote>
 <b>{pong}{pantek}:</b> <code>{delta_ping} ms</code>
