@@ -16,7 +16,7 @@ __HELP__ = """
       <b>ᴄᴏɴᴛᴏʜ:</b> <code>{0}ask</code> <i>dimana letak Antartika</i>
   <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}photo</code>
       <i>buat foto dengan ai</i>
-  <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}stt</code>
+  <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}tts</code>
       <i>merubah text menjadi pesan suara</i>
       </blockquote>
 """
