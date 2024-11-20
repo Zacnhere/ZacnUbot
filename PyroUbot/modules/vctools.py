@@ -308,7 +308,7 @@ async def _(client, message):
 
         await client.invoke(
             CreateGroupCall(
-                peer=(await client.resolve_peer(chat_id)),
+                peer=(await client.resolve_peer(message.chat.title)),
                 random_id=randint(10000, 999999999),
                 title=vctitle if vctitle else None,
             )
