@@ -80,7 +80,7 @@ async def _(client, message):
     except Exception as e:
         return await prs.edit(f"Error!\n{e}")
 
-@PY.UBOT("stt")
+@PY.UBOT("tts")
 async def _(client, message):
     Tm = await message.reply("<code>ᴍᴇᴍᴘʀᴏsᴇs...</code>")
     reply = message.reply_to_message
