@@ -80,7 +80,8 @@ async def _(client, message):
     except Exception as e:
         return await prs.edit(f"Error!\n{e}")
 
-@PY.UBOT("tts")
+
+@PY.UBOT("stt")
 async def _(client, message):
     Tm = await message.reply("<code>ᴍᴇᴍᴘʀᴏsᴇs...</code>")
     reply = message.reply_to_message
@@ -115,31 +116,4 @@ async def _(client, message):
         else:
             return await Tm.edit(
                 f"<b><code>{message.text}</code> [ʀᴇᴘʟʏ ᴠᴏɪᴄᴇ_ᴄʜᴀᴛ/ᴀᴜᴅɪᴏ/ᴠɪᴅᴇᴏ]</b>"
-            )
-
-
-@PY.UBOT("stt")
-async def voice_tools(client, message):
-    TM = await message.reply("<b>Sedang memproses audio...</b>")
-
-    if not message.reply_to_message or not message.reply_to_message.voice:
-        return await TM.edit("<b>Reply vnya</b>")
-    voice_file = await    client.download_media(message.reply_to_message.voice)
-
-    recognizer = sr.Recognizer()
-    try:
-        with sr.AudioFile(voice_file) as source:
-            audio = recognizer.record(source)  
-            text = recognizer.recognize_google(audio)  
-            await TM.edit(f"<code>{text}</code>")
-    except sr.UnknownValueError:
-        await TM.edit("<b>-</b>")
-    except sr.RequestError:
-        await TM.edit("<b>-</b>")
-    except Exception as e:
-        await TM.edit(f"<b>Error:</b> <code>{str(e)}</code>")
-    
-    try:
-        os.remove(voice_file)
-    except FileNotFoundError:
-        pass
+          )
