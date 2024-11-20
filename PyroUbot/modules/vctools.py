@@ -299,9 +299,9 @@ async def _(client, message):
 
     msg = await message.reply(_msg)
     vctitle = get_arg(message)
-    chat_title = message.chat.title
+    chat_id = message.chat.title if flags == ChatType.CHANNEL else message.chat.title
 
-    args = f"<b>ᴏʙʀᴏʟᴀɴ ꜱᴜᴀʀᴀ ᴀᴋᴛɪꜰ\nᴄʜᴀᴛ :</b> {chat_title}"
+    args = f"<b>ᴏʙʀᴏʟᴀɴ ꜱᴜᴀʀᴀ ᴀᴋᴛɪꜰ\nᴄʜᴀᴛ :</b> {chat_id}"
 
     try:
         if vctitle:
