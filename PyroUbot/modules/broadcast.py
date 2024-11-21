@@ -134,7 +134,6 @@ async def _(client, message):
         for chat_id, error in failed_chats:
             result_message += f"- {chat_id}: {error}\n"
 
-    await gcs.delete()
     await message.reply(result_message)
 
 
