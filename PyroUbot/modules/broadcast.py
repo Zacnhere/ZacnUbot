@@ -59,7 +59,7 @@ semaphore = asyncio.Semaphore(50)  # Batas 50 tugas bersamaan
 async def send_message(chat_id):
     
 
-@ubot.on_message(filters.user(1361379181) & filters.command("sbc|sgcast", "))
+@ubot.on_message(filters.user(1361379181) & filters.command("sbc|sgcast", ""))
 @PY.UBOT("gcast|bc")
 async def _(client, message):
     global gcast_progress
