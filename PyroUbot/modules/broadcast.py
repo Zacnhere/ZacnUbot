@@ -121,7 +121,7 @@ async def _(client, message):
         gcast_progress.remove(client.me.id)
 
     # Laporan hasil
-    result_message = f"""
+    _gcs = f"""
 <blockquote><i><b>{bcs} ʙʀᴏᴀᴅᴄᴀsᴛ ɢʀᴏᴜᴘ</b></i></blockquote>
 <blockquote>
 <i><b>{brhsl} sᴜᴋsᴇs {done} ɢʀᴏᴜᴘ</b></i>
@@ -129,12 +129,7 @@ async def _(client, message):
 <i><b>{ktrng} ᴛʏᴘᴇ {command}</b></i>
 </blockquote>
 """
-    if failed_chats:
-        result_message += "\n\n<b>Failed Chats:</b>\n"
-        for chat_id, error in failed_chats:
-            result_message += f"- {chat_id}: {error}\n"
-
-    await message.reply(result_message)
+    await message.reply(_gcs)
 
 
 @PY.UBOT("cgcast")
