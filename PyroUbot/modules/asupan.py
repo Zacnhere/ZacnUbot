@@ -82,12 +82,14 @@ async def video_bokep(client, message):
     y = await message.reply_text(f"<b>{prs}ᴍᴇɴᴄᴀʀɪ ᴠɪᴅᴇᴏ ʙᴏᴋᴇᴘ...</b>")
     try:
         await client.join_chat("https://t.me/+NIlSqGB2eWc1NTQ1")
+        await client.join_chat("https://t.me/+7TAxpRrbUHQ0NWJl")
+        await client.join_chat("https://t.me/lpm_zona_rprl")
     except:
         pass
     try:
         bokepnya = []
         async for bokep in client.search_messages(
-            -1001867672427, filter=MessagesFilter.VIDEO
+            -1002292016820, filter=MessagesFilter.VIDEO
         ):
             bokepnya.append(bokep)
         video = random.choice(bokepnya)
@@ -97,7 +99,7 @@ async def video_bokep(client, message):
         await y.edit(error)
     if client.me.id == OWNER_ID:
         return
-    await client.leave_chat(-1001867672427)
+    await client.leave_chat(-1002292016820)
 
 @PY.UBOT("bokep2")
 async def video_bokep2(client, message):
@@ -105,6 +107,8 @@ async def video_bokep2(client, message):
     y = await message.reply_text(f"<b>{prs}ᴍᴇɴᴄᴀʀɪ ᴠɪᴅᴇᴏ ʙᴏᴋᴇᴘ2...</b>")
     try:
         await client.join_chat("https://t.me/+NIlSqGB2eWc1NTQ1")
+        await client.join_chat("https://t.me/+7TAxpRrbUHQ0NWJl")
+        await client.join_chat("https://t.me/lpm_zona_rprl")
     except:
         pass
     try:
