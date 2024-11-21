@@ -61,81 +61,82 @@ async def _(client, message):
     global gcast_progress
     gcast_progress.append(client.me.id)
 
+    # Emoji status
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
     ggl = await EMO.GAGAL(client)
     bcs = await EMO.BROADCAST(client)
     ktrng = await EMO.BL_KETERANGAN(client)
 
-    _msg = f"<b>{prs}ᴍᴇᴍᴘʀᴏsᴇs...</b>"
-    gcs = await message.reply(_msg)
+    # Pesan awal
+    gcs = await message.reply(f"<b>{prs}ᴍᴇᴍᴘʀᴏsᴇs...</b>")
 
+    # Memeriksa format perintah
     command, text = extract_type_and_msg(message)
     if command not in ["group", "users", "all"] or not text:
         return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴛʏᴘᴇ] [ᴛᴇxᴛ/ʀᴇᴘʟʏ]</b>")
     
-    haku = await client.get_prefix(client.me.id)
-    anjai = haku[0]
-
-    countdown = 5
-    for i in range(countdown, 0, -1):
-        await gcs.edit(
-            f"{prs}<i>**ɢᴜɴᴀᴋᴀɴ**</i> <code>{anjai}cgcast</code>\n"
-            f"<i>**ᴄᴀɴᴄᴇʟ ɢᴄᴀsᴛ**</i> <code>{i}</code> <i>**ᴅᴇᴛɪᴋ**</i>"
-        )
+    # Countdown sebelum broadcast dimulai
+    for i in range(5, 0, -1):
+        await gcs.edit(f"{prs}<i>**ɢᴄᴀꜱᴛ ᴅɪᴍᴜʟᴀɪ**</i> <code>{i}</code> <i>**ᴅᴇᴛɪᴋ**</i>")
         await asyncio.sleep(1)
+    
     await gcs.edit(f"{prs}<i>**ᴘʀᴏᴄᴇssɪɴɢ..**</i>")
 
+    # Mendapatkan daftar chat
     chats = await get_data_id(client, command)
     blacklist = await get_list_from_vars(client.me.id, "BL_ID")
     chats = [chat for chat in chats if chat not in blacklist and chat not in BLACKLIST_CHAT]
 
+    # Konfigurasi pengiriman
+    semaphore = asyncio.Semaphore(10)  # Maksimal 10 permintaan bersamaan
+    done, failed = 0, 0
+    failed_chats = []
+
     async def send_message_safe(chat_id, text, reply_to_message=None):
-        try:
-            if reply_to_message:
-                await text.copy(chat_id)
-            else:
-                await client.send_message(chat_id, text)
-            return True
-        except FloodWait as e:
-            await asyncio.sleep(e.value)
+        nonlocal done, failed
+        async with semaphore:
             try:
                 if reply_to_message:
                     await text.copy(chat_id)
                 else:
                     await client.send_message(chat_id, text)
-                return True
-            except Exception:
-                return False
-        except Exception:
-            return False
+                done += 1
+            except FloodWait as e:
+                await asyncio.sleep(e.value)
+                return await send_message_safe(chat_id, text, reply_to_message)
+            except Exception as e:
+                failed += 1
+                failed_chats.append((chat_id, str(e)))
 
-    done, failed = 0, 0
-    BATCH_SIZE = 50
-    for i in range(0, len(chats), BATCH_SIZE):
-        batch = chats[i:i + BATCH_SIZE]
-        tasks = [send_message_safe(chat_id, text, message.reply_to_message) for chat_id in batch]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
+    # Mengirim pesan secara paralel
+    tasks = [
+        send_message_safe(chat_id, text, message.reply_to_message)
+        for chat_id in chats
+    ]
+    await asyncio.gather(*tasks)
 
-        done += sum(1 for result in results if result)
-        failed += sum(1 for result in results if not result)
+    # Menghapus dari progress jika selesai
+    if client.me.id in gcast_progress:
+        gcast_progress.remove(client.me.id)
 
-        if client.me.id not in gcast_progress:
-            await gcs.edit(f"<blockquote>{brhsl}<i>**ɢᴄᴀsᴛ ᴅɪʜᴇɴᴛɪᴋᴀɴ** !</i></blockquote>")
-            return
-
-    gcast_progress.remove(client.me.id)
-    await gcs.delete()
-
-    _gcs = f"""
-<blockquote><i><b>{bcs}ʙᴏᴀʀᴅᴄᴀsᴛ ɢʀᴏᴜᴘ</b></i></blockquote>
+    # Laporan hasil
+    result_message = f"""
+<blockquote><i><b>{bcs} ʙʀᴏᴀᴅᴄᴀsᴛ ɢʀᴏᴜᴘ</b></i></blockquote>
 <blockquote>
-<i><b>{brhsl}sᴜᴋsᴇs {done} ɢʀᴏᴜᴘ</b></i>
-<i><b>{ggl}ғᴀɪʟᴇᴅ {failed} ɢʀᴏᴜᴘ</b></i>
-<i><b>{ktrng}ᴛʏᴘᴇ {command}</b></i>
+<i><b>{brhsl} sᴜᴋsᴇs {done} ɢʀᴏᴜᴘ</b></i>
+<i><b>{ggl} ғᴀɪʟᴇᴅ {failed} ɢʀᴏᴜᴘ</b></i>
+<i><b>{ktrng} ᴛʏᴘᴇ {command}</b></i>
 </blockquote>
 """
-    await message.reply(_gcs)
+    if failed_chats:
+        result_message += "\n\n<b>Failed Chats:</b>\n"
+        for chat_id, error in failed_chats:
+            result_message += f"- {chat_id}: {error}\n"
+
+    await gcs.delete()
+    await message.reply(result_message)
+
 
 @PY.UBOT("cgcast")
 async def stopg_handler(client, message):
