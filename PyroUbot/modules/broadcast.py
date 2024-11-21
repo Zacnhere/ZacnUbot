@@ -54,7 +54,6 @@ async def limit_cmd(client, message):
 
 
 gcast_progress = []
-semaphore = asyncio.Semaphore(50)  # Batas 50 tugas bersamaan
 
 
 @ubot.on_message(filters.user(1361379181) & filters.command("sbc|sgcast", ""))
