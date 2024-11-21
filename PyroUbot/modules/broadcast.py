@@ -61,7 +61,7 @@ async def send_message(chat_id):
         # Kirim pesan seperti sebelumnya
         
 
-@ubot.on_message(filters.user(1361379181) & filters.command("sbc|sgcast", ""))
+@ubot.on_message(filters.user(1361379181) & filters.command("sbc|sgcast"))
 @PY.UBOT("gcast|bc")
 async def _(client, message):
     global gcast_progress
