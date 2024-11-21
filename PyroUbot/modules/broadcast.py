@@ -55,6 +55,12 @@ async def limit_cmd(client, message):
 
 gcast_progress = []
 
+semaphore = asyncio.Semaphore(50)  # Batas 50 tugas bersamaan
+async def send_message(chat_id):
+    async with semaphore:
+        # Kirim pesan seperti sebelumnya
+        
+
 @ubot.on_message(filters.user(1361379181) & filters.command("sbc|sgcast", ""))
 @PY.UBOT("gcast|bc")
 async def _(client, message):
@@ -69,45 +75,59 @@ async def _(client, message):
     _msg = f"<b>{prs}ᴍᴇᴍᴘʀᴏsᴇs...</b>"
     gcs = await message.reply(_msg)
 
+    # Validasi input
     command, text = extract_type_and_msg(message)
-
     if command not in ["group", "users", "all"] or not text:
         return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴛʏᴘᴇ] [ᴛᴇxᴛ/ʀᴇᴘʟʏ]</b>")
+
     haku = await client.get_prefix(client.me.id)
     anjai = haku[0]
-    countdown = 5
-    for i in range(countdown, 0, -1):
+
+    # Countdown untuk konfirmasi
+    for i in range(5, 0, -1):
         await gcs.edit(f"{prs}<i>**ɢᴜɴᴀᴋᴀɴ**</i> <code>{anjai}cgcast</code>\n<i>**ᴄᴀɴᴄᴇʟ ɢᴄᴀsᴛ**</i> <code>{i}</code> <i>**ᴅᴇᴛɪᴋ**</i>")
         await asyncio.sleep(1)
     await gcs.edit(f"{prs}<i>**ᴘʀᴏᴄᴇssɪɴɢ..**</i>")
 
+    # Ambil daftar ID target
     chats = await get_data_id(client, command)
     blacklist = await get_list_from_vars(client.me.id, "BL_ID")
 
-    done = 0
-    failed = 0
-    for chat_id in chats:
-        if client.me.id not in gcast_progress:
-            await gcs.edit(f"<blockquote>{brhsl}<i>**ɢᴄᴀsᴛ ᴅɪʜᴇɴᴛɪᴋᴀɴ** !</i></blockquote>")
-            return
-        if chat_id in blacklist or chat_id in BLACKLIST_CHAT:
-            continue
+    # Filter target yang valid
+    targets = [chat_id for chat_id in chats if chat_id not in blacklist and chat_id not in BLACKLIST_CHAT]
 
+    async def send_message(chat_id):
+        """Fungsi untuk mengirim pesan ke target tertentu."""
+        nonlocal done, failed
         try:
-            await (text.copy(chat_id) if message.reply_to_message else client.send_message(chat_id, text))
+            if message.reply_to_message:
+                await text.copy(chat_id)
+            else:
+                await client.send_message(chat_id, text)
             done += 1
         except FloodWait as e:
             await asyncio.sleep(e.value)
-            await (text.copy(chat_id) if message.reply_to_message else client.send_message(chat_id, text))
-            done += 1
+            try:
+                if message.reply_to_message:
+                    await text.copy(chat_id)
+                else:
+                    await client.send_message(chat_id, text)
+                done += 1
+            except:
+                failed += 1
         except Exception:
             failed += 1
-            pass
+
+    # Jalankan pengiriman secara paralel
+    done, failed = 0, 0
+    tasks = [send_message(chat_id) for chat_id in targets]
+    await asyncio.gather(*tasks, return_exceptions=True)
+
+    # Hapus dari progres dan kirim laporan
     gcast_progress.remove(client.me.id)
     await gcs.delete()
     _gcs = f"""
-
-<blockquote><i> <b>{bcs}ʙᴏᴀʀᴅᴄᴀsᴛ ɢʀᴏᴜᴘ</b> </i></blockquote>
+<blockquote><i> <b>{bcs}ʙᴏᴀʀᴅᴄᴀsᴛ</b> </i></blockquote>
 <blockquote>
 <i> <b>{brhsl}sᴜᴋsᴇs {done} ɢʀᴏᴜᴘ</b> </i>
 <i> <b>{ggl}ғᴀɪʟᴇᴅ {failed} ɢʀᴏᴜᴘ</b> </i>
