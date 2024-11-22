@@ -284,6 +284,7 @@ async def copy_callback_msg(client, callback_query):
 
 
 @PY.BOT("copychannel")
+@PY.OWNER
 async def copy_channel(client, message):
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
