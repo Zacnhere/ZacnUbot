@@ -296,7 +296,7 @@ async def copy_channel(client, message):
     if not args or len(args.split()) < 2:
         return await infomsg.edit(
             f"<b>{ggl}ꜱɪʟᴀʜᴋᴀɴ ᴍᴀꜱᴜᴋᴋᴀɴ ʟɪɴᴋ ᴄʜᴀɴɴᴇʟ ꜱᴀꜱᴀʀᴀɴ ᴅᴀɴ ᴛᴜᴊᴜᴀɴ.</b>\n"
-            f"Format: <code>/copy_channel [source_channel] [target_channel]</code>"
+            f"Format: <code>/copychannel [source_channel] [target_channel]</code>"
         )
 
     try:
@@ -304,7 +304,7 @@ async def copy_channel(client, message):
         source_channel, target_channel = args.split(maxsplit=1)
         source_entity = await client.get_chat(source_channel)
         target_entity = await client.get_chat(target_channel)
-
+      
         # Validasi awal
         if not source_entity or not target_entity:
             return await infomsg.edit(f"<b>{ggl} ᴛɪᴅᴀᴋ ᴅᴀᴘᴀᴛ ᴍᴇɴᴅᴀᴘᴀᴛᴋᴀɴ ᴄʜᴀɴɴᴇʟ ꜱᴀꜱᴀʀᴀɴ!</b>")
