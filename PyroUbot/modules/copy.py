@@ -280,3 +280,66 @@ async def copy_callback_msg(client, callback_query):
             await get.delete()
     except Exception as error:
         await callback_query.edit_message_text(f"<code>{error}</code>")
+
+
+@PY.BOT("copychannel")
+async def copy_channel(client, message):
+    prs = await EMO.PROSES(client)
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
+
+    infomsg = await message.reply(f"<b>{prs}ꜱᴇᴅᴀɴɢ ᴍᴇɴʏᴀʟɪɴ ᴄʜᴀɴɴᴇʟ...</b>")
+
+    args = get_arg(message)
+    if not args or len(args.split()) < 2:
+        return await infomsg.edit(
+            f"<b>{ggl}ꜱɪʟᴀʜᴋᴀɴ ᴍᴀꜱᴜᴋᴋᴀɴ ʟɪɴᴋ ᴄʜᴀɴɴᴇʟ ꜱᴀꜱᴀʀᴀɴ ᴅᴀɴ ᴛᴜᴊᴜᴀɴ.</b>\n"
+            f"Format: <code>/copy_channel [source_channel] [target_channel]</code>"
+        )
+
+    try:
+        # Mendapatkan channel sumber dan tujuan
+        source_channel, target_channel = args.split(maxsplit=1)
+        source_entity = await client.get_chat(source_channel)
+        target_entity = await client.get_chat(target_channel)
+
+        # Validasi awal
+        if not source_entity or not target_entity:
+            return await infomsg.edit(f"<b>{ggl} ᴛɪᴅᴀᴋ ᴅᴀᴘᴀᴛ ᴍᴇɴᴅᴀᴘᴀᴛᴋᴀɴ ᴄʜᴀɴɴᴇʟ ꜱᴀꜱᴀʀᴀɴ!</b>")
+
+        # Mendapatkan pesan dari channel sumber
+        messages = await client.get_history(source_entity.id, limit=1000)
+        if not messages:
+            return await infomsg.edit(f"<b>{ggl} ᴄʜᴀɴɴᴇʟ ꜱᴜᴍʙᴇʀ ᴛɪᴅᴀᴋ ᴍᴇᴍɪʟɪᴋɪ ᴘᴇꜱᴀɴ!</b>")
+
+        # Memulai proses penyalinan
+        success, failed = 0, 0
+        for msg in messages:
+            try:
+                # Salin teks atau media
+                if msg.media:
+                    await client.copy_message(
+                        target_entity.id,
+                        source_entity.id,
+                        msg.message_id,
+                        caption=msg.caption,
+                    )
+                else:
+                    await client.send_message(target_entity.id, msg.text)
+
+                success += 1
+            except Exception as e:
+                print(f"Error copying message {msg.message_id}: {e}")
+                failed += 1
+
+        # Hasil akhir
+        await infomsg.edit(
+            f"<b>{brhsl} Penyalinan selesai!</b>\n"
+            f"<b>Sukses:</b> {success}\n"
+            f"<b>Gagal:</b> {failed}"
+        )
+
+    except Exception as e:
+        # Jika terjadi kesalahan umum
+        await infomsg.edit(f"<b>{ggl} Terjadi kesalahan:</b> <code>{str(e)}</code>")
+      
