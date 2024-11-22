@@ -1,6 +1,7 @@
 import asyncio
 import os
 import logging
+import re
 from gc import get_objects
 from time import time
 
@@ -296,18 +297,35 @@ async def copy_channel(client, message):
     if not args or len(args.split()) < 2:
         return await infomsg.edit(
             f"<b>{ggl}ꜱɪʟᴀʜᴋᴀɴ ᴍᴀꜱᴜᴋᴋᴀɴ ʟɪɴᴋ ᴄʜᴀɴɴᴇʟ ꜱᴀꜱᴀʀᴀɴ ᴅᴀɴ ᴛᴜᴊᴜᴀɴ.</b>\n"
-            f"Format: <code>/copychannel [source_channel] [target_channel]</code>"
+            f"Format: <code>/copychannel [source_channel_link] [target_channel_link]</code>"
         )
 
     try:
         # Mendapatkan channel sumber dan tujuan
         source_channel, target_channel = args.split(maxsplit=1)
-        source_entity = await client.get_chat(source_channel)
-        target_entity = await client.get_chat(target_channel)
-      
-        # Validasi awal
-        if not source_entity or not target_entity:
-            return await infomsg.edit(f"<b>{ggl} ᴛɪᴅᴀᴋ ᴅᴀᴘᴀᴛ ᴍᴇɴᴅᴀᴘᴀᴛᴋᴀɴ ᴄʜᴀɴɴᴇʟ ꜱᴀꜱᴀʀᴀɴ!</b>")
+
+        # Ekstrak username dari URL jika diberikan full link (https://t.me/username)
+        source_channel = re.sub(r'https?://t\.me/', '', source_channel)  # Hapus bagian https://t.me/
+        target_channel = re.sub(r'https?://t\.me/', '', target_channel)
+
+        try:
+            source_entity = await client.get_chat(source_channel)
+            target_entity = await client.get_chat(target_channel)
+
+            # Validasi tipe channel
+            if source_entity.type not in ["channel", "supergroup"]:
+                return await infomsg.edit(f"<b>{ggl} Bot hanya bisa menyalin dari channel atau supergroup.</b>")
+
+            if not target_entity:
+                return await infomsg.edit(f"<b>{ggl} Tidak dapat mengakses channel tujuan!</b>")
+        except Exception as e:
+            if "BOT_METHOD_INVALID" in str(e):
+                return await infomsg.edit(
+                    f"<b>{ggl} Bot tidak memiliki akses yang diperlukan di salah satu channel.</b>\n"
+                    f"<i>Pastikan bot adalah admin di kedua channel.</i>"
+                )
+            else:
+                return await infomsg.edit(f"<b>{ggl} Kesalahan:</b> <code>{str(e)}</code>")
 
         # Mendapatkan pesan dari channel sumber
         messages = await client.get_history(source_entity.id, limit=1000)
