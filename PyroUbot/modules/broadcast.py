@@ -122,7 +122,7 @@ async def _(client, message):
     gcast_progress.remove(client.me.id)
     await gcs.delete()
     _gcs = f"""
-<blockquote><i> <b>{bcs}ʙᴏᴀʀᴅᴄᴀsᴛ</b> </i></blockquote>
+<blockquote><i> <b>{bcs}ʙʀᴏᴀᴅᴄᴀsᴛ</b> </i></blockquote>
 <blockquote>
 <i> <b>{brhsl}sᴜᴋsᴇs {done} ɢʀᴏᴜᴘ</b> </i>
 <i> <b>{ggl}ғᴀɪʟᴇᴅ {failed} ɢʀᴏᴜᴘ</b> </i>
