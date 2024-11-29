@@ -115,3 +115,83 @@ async def display_blacklist(client, message):
         await message.reply(pesan)
     except Exception as r:
         await message.reply(r)
+
+
+@PY.NO_CMD_UBOT("NOPM", ubot)
+async def _(client, message):
+    user = message.from_user
+    nopm_on = await get_vars(client.me.id, "NOPM_STATUS")  # Ambil status NoPM dari database
+    datanya = await get_list_from_vars(client.me.id, "BL_ID")
+    if nopm_on:
+          if user.id not in datanya:
+              await client.delete_messages(message.chat.id, message.id)
+              return
+
+# Perintah untuk mengaktifkan atau menonaktifkan NoPM
+@PY.UBOT("nopm")
+async def _(client, message):
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
+    if len(message.command) < 2:
+        return await message.reply(
+            f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴏɴ/ᴏғғ]</b>"
+        )
+
+    toggle_options = {"off": False, "on": True}
+    toggle_option = message.command[1].lower()
+
+    if toggle_option not in toggle_options:
+        return await message.reply(f"{ggl}ᴏᴘsɪ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ. Hᴀʀᴀᴘ ɢᴜɴᴀᴋᴀɴ 'on' ᴀᴛᴀᴜ 'off'.")
+
+    value = toggle_options[toggle_option]
+    text = "diaktifkan" if value else "dinonaktifkan"
+
+    await set_vars(client.me.id, "NOPM_STATUS", value)
+    await message.reply(f"<b>{brhsl}NoPM berhasil {text}</b>")
+
+
+
+# Perintah untuk menerima pengguna (acc)
+@PY.UBOT("acc|oke")
+async def accept_user(client, message):
+    ggl = await EMO.GAGAL(client)
+    brhsl = await EMO.BERHASIL(client)
+    _msg = f"<blockquote><b>ᴘʀᴏᴄᴇꜱꜱɪɴɢ...</b></blockquote>"
+    msg = await message.reply(_msg)
+    try:
+        user = message.chat
+        datanya = await get_list_from_vars(client.me.id, "BL_ID")
+        if user.id in datanya:
+            txt = f"""
+<blockquote>{brhsl} [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})\n<b>Okey i'm acc you to send messages!</b></blockquote>
+"""
+        else:
+            await add_to_vars(client.me.id, "BL_ID", user.id)
+            txt = f"""
+<blockquote>{brhsl} [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})\n<b>Done to acc!</b></blockquote>
+"""
+    
+        return await msg.edit(txt)
+    except Exception as error:
+        return await msg.edit(str(error))
+       
+# Perintah untuk menolak pengguna (reject)
+@PY.UBOT("reject|tangkis")
+async def reject_user(client, message):
+    ggl = await EMO.GAGAL(client)
+    brhsl = await EMO.BERHASIL(client)
+    user = message.chat
+    datanya = await get_list_from_vars(client.me.id, "BL_ID")
+    
+    if user.id not in datanya:
+        await message.reply(f"🙏🏻 [{user.first_name} {user.last_name or ''}](tg://user?id={user.id}) <b>NoPM activated Block User</b>")
+        try:
+            await client.block_user(user.id)
+        except Exception:
+            pass
+        
+    else:
+        await remove_from_vars(client.me.id, "BL_ID", user.id)
+        return await message.reply(
+            f"🙏🏻 [{user.first_name} {user.last_name or ''}](tg://user?id={user.id}) <b>You can't send messages again</b>"
+       )
