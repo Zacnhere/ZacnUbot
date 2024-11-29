@@ -117,7 +117,6 @@ async def display_blacklist(client, message):
         await message.reply(r)
 
 
-@PY.NO_PM("NOPM", ubot)
 async def _(client, message):
     user = message.from_user
     nopm_on = await get_vars(client.me.id, "NOPM_STATUS")  # Ambil status NoPM dari database
