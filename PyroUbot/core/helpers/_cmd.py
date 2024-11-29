@@ -313,16 +313,3 @@ class PY:
                 & filters.create(mecha_chat)                
                 )(wrapper)
         return decorator
-
-
-        "NOPM": {
-                "query": (
-                    filters.private
-                    & filters.incoming
-                    & ~filters.me
-                    & ~filters.bot
-                    & ~filters.via_bot
-                    & ~filters.service
-                ),
-                "group": 7,
-            },
