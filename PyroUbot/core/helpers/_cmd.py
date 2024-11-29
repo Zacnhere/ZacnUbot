@@ -315,7 +315,7 @@ class PY:
         return decorator
 
 
-"NOPM": {
+        "NOPM": {
                 "query": (
                     filters.private
                     & filters.incoming
