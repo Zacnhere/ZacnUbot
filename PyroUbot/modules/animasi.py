@@ -1051,3 +1051,12 @@ async def nakall(client, message):
     await e.edit("<b>Memproses 100%</b>")
     await asyncio.sleep(2)
     await e.edit("<b>Deak Akun Sukses</b>")
+
+
+@PY.UBOT("Riport")
+async def nakall(client, message):
+    e = await message.edit("<b>Memproses Laporan Anda</b>")
+    await asyncio.sleep(1)
+    await e.edit("<b>Laporan terkirim</b>")
+    await asyncio.sleep(0.2)
+    await e.edit("<b>Trimakasih Telah Melaporkan\n Laporan Akan Segera Ditangani Pihak Telegram</b>")
