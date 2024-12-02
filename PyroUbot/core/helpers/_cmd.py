@@ -316,7 +316,7 @@ class PY:
         return decorator
 
 @staticmethod
-def NO_PM(client, message):
+def NO_PM(result, ubot):
         def wrapper(func):
             @ubot.on_message(
              filters.private
