@@ -117,15 +117,6 @@ async def display_blacklist(client, message):
         await message.reply(r)
 
 
-async def _(client, message):
-    user = message.from_user
-    nopm_on = await get_vars(client.me.id, "NOPM_STATUS")  # Ambil status NoPM dari database
-    datanya = await get_list_from_vars(client.me.id, "BL_ID")
-    if nopm_on:
-          if user.id not in datanya:
-              await client.delete_messages(message.chat.id, message.id)
-              return
-
 # Perintah untuk mengaktifkan atau menonaktifkan NoPM
 @PY.UBOT("nopm")
 async def _(client, message):
@@ -148,6 +139,14 @@ async def _(client, message):
     await set_vars(client.me.id, "NOPM_STATUS", value)
     await message.reply(f"<b>{brhsl}NoPM berhasil {text}</b>")
 
+async def _(client, message):
+    user = message.from_user
+    nopm_on = await get_vars(client.me.id, "NOPM_STATUS")  # Ambil status NoPM dari database
+    datanya = await get_list_from_vars(client.me.id, "BL_ID")
+    if nopm_on:
+          if user.id not in datanya:
+              await client.delete_messages(message.chat.id, message.id)
+              return
 
 
 # Perintah untuk menerima pengguna (acc)
