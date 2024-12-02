@@ -241,3 +241,46 @@ async def delete_old_message(message, msg_id):
         await message._client.delete_messages(message.chat.id, msg_id)
     except:
         pass
+
+@PY.NO_CMD_UBOT("NOPC", ubot)
+async def _(client, message):
+    user = message.from_user
+    nopm_on = await get_vars(client.me.id, "NOPM_STATUS")  # Ambil status NoPM dari database
+    datanya = await get_list_from_vars(client.me.id, "BL_ID")
+    if nopm_on:
+          if user.id not in datanya:
+              await client.delete_messages(message.chat.id, message.id)
+              return
+
+
+@PY.UBOT("nopc")
+async def toggle_nopm(client, message):
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
+
+    # Validate command length
+    if len(message.command) < 2:
+        return await message.reply(
+            f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴏɴ/ᴏғғ]</b>"
+        )
+
+    # Parse and validate toggle option
+    toggle_options = {"off": False, "on": True}
+    toggle_option = message.command[1].lower()
+
+    if toggle_option not in toggle_options:
+        return await message.reply(
+            f"{ggl}ᴏᴘsɪ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ. Hᴀʀᴀᴘ ɢᴜɴᴀᴋᴀɴ 'on' ᴀᴛᴀᴜ 'off'."
+        )
+
+    value = toggle_options[toggle_option]
+    text = "diaktifkan" if value else "dinonaktifkan"
+
+    # Set NoPM status in database
+    try:
+        await set_vars(client.me.id, "NOPM_STATUS", value)
+        await message.reply(f"<b>{brhsl}NoPM berhasil {text}</b>")
+    except Exception as e:
+        return await message.reply(
+            f"{ggl}Gagal menyimpan status NoPM: {str(e)}"
+        )
