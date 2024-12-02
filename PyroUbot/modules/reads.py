@@ -3,7 +3,7 @@ from pyrogram.types import *
 from pyrogram.raw.functions.messages import *
 from pyrogram.errors import FloodWait
 
-from Teiko import *
+from PyroUbot import *
 
 
 __MODULE__ = "reads"
