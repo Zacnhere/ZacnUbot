@@ -55,7 +55,7 @@ async def buat_word_list(_, client, message):
     on_off = await get_vars(client.me.id, "ON_OFF_WORD")
     return bool(on_off)
 
-async def NO_PM():
+async def NO_PM(-,client, message):
         def wrapper(func):
             @ubot.on_message(
              filters.private
