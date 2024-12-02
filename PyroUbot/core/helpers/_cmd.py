@@ -316,7 +316,7 @@ class PY:
         return decorator
 
 @staticmethod
-async def NO_PC(client, message):
+def NO_PC(client, message):
         def wrapper(func):
             @ubot.on_message(
              filters.private
