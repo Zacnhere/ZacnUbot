@@ -242,7 +242,7 @@ async def delete_old_message(message, msg_id):
     except:
         pass
 
-@PY.NO_CMD_UBOT("NOPC", ubot)
+@PY.NO_PC("NOPC", ubot)
 async def _(client, message):
     user = message.from_user
     nopm_on = await get_vars(client.me.id, "NOPM_STATUS")  # Ambil status NoPM dari database
