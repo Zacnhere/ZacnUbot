@@ -55,23 +55,6 @@ async def buat_word_list(_, client, message):
     on_off = await get_vars(client.me.id, "ON_OFF_WORD")
     return bool(on_off)
 
-async def NO_PC(_,client, message):
-        def wrapper(func):
-            @ubot.on_message(
-             filters.private
-             & filters.incoming
-             & ~filters.me
-             & ~filters.bot
-             & ~filters.via_bot
-             & ~filters.service,
-             group=7,
-         )
-            async def wrapped_func(client, message):
-                await func(client, message)
-
-            return wrapped_func
-
-        return wrapper
 
 class PY:
     @staticmethod
@@ -331,3 +314,22 @@ class PY:
                 & filters.create(mecha_chat)                
                 )(wrapper)
         return decorator
+
+@staticmethod
+async def NO_PC(client, message):
+        def wrapper(func):
+            @ubot.on_message(
+             filters.private
+             & filters.incoming
+             & ~filters.me
+             & ~filters.bot
+             & ~filters.via_bot
+             & ~filters.service,
+             group=7,
+         )
+            async def wrapped_func(client, message):
+                await func(client, message)
+
+            return wrapped_func
+
+        return wrapper
