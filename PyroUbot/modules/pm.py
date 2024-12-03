@@ -27,6 +27,9 @@ __HELP__ = """
 <blockquote>
 <b>『 ʙᴀɴᴛᴜᴀɴ ᴘᴍ ᴘᴇʀᴍɪᴛ 』</b> </blockquote>  
  <blockquote>
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}nopc</code>
+    <i>menghapus pesan baru dari semua pengguna</i>
+ 
  <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}pmpermit</code>
     <i>mengaktifkan atau menonaktifkan pm permit</i>
 
@@ -270,16 +273,16 @@ async def toggle_nopm(client, message):
 
     if toggle_option not in toggle_options:
         return await message.reply(
-            f"{ggl}ᴏᴘsɪ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ. Hᴀʀᴀᴘ ɢᴜɴᴀᴋᴀɴ 'on' ᴀᴛᴀᴜ 'off'."
+            f"{ggl}ᴏᴘsɪ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ. ɢᴜɴᴀᴋᴀɴ 'on' ᴀᴛᴀᴜ 'off'."
         )
 
     value = toggle_options[toggle_option]
-    text = "diaktifkan" if value else "dinonaktifkan"
+    text = "ᴀᴋᴛɪғᴋᴀɴ" if value else "ɴᴏɴᴀᴋᴛɪғᴋᴀɴ"
 
     # Set NoPM status in database
     try:
         await set_vars(client.me.id, "NOPM_STATUS", value)
-        await message.reply(f"<b>{brhsl}NoPM berhasil {text}</b>")
+        await message.reply(f"<b>{brhsl}ᴀɴᴛɪ ᴘᴄ ᴅɪ{text}</b>")
     except Exception as e:
         return await message.reply(
             f"{ggl}Gagal menyimpan status NoPM: {str(e)}"
