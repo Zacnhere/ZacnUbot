@@ -12,17 +12,14 @@ __HELP__ = """
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}read</code>
    <i>membaca pesan dengan instant</i>
 
-type
-   » for group
-   read group
-   » for user
-   read users
-   » channel
-   read channel 
-   » reaction 
-   read reaction 
-   » mention
-   read mention 
+ <b>ᴛʏᴘᴇ:</b>
+   ● <code>all</code>
+   ● <code>group</code>
+   ● <code>users</code>
+   ● <code>channel</code>
+   ● <code>reaction</code>
+   ● <code>bot</code>
+   ● <code>mention</code>
    </blockquote>
 """
 
