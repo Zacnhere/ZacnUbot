@@ -8,12 +8,13 @@ from PyroUbot import *
 
 __MODULE__ = "reads"
 __HELP__ = """
-<b>Read messengers</b>
+<blockquote>
+<b>read messengers</b>
 
-<b>Read all type chat</b>
+<b>read all type chat</b>
    » read all
 
-<b>Read your type chat</b>
+<b>read your type chat</b>
    » for group
    read group
    » for user
@@ -24,6 +25,7 @@ __HELP__ = """
    read reaction 
    » mention
    read mention 
+   </blockquote>
 """
 
 
