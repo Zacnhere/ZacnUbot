@@ -75,7 +75,7 @@ async def _(client, message):
     
     Tm = await message.reply("<b>ᴍᴇᴍᴘʀᴏsᴇs...</b>")
 
-    valid_commands = ["mention", "reaction", "allmsg", "group", "users", "channel", "bot"]
+    valid_commands = ["mention", "reaction", "all", "group", "users", "channel", "bot"]
     if command not in valid_commands:
         return await Tm.edit("<b>ɪɴᴠᴀʟɪᴅ ᴄᴏᴍᴍᴀɴᴅ</b>")
 
@@ -84,6 +84,6 @@ async def _(client, message):
     else:
         total_read = await read_count(client, command)
 
-    return await Tm.edit(f"{total_read} <b>ᴘᴇsᴀɴ ᴛᴇʟᴀʜ ᴅɪʙᴀᴄᴀ\n ᴛʏᴘᴇ {command.capitalize()}</b>")
+    return await Tm.edit(f"{total_read} <b>ᴘᴇsᴀɴ ᴛᴇʟᴀʜ ᴅɪʙᴀᴄᴀ\n ᴛʏᴘᴇ {command}</b>")
 
   
