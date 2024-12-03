@@ -9,12 +9,10 @@ from PyroUbot import *
 __MODULE__ = "reads"
 __HELP__ = """
 <blockquote>
-<b>read messengers</b>
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}read</code>
+   <i>membaca pesan dengan instant</i>
 
-<b>read all type chat</b>
-   » read all
-
-<b>read your type chat</b>
+type
    » for group
    read group
    » for user
