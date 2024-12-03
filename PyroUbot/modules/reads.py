@@ -63,7 +63,7 @@ async def read_count(client, message_type):
                 await client.read_chat_history(chat_id)
 
         except Exception as e:
-            print(f"Error processing chat {chat_id}: {e}")
+            print(f"ᴘʀᴏsᴇs ɢᴀɢᴀʟ {chat_id}: {e}")
 
     return total_unread
 
@@ -72,17 +72,17 @@ async def read_count(client, message_type):
 async def _(client, message):
     command = message.command[1].lower() if len(message.command) > 1 else None
     
-    Tm = await message.reply("<b>Processing...</b>")
+    Tm = await message.reply("<b>ᴍᴇᴍᴘʀᴏsᴇs...</b>")
 
     valid_commands = ["mention", "reaction", "allmsg", "group", "users", "channel", "bot"]
     if command not in valid_commands:
-        return await Tm.edit("<b>Invalid command!</b>")
+        return await Tm.edit("<b>ɪɴᴠᴀʟɪᴅ ᴄᴏᴍᴍᴀɴᴅ</b>")
 
     if command == "mention":
         total_read = await read_count(client, "mention")
     else:
         total_read = await read_count(client, command)
 
-    return await Tm.edit(f"{total_read} <b>ᴘᴇsᴀɴ ᴛᴇʟᴀʜ ᴅɪʙᴀᴄᴀ\n {command.capitalize()}</b>")
+    return await Tm.edit(f"{total_read} <b>ᴘᴇsᴀɴ ᴛᴇʟᴀʜ ᴅɪʙᴀᴄᴀ\n ᴛʏᴘᴇ {command.capitalize()}</b>")
 
   
