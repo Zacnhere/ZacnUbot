@@ -274,29 +274,6 @@ async def _(client, message):
 """
     )
 
-# async def _(client, message):
-    # Tm = await message.reply("<b>ᴘʀᴏᴄᴇssɪɴɢ . . .</b>")
-    # user_id, get_day = await extract_user_and_reason(message)
-    # if not user_id:
-        # return await Tm.edit(f"<b>{message.text} ᴜsᴇʀ_ɪᴅ/ᴜsᴇʀɴᴀᴍᴇ - ʜᴀʀɪ</b>")
-    # try:
-        # get_id = (await client.get_users(user_id)).id
-        # user = await client.get_users(user_id)
-    # except Exception as error:
-        # return await Tm.edit(error)
-    # if not get_day:
-        # get_day = 30
-    # now = datetime.now(timezone("Asia/Jakarta"))
-    # expire_date = now + timedelta(days=int(get_day))
-    # await set_expired_date(user_id, expire_date)
-    # await Tm.edit(f"""
-# <b>💬 INFORMATION</b>
- # <b>ɴᴀᴍᴇ: {user.mention}</b>
- # <b>ɪᴅ: {get_id}</b>
- # <b>ᴀᴋᴛɪғᴋᴀɴ_sᴇʟᴀᴍᴀ: {get_day} ʜᴀʀɪ</b>
-# """
-    # )
-
 
 @PY.BOT("cek")
 @PY.SELLER
