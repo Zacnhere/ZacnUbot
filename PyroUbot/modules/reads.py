@@ -8,18 +8,22 @@ from PyroUbot import *
 
 __MODULE__ = "reads"
 __HELP__ = """
-<b>Menu Reads!</b>
+<b>Read messengers</b>
 
-<b>Read your type chat(s)!</b>
-  {0}read
+<b>Read all type chat</b>
+   » read all
 
-<b>Type!</b>
-mention
-reaction
-allmsg
-users
-group
-channel
+<b>Read your type chat</b>
+   » for group
+   read group
+   » for user
+   read users
+   » channel
+   read channel 
+   » reaction 
+   read reaction 
+   » mention
+   read mention 
 """
 
 
@@ -58,7 +62,7 @@ async def read_count(client, message_type):
                 total_unread += dialog.unread_messages_count
                 await client.read_chat_history(chat_id)
             
-            elif message_type == "allmsg" and chat_type in [enums.ChatType.PRIVATE, enums.ChatType.GROUP, enums.ChatType.SUPERGROUP, enums.ChatType.CHANNEL, enums.ChatType.BOT]:
+            elif message_type == "all" and chat_type in [enums.ChatType.PRIVATE, enums.ChatType.GROUP, enums.ChatType.SUPERGROUP, enums.ChatType.CHANNEL, enums.ChatType.BOT]:
                 total_unread += dialog.unread_messages_count
                 await client.read_chat_history(chat_id)
 
