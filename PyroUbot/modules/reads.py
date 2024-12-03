@@ -83,6 +83,6 @@ async def _(client, message):
     else:
         total_read = await read_count(client, command)
 
-    return await Tm.edit(f"{total_read} <b>{command.capitalize()} read in chat(s)!</b>")
+    return await Tm.edit(f"{total_read} <b>ᴘᴇsᴀɴ ᴛᴇʟᴀʜ ᴅɪʙᴀᴄᴀ\n {command.capitalize()}</b>")
 
   
