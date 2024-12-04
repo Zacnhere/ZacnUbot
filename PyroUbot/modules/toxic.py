@@ -245,4 +245,4 @@ async def _(client, message):
     await asyncio.sleep(1.5)
     await message.edit("**Yah Sama**")
     await asyncio.sleep(1.5)
-    await message.edit("**XiXiXi>_<
+    await message.edit("**XiXiXi>_<**")
