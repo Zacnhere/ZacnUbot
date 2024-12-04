@@ -28,6 +28,38 @@ __HELP__ = """
   
 """
 
+
+cached_word_list = []
+cache_expiry_time = None
+
+async def get_word_list(client):
+    global cached_word_list, cache_expiry_time
+    if cache_expiry_time is None or cache_expiry_time < asyncio.get_event_loop().time():
+        cached_word_list = await get_vars(client.me.id, "WORD_LIST") or []
+        cache_expiry_time = asyncio.get_event_loop().time() + 60
+    
+    return cached_word_list
+
+@PY.NO_CMD_UBOT("HANDLE_WORD_USER", ubot)
+async def process_message(client, message):
+    try:
+        word_split = message.text.lower().split()
+    except AttributeError:
+        pass
+    
+    word_list = await get_word_list(client)
+    try:
+        for x in word_split:
+            if x in word_list:
+                try:
+                    await message.delete()
+                except FloodWait as e:
+                    await asyncio.sleep(e.value)
+                    pass
+    except UnboundLocalError:
+        pass
+
+
 @PY.UBOT("protect")
 @PY.ULTRA
 @PY.GROUP
