@@ -11,35 +11,6 @@ import psutil
 from PyroUbot import *
 
 
-#@PY.BOT("sh")
-#@PY.UBOT("sh")
-#@PY.OWNER
-#async def _(client, message):
-    #command = get_arg(message)
-    #msg = await message.reply("memproses...", quote=True)
-    #if not command:
-        #return await msg.edit("noob")
-    #try:
-        #await process_command(message, command)
-        #await msg.delete()
-    #except Exception as error:
-        #await msg.edit(error)
-
-
-#async def process_command(message, command):
-    #result = (await bash(command))[0]
-    #if int(len(str(result))) > 4096:
-        #await send_large_output(message, result)
-    #else:
-        #await message.reply(result)
-
-
-#async def send_large_output(message, output):
-    #with BytesIO(str.encode(str(output))) as out_file:
-        #out_file.name = "result.txt"
-        #await message.reply_document(document=out_file)
-
-
 @PY.BOT("eval")
 @PY.UBOT("eval")
 @PY.OWNER
