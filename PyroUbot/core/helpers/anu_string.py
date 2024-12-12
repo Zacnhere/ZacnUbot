@@ -15,7 +15,7 @@ class STR:
 
     async def UBOT(client):
         str_pong = await get_vars(client.me.id, "STRING_UBOT")
-        string_pong = str_pong if str_pong else "ᴢᴀᴄɴʙᴏᴛ"
+        string_pong = str_pong if str_pong else "ᴢᴀᴄɴ ᴜʙᴏᴛ"
         result = f"{string_pong}"
         return result
 
