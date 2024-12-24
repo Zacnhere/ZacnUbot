@@ -55,7 +55,8 @@ from youtubesearchpython import VideosSearch
 from pyrogram.enums import ChatType
 from PyroUbot import *
 
-
+async def YoutubeDownload(url, as_video=False):
+    if as_video:
         ydl_opts = {
             "quiet": True,
             "no_warnings": True,
