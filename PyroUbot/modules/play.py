@@ -59,62 +59,40 @@ async def run_sync(func, *args, **kwargs):
 
 
 async def YoutubeDownload(url, as_video=False):
-    try:
+    if as_video:
         ydl_opts = {
             "quiet": True,
             "no_warnings": True,
-            "format": "(bestvideo[height<=720][width<=1280][ext=mp4])+bestaudio[ext=m4a]/best"
-         if as_video
-         else "bestaudio[ext=m4a]/bestaudio/best",
+            "format": "(bestvideo[height<=?720][width<=?1280][ext=mp4])+(bestaudio[ext=m4a])",
             "outtmpl": "downloads/%(id)s.%(ext)s",
             "nocheckcertificate": True,
             "geo_bypass": True,
             "cookiefile": "cookies.txt",
         }
+    else:
+        ydl_opts = {
+            "quiet": True,
+            "no_warnings": True,
+            "format": "bestaudio[ext=m4a]",
+            "outtmpl": "downloads/%(id)s.%(ext)s",
+            "nocheckcertificate": True,
+            "geo_bypass": True,
+            "cookiefile": "cookies.txt",
+        }
+    data_ytp = "<b>🗯 ɪɴꜰᴏʀᴍᴀsɪ {}</b>\n\n<b>💠 ɴᴀᴍᴀ:</b> {}<b>\n<b>⏲ ᴅᴜʀᴀsɪ:</b> {}\n<b>🎑 ᴅɪʟɪʜᴀᴛ:</b> {}\n<b>🌍 ᴄʜᴀɴɴᴇʟ:</b> {}\n<b>🔗 ᴛᴀᴜᴛᴀɴ:</b> <a href={}>ʏᴏᴜᴛᴜʙᴇ</a>\n\n<b> ᴘʟᴀʏ ʙʏ :</b> {}"
+    ydl = YoutubeDL(ydl_opts)
+    ytdl_data = await run_sync(ydl.extract_info, url, download=True)
+    file_name = ydl.prepare_filename(ytdl_data)
+    videoid = ytdl_data["id"]
+    title = ytdl_data["title"]
+    url = f"https://youtu.be/{videoid}"
+    duration = ytdl_data["duration"]
+    channel = ytdl_data["uploader"]
+    views = f"{ytdl_data['view_count']:,}".replace(",", ".")
+    thumb = f"https://img.youtube.com/vi/{videoid}/hqdefault.jpg"
+    return file_name, title, url, duration, views, channel, thumb, data_ytp
 
-        # Check available formats
-        with YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=False)
-            available_formats = [f["format_id"] for f in info.get("formats", [])]
-            print(f"Available formats: {available_formats}")
-
-        # Re-adjust the format based on availability
-        if as_video and "22" in available_formats:  # Example: format ID 22 is 720p MP4
-            ydl_opts["format"] = "22"
-        elif not as_video and "140" in available_formats:  # Example: format ID 140 is M4A
-            ydl_opts["format"] = "140"
-
-        # Download the video/audio
-        ydl = YoutubeDL(ydl_opts)
-        ytdl_data = await run_sync(ydl.extract_info, url, download=True)
-
-        # Prepare metadata
-        file_name = ydl.prepare_filename(ytdl_data)
-        videoid = ytdl_data["id"]
-        title = ytdl_data["title"]
-        duration = str(timedelta(seconds=ytdl_data["duration"]))
-        channel = ytdl_data["uploader"]
-        views = f"{ytdl_data['view_count']:,}".replace(",", ".")
-        thumb = f"https://img.youtube.com/vi/{videoid}/hqdefault.jpg"
-        yt_url = f"https://youtu.be/{videoid}"
-
-        data_ytp = (
-            f"<b>🗯 ɪɴꜰᴏʀᴍᴀsɪ {title}</b>\n\n"
-            f"<b>💠 ɴᴀᴍᴀ:</b> {title}\n"
-            f"<b>⏲ ᴅᴜʀᴀsɪ:</b> {duration}\n"
-            f"<b>🎑 ᴅɪʟɪʜᴀᴛ:</b> {views}\n"
-            f"<b>🌍 ᴄʜᴀɴɴᴇʟ:</b> {channel}\n"
-            f"<b>🔗 ᴛᴀᴜᴛᴀɴ:</b> <a href={yt_url}>ʏᴏᴜᴛᴜʙᴇ</a>\n\n"
-            f"<b>ᴘʟᴀʏ ʙʏ :</b> Your Bot"
-        )
-
-        return file_name, title, yt_url, duration, views, channel, thumb, data_ytp
-
-    except Exception as e:
-        print(f"Error in YoutubeDownload: {e}")
-        return None, None, None, None, None, None, None, f"⚠️ Error: {e}"
-
-
+                   
 @PY.HAKU("play")
 @PY.ULTRA
 @PY.GROUP
