@@ -238,6 +238,7 @@ async def get_group_call(client, message):
     await message.reply("<b>ɴᴏ ɢʀᴏᴜᴘ ᴄᴀʟʟ</b>")
     return False
 
+
 @PY.UBOT("lvc")
 @PY.GROUP
 async def _(client, message):
@@ -245,16 +246,42 @@ async def _(client, message):
     ggl = await EMO.GAGAL(client)
     prs = await EMO.PROSES(client)
     grp = await EMO.BL_GROUP(client)
+
     try:
+        # Mendapatkan ID grup dari argumen atau gunakan grup saat ini
+        args = message.text.split()
+        if len(args) > 1:
+            target_group_id = int(args[1])
+            chat = await client.get_chat(target_group_id)
+        else:
+            target_group_id = message.chat.id
+            chat = message.chat
+
+        # Kirim pesan pemrosesan
         mex = await message.reply(f"{prs}<b>ᴘʀᴏᴄᴄᴇsɪɴɢ...</b>")
-        cc = await client.call_py.leave_call(message.chat.id)
-        await mex.edit(f"<blockquote>{brhsl}<b>╭sᴜᴄᴄᴇss ʟᴇᴀᴠᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ</b>\n{grp}<b>╰ɢʀᴏᴜᴘs :</b><code>{message.chat.title}</code></blockquote>")
+
+        # Keluar dari Voice Chat di grup target
+        await client.call_py.leave_call(target_group_id)
+
+        # Kirim pesan sukses
+        await mex.edit(
+            f"<blockquote>{brhsl}<b>╭sᴜᴄᴄᴇss ʟᴇᴀᴠᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ</b>\n"
+            f"{grp}<b>╰ɢʀᴏᴜᴘ :</b> <code>{chat.title}</code></blockquote>"
+        )
     except NotInCallError:
-        await mex.edit(f"<blockquote>{ggl}<b>ʜᴀᴠᴇɴ'ᴛ ᴊᴏɪɴᴇᴅ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ʏᴇᴛ</b></blockquote>")
+        await mex.edit(
+            f"<blockquote>{ggl}<b>ʜᴀᴠᴇɴ'ᴛ ᴊᴏɪɴᴇᴅ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ʏᴇᴛ</b></blockquote>"
+        )
+    except ValueError:
+        await mex.edit(f"{ggl}<b>Error:</b> Invalid group ID.")
     except UserBannedInChannel:
-        pass
+        await mex.edit(f"{ggl}<b>Error:</b> You are banned from the channel.")
     except Exception as r:
-        print(r)
+        await mex.edit(
+            f"{ggl}<b>Failed to leave the voice chat.</b>\n<code>{r}</code>"
+        )
+        logging.error(f"Error in leaving VC for group {target_group_id}:", exc_info=True)
+     
 
 @PY.UBOT("jvc")
 @PY.GROUP
