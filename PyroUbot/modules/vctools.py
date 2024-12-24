@@ -56,63 +56,35 @@ from pyrogram.enums import ChatType
 from PyroUbot import *
 
 
-async def YoutubeDownload(url, as_video=False):
-    # Define download options based on as_video
-    if as_video:
         ydl_opts = {
             "quiet": True,
             "no_warnings": True,
-            "format": "(bestvideo[height<=720][width<=1280][ext=mp4])+bestaudio[ext=m4a]/best",  # Fallback to best
+            "format": "(bestvideo[height<=?720][width<=?1280][ext=mp4])+(bestaudio[ext=m4a])",
             "outtmpl": "downloads/%(id)s.%(ext)s",
             "nocheckcertificate": True,
             "geo_bypass": True,
-            "cookiefile": "cookies.txt",
         }
     else:
         ydl_opts = {
             "quiet": True,
             "no_warnings": True,
-            "format": "bestaudio[ext=m4a]/bestaudio/best",  # Fallback to bestaudio
+            "format": "bestaudio[ext=m4a]",
             "outtmpl": "downloads/%(id)s.%(ext)s",
             "nocheckcertificate": True,
             "geo_bypass": True,
-            "cookiefile": "cookies.txt",
         }
-    
-    try:
-        # Initialize YoutubeDL with the options
-        ydl = YoutubeDL(ydl_opts)
-        
-        # Run the extraction and download asynchronously
-        ytdl_data = await run_sync(ydl.extract_info, url, download=True)
-        
-        # Prepare data for output
-        file_name = ydl.prepare_filename(ytdl_data)
-        videoid = ytdl_data["id"]
-        title = ytdl_data["title"]
-        url = f"https://youtu.be/{videoid}"
-        duration = str(timedelta(seconds=ytdl_data["duration"]))  # Convert duration to HH:MM:SS
-        channel = ytdl_data["uploader"]
-        views = f"{ytdl_data['view_count']:,}".replace(",", ".")
-        thumb = f"https://img.youtube.com/vi/{videoid}/hqdefault.jpg"
-        
-        # Data for formatted output
-        data_ytp = (
-            f"<b><emoji id=6005994005148471369>💡</emoji> ʙᴇʀʜᴀsɪʟ ᴍᴇᴍᴜᴛᴀʀ ᴍᴜsɪᴄ {title}</b>\n\n"
-            f"<b><emoji id=5904544038643569182>🏷</emoji> ɴᴀᴍᴀ:</b> {title}\n"
-            f"<b><emoji id=6030547358222127917>🧭</emoji> ᴅᴜʀᴀsɪ:</b> {duration}\n"
-            f"<b><emoji id=5233246225146332642>👀</emoji> ᴅɪʟɪʜᴀᴛ:</b> {views}\n"
-            f"<b><emoji id=6005896024059547548>📢</emoji> ᴄʜᴀɴɴᴇʟ:</b> {channel}\n"
-            f"<b><emoji id=6005993794695076239>🔗</emoji> ᴛᴀᴜᴛᴀɴ:</b> <a href={url}>ʏᴏᴜᴛᴜʙᴇ</a>\n\n"
-            f"<b><emoji id=5801170880272797821>⚡</emoji> ᴘᴏᴡᴇʀᴇᴅ ʙʏ:</b> Your Bot"
-        )
-        
-        # Return the structured data
-        return file_name, title, url, duration, views, channel, thumb, data_ytp
-    
-    except DownloadError as e:
-        # Handle download errors gracefully
-        return None, None, None, None, None, None, None, f"⚠️ Failed to download: {str(e)}"
+    data_ytp = "<b><emoji id=6005994005148471369>💡</emoji> ʙᴇʀʜᴀsɪʟ ᴍᴇᴍᴜᴛᴀʀ ᴍᴜsɪᴄ {}</b>\n\n<b><emoji id=5904544038643569182>🏷</emoji> ɴᴀᴍᴀ:</b> {}<b>\n<b><emoji id=6030547358222127917>🧭</emoji> ᴅᴜʀᴀsɪ:</b> {}\n<b><emoji id=5233246225146332642>👀</emoji> ᴅɪʟɪʜᴀᴛ:</b> {}\n<b><emoji id=6005896024059547548>📢</emoji> ᴄʜᴀɴɴᴇʟ:</b> {}\n<b><emoji id=6005993794695076239>🔗</emoji> ᴛᴀᴜᴛᴀɴ:</b> <a href={}>ʏᴏᴜᴛᴜʙᴇ</a>\n\n<b><emoji id=5801170880272797821>⚡</emoji> ᴘᴏᴡᴇʀᴇᴅ ʙʏ:</b> {}"
+    ydl = YoutubeDL(ydl_opts)
+    ytdl_data = await run_sync(ydl.extract_info, url, download=True)
+    file_name = ydl.prepare_filename(ytdl_data)
+    videoid = ytdl_data["id"]
+    title = ytdl_data["title"]
+    url = f"https://youtu.be/{videoid}"
+    duration = ytdl_data["duration"]
+    channel = ytdl_data["uploader"]
+    views = f"{ytdl_data['view_count']:,}".replace(",", ".")
+    thumb = f"https://img.youtube.com/vi/{videoid}/hqdefault.jpg"
+    return file_name, title, url, duration, views, channel, thumb, data_ytp
 
 
 def humanbytes(size):
