@@ -64,6 +64,7 @@ async def YoutubeDownload(url, as_video=False):
             "outtmpl": "downloads/%(id)s.%(ext)s",
             "nocheckcertificate": True,
             "geo_bypass": True,
+            "cookiefile": "cookies.txt",
         }
     else:
         ydl_opts = {
@@ -73,6 +74,7 @@ async def YoutubeDownload(url, as_video=False):
             "outtmpl": "downloads/%(id)s.%(ext)s",
             "nocheckcertificate": True,
             "geo_bypass": True,
+            "cookiefile": "cookies.txt",
         }
     data_ytp = "<b><emoji id=6005994005148471369>💡</emoji> ʙᴇʀʜᴀsɪʟ ᴍᴇᴍᴜᴛᴀʀ ᴍᴜsɪᴄ {}</b>\n\n<b><emoji id=5904544038643569182>🏷</emoji> ɴᴀᴍᴀ:</b> {}<b>\n<b><emoji id=6030547358222127917>🧭</emoji> ᴅᴜʀᴀsɪ:</b> {}\n<b><emoji id=5233246225146332642>👀</emoji> ᴅɪʟɪʜᴀᴛ:</b> {}\n<b><emoji id=6005896024059547548>📢</emoji> ᴄʜᴀɴɴᴇʟ:</b> {}\n<b><emoji id=6005993794695076239>🔗</emoji> ᴛᴀᴜᴛᴀɴ:</b> <a href={}>ʏᴏᴜᴛᴜʙᴇ</a>\n\n<b><emoji id=5801170880272797821>⚡</emoji> ᴘᴏᴡᴇʀᴇᴅ ʙʏ:</b> {}"
     ydl = YoutubeDL(ydl_opts)
