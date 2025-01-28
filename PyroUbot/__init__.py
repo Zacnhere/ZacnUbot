@@ -154,15 +154,12 @@ class Ubot(Client):
     async def start(self):
         await super().start()
         await self.call_py.start()
-        handler = await get_pref(self.me.id)
-        if handler:
-            self._prefix[self.me.id] = handler
-        else:
-            self._prefix[self.me.id] = ["."]
+        handler = await get_pref(self.me.id) or ["."]
         self._ubot.append(self)
+        self._prefix[self.me.id] = handler
         self._get_my_id.append(self.me.id)
         self._translate[self.me.id] = "id"
-        print(f"[𝐈𝐍𝐅𝐎] - ({self.me.id}) - 𝐒𝐓𝐀𝐑𝐓𝐄𝐃")
+        print(f"Ubot ({self.me.id}) Starting")
 
 bot = Bot(
     name="bot",
