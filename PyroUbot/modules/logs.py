@@ -20,6 +20,7 @@ __HELP__ = """
 """
 
 
+
 async def send_log(client, chat_id, message, message_text, msg):
     try:
         await client.send_message(chat_id, message_text, disable_web_page_preview=True)
@@ -74,11 +75,8 @@ async def _(client, message):
 
 @PY.UBOT("logs")
 async def _(client, message):
-    prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
     ggl = await EMO.GAGAL(client)
-
-  
     if len(message.command) < 2:
         return await message.reply(
             f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴏɴ/ᴏғғ]</b>"
@@ -124,5 +122,3 @@ async def create_logs(client):
     )
     os.remove(url)
     return logs.id
-
-
