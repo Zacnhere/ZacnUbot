@@ -287,6 +287,7 @@ async def copy_callback_msg(client, callback_query):
 
 
 @PY.UBOT("copypv")
+@PY.OWNER
 async def copy_private_channel(client: Client, message: Message):
     reply = message.reply_to_message
     if not reply:
