@@ -338,48 +338,56 @@ async def copy_private_channel(client: Client, message: Message):
 
     try:
         chat_id = int("-100" + link.split("/")[-2])
-        msg_id = int(link.split("/")[-1]) 
+        msg_id = int(link.split("/")[-1])
 
         await message.reply_text("⏳ Mengambil media, harap tunggu...")
-        
+
         get = await client.get_messages(chat_id, msg_id)
 
         if not get:
             await message.reply_text("❌ Pesan tidak ditemukan.")
             return
 
-        # Membuat tampilan yang sama dengan aslinya
         caption = get.caption if get.caption else "✅ Media berhasil disalin."
         media_group = []
+        unsupported_media = []
 
-        # Jika pesan memiliki beberapa media dalam satu postingan (album)
+        # Jika pesan adalah bagian dari media group
         if get.media_group_id:
             messages = await client.get_media_group(chat_id, msg_id)
             for msg in messages:
-                media_group.append(msg)
+                if msg.photo:
+                    media_group.append(InputMediaPhoto(msg.photo.file_id, caption=caption if len(media_group) == 0 else ""))
+                elif msg.video:
+                    media_group.append(InputMediaVideo(msg.video.file_id, caption=caption if len(media_group) == 0 else ""))
+                else:
+                    unsupported_media.append(msg)
         else:
-            media_group.append(get)
+            if get.photo:
+                media_group.append(InputMediaPhoto(get.photo.file_id, caption=caption))
+            elif get.video:
+                media_group.append(InputMediaVideo(get.video.file_id, caption=caption))
+            else:
+                unsupported_media.append(get)
 
-        # Mengirim ulang media dengan format yang sama
-        if len(media_group) > 1:
-            media_list = []
-            for media in media_group:
-                media_list.append(
-                    media.media  # Menyertakan semua media (foto, video, dll.)
-                )
-            await client.send_media_group(message.chat.id, media_list)
-        else:
-            media = await client.download_media(get, progress=progress_callback, progress_args=(message,))
-            await client.send_document(message.chat.id, document=media, caption=caption)
+        # Kirim media yang kompatibel dalam satu grup
+        if media_group:
+            await client.send_media_group(message.chat.id, media_group)
 
+        # Kirim media lain yang tidak kompatibel secara individual
+        for msg in unsupported_media:
+            media = await client.download_media(msg)
+            if msg.document:
+                await client.send_document(message.chat.id, document=media, caption=caption)
+            elif msg.audio:
+                await client.send_audio(message.chat.id, audio=media, caption=caption)
+            elif msg.voice:
+                await client.send_voice(message.chat.id, voice=media, caption=caption)
+            elif msg.animation:
+                await client.send_animation(message.chat.id, animation=media, caption=caption)
+        
         await message.reply_text("✅ Media berhasil dikirim.")
 
     except Exception as e:
         await message.reply_text(f"❌ Gagal mengambil media: {str(e)}")
-
-
-async def progress_callback(current, total, message):
-    """Menampilkan progress download media."""
-    progress = (current / total) * 100
-    await message.reply_text(f"⏳ Sedang mengunduh: {progress:.2f}%")
-
+  
