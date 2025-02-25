@@ -360,6 +360,12 @@ async def copy_channel(client, message):
             f"<b>Gagal:</b> {failed}"
           )
 
+    except Exception as e:
+        # Jika terjadi kesalahan umum
+        await infomsg.edit(f"<b>{ggl} Terjadi kesalahan:</b> <code>{str(e)}</code>")
+
+
+
 
 PY.UBOT("pcopy")
 @PY.OWNER
@@ -395,9 +401,4 @@ async def copy_private_media(client: Client, message: Message):
     
     except Exception as e:
         await message.reply_text(f"❌ Gagal mengambil media{(e)}")
-        )
-
-    except Exception as e:
-        # Jika terjadi kesalahan umum
-        await infomsg.edit(f"<b>{ggl} Terjadi kesalahan:</b> <code>{str(e)}</code>")
-      
+        
