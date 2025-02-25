@@ -4,7 +4,8 @@ import logging
 import re
 from gc import get_objects
 from time import time
-
+from pyrogram import Client, filters
+from pyrogram.types import Message
 from pyrogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
                             InlineQueryResultArticle, InputTextMessageContent)
 
