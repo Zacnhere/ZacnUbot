@@ -303,6 +303,8 @@ async def copy_private_channel(client: Client, message: Message):
         chat_id = int("-100" + link.split("/")[-2])
         msg_id = int(link.split("/")[-1]) 
 
+        await message.reply_text("⏳ Mengambil media, harap tunggu...")
+
         get = await client.get_messages(chat_id, msg_id)
 
         if not get.media:
@@ -321,73 +323,3 @@ async def copy_private_channel(client: Client, message: Message):
     except Exception as e:
         await message.reply_text(f"❌ Gagal mengambil media{(e)}")
       
-
-
-@PY.UBOT("copypvt")
-@PY.OWNER
-async def copy_private_channel(client: Client, message: Message):
-    reply = message.reply_to_message
-    if not reply:
-        await message.reply_text("❌ Balas pesan yang berisi link channel private.")
-        return
-
-    link = reply.text.strip()
-    if not link.startswith("https://t.me/c/"):
-        await message.reply_text("❌ Link tidak valid. Pastikan itu adalah link dari channel private.")
-        return
-
-    try:
-        chat_id = int("-100" + link.split("/")[-2])
-        msg_id = int(link.split("/")[-1])
-
-        await message.reply_text("⏳ Mengambil media, harap tunggu...")
-
-        get = await client.get_messages(chat_id, msg_id)
-
-        if not get:
-            await message.reply_text("❌ Pesan tidak ditemukan.")
-            return
-
-        caption = get.caption if get.caption else "✅ Media berhasil disalin."
-        media_group = []
-        unsupported_media = []
-
-        # Jika pesan adalah bagian dari media group
-        if get.media_group_id:
-            messages = await client.get_media_group(chat_id, msg_id)
-            for msg in messages:
-                if msg.photo:
-                    media_group.append(InputMediaPhoto(msg.photo.file_id, caption=caption if len(media_group) == 0 else ""))
-                elif msg.video:
-                    media_group.append(InputMediaVideo(msg.video.file_id, caption=caption if len(media_group) == 0 else ""))
-                else:
-                    unsupported_media.append(msg)
-        else:
-            if get.photo:
-                media_group.append(InputMediaPhoto(get.photo.file_id, caption=caption))
-            elif get.video:
-                media_group.append(InputMediaVideo(get.video.file_id, caption=caption))
-            else:
-                unsupported_media.append(get)
-
-        # Kirim media yang kompatibel dalam satu grup
-        if media_group:
-            await client.send_media_group(message.chat.id, media_group)
-
-        # Kirim media lain yang tidak kompatibel secara individual
-        for msg in unsupported_media:
-            media = await client.download_media(msg)
-            if msg.document:
-                await client.send_document(message.chat.id, document=media, caption=caption)
-            elif msg.audio:
-                await client.send_audio(message.chat.id, audio=media, caption=caption)
-            elif msg.voice:
-                await client.send_voice(message.chat.id, voice=media, caption=caption)
-            elif msg.animation:
-                await client.send_animation(message.chat.id, animation=media, caption=caption)
-        
-        await message.reply_text("✅ Media berhasil dikirim.")
-
-    except Exception as e:
-        await message.reply_text(f"❌ Gagal mengambil media: {str(e)}")
-  
