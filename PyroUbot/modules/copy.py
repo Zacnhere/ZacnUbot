@@ -321,3 +321,65 @@ async def copy_private_channel(client: Client, message: Message):
     except Exception as e:
         await message.reply_text(f"❌ Gagal mengambil media{(e)}")
       
+
+
+@PY.UBOT("copypvt")
+@PY.OWNER
+async def copy_private_channel(client: Client, message: Message):
+    reply = message.reply_to_message
+    if not reply:
+        await message.reply_text("❌ Balas pesan yang berisi link channel private.")
+        return
+
+    link = reply.text.strip()
+    if not link.startswith("https://t.me/c/"):
+        await message.reply_text("❌ Link tidak valid. Pastikan itu adalah link dari channel private.")
+        return
+
+    try:
+        chat_id = int("-100" + link.split("/")[-2])
+        msg_id = int(link.split("/")[-1]) 
+
+        await message.reply_text("⏳ Mengambil media, harap tunggu...")
+        
+        get = await client.get_messages(chat_id, msg_id)
+
+        if not get:
+            await message.reply_text("❌ Pesan tidak ditemukan.")
+            return
+
+        # Membuat tampilan yang sama dengan aslinya
+        caption = get.caption if get.caption else "✅ Media berhasil disalin."
+        media_group = []
+
+        # Jika pesan memiliki beberapa media dalam satu postingan (album)
+        if get.media_group_id:
+            messages = await client.get_media_group(chat_id, msg_id)
+            for msg in messages:
+                media_group.append(msg)
+        else:
+            media_group.append(get)
+
+        # Mengirim ulang media dengan format yang sama
+        if len(media_group) > 1:
+            media_list = []
+            for media in media_group:
+                media_list.append(
+                    media.media  # Menyertakan semua media (foto, video, dll.)
+                )
+            await client.send_media_group(message.chat.id, media_list)
+        else:
+            media = await client.download_media(get, progress=progress_callback, progress_args=(message,))
+            await client.send_document(message.chat.id, document=media, caption=caption)
+
+        await message.reply_text("✅ Media berhasil dikirim.")
+
+    except Exception as e:
+        await message.reply_text(f"❌ Gagal mengambil media: {str(e)}")
+
+
+async def progress_callback(current, total, message):
+    """Menampilkan progress download media."""
+    progress = (current / total) * 100
+    await message.reply_text(f"⏳ Sedang mengunduh: {progress:.2f}%")
+
