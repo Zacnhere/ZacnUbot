@@ -285,89 +285,9 @@ async def copy_callback_msg(client, callback_query):
         await callback_query.edit_message_text(f"<code>{error}</code>")
 
 
-@PY.BOT("copychannel")
-@PY.OWNER
-async def copy_channel(client, message):
-    prs = await EMO.PROSES(client)
-    brhsl = await EMO.BERHASIL(client)
-    ggl = await EMO.GAGAL(client)
-
-    infomsg = await message.reply(f"<b>{prs}ꜱᴇᴅᴀɴɢ ᴍᴇɴʏᴀʟɪɴ ᴄʜᴀɴɴᴇʟ...</b>")
-
-    args = get_arg(message)
-    if not args or len(args.split()) < 2:
-        return await infomsg.edit(
-            f"<b>{ggl}ꜱɪʟᴀʜᴋᴀɴ ᴍᴀꜱᴜᴋᴋᴀɴ ʟɪɴᴋ ᴄʜᴀɴɴᴇʟ ꜱᴀꜱᴀʀᴀɴ ᴅᴀɴ ᴛᴜᴊᴜᴀɴ.</b>\n"
-            f"Format: <code>/copychannel [source_channel_link] [target_channel_link]</code>"
-        )
-
-    try:
-        # Mendapatkan channel sumber dan tujuan
-        source_channel, target_channel = args.split(maxsplit=1)
-
-        # Ekstrak username dari URL jika diberikan full link (https://t.me/username)
-        source_channel = re.sub(r'https?://t\.me/', '', source_channel)  # Hapus bagian https://t.me/
-        target_channel = re.sub(r'https?://t\.me/', '', target_channel)
-
-        try:
-            source_entity = await client.get_chat(source_channel)
-            target_entity = await client.get_chat(target_channel)
-
-            # Validasi tipe channel
-            if source_entity.type not in ["channel", "supergroup"]:
-                return await infomsg.edit(f"<b>{ggl} Bot hanya bisa menyalin dari channel atau supergroup.</b>")
-
-            if not target_entity:
-                return await infomsg.edit(f"<b>{ggl} Tidak dapat mengakses channel tujuan!</b>")
-        except Exception as e:
-            if "BOT_METHOD_INVALID" in str(e):
-                return await infomsg.edit(
-                    f"<b>{ggl} Bot tidak memiliki akses yang diperlukan di salah satu channel.</b>\n"
-                    f"<i>Pastikan bot adalah admin di kedua channel.</i>"
-                )
-            else:
-                return await infomsg.edit(f"<b>{ggl} Kesalahan:</b> <code>{str(e)}</code>")
-
-        # Mendapatkan pesan dari channel sumber
-        messages = await client.get_history(source_entity.id, limit=1000)
-        if not messages:
-            return await infomsg.edit(f"<b>{ggl} ᴄʜᴀɴɴᴇʟ ꜱᴜᴍʙᴇʀ ᴛɪᴅᴀᴋ ᴍᴇᴍɪʟɪᴋɪ ᴘᴇꜱᴀɴ!</b>")
-
-        # Memulai proses penyalinan
-        success, failed = 0, 0
-        for msg in messages:
-            try:
-                # Salin teks atau media
-                if msg.media:
-                    await client.copy_message(
-                        target_entity.id,
-                        source_entity.id,
-                        msg.message_id,
-                        caption=msg.caption,
-                    )
-                else:
-                    await client.send_message(target_entity.id, msg.text)
-
-                success += 1
-            except Exception as e:
-                print(f"Error copying message {msg.message_id}: {e}")
-                failed += 1
-
-        # Hasil akhir
-        await infomsg.edit(
-            f"<b>{brhsl} Penyalinan selesai!</b>\n"
-            f"<b>Sukses:</b> {success}\n"
-            f"<b>Gagal:</b> {failed}"
-          )
-
-    except Exception as e:
-        # Jika terjadi kesalahan umum
-        await infomsg.edit(f"<b>{ggl} Terjadi kesalahan:</b> <code>{str(e)}</code>")
-
-
 
 PY.UBOT("copypv")
-async def copy_private_media(client: Client, message: Message):
+async def copy_ubot_msg(client: Client, message: Message):
     reply = message.reply_to_message
     if not reply:
         await message.reply_text("❌ Balas pesan yang berisi link channel private.")
