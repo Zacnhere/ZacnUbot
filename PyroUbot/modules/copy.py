@@ -366,9 +366,7 @@ async def copy_channel(client, message):
 
 
 
-
-PY.UBOT("pcopy")
-@PY.OWNER
+PY.UBOT("copypv")
 async def copy_private_media(client: Client, message: Message):
     reply = message.reply_to_message
     if not reply:
@@ -392,13 +390,12 @@ async def copy_private_media(client: Client, message: Message):
 
         media = await client.download_media(get)
 
-        await client.send_document(
+        await client.send_video(
             message.chat.id, 
-            document=media,
+            video=media,
             caption="✅ Media berhasil disalin dari channel private."
         )
 
     
     except Exception as e:
         await message.reply_text(f"❌ Gagal mengambil media{(e)}")
-        
