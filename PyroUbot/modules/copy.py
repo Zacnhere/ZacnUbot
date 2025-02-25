@@ -358,6 +358,7 @@ async def copy_channel(client, message):
             f"<b>{brhsl} Penyalinan selesai!</b>\n"
             f"<b>Sukses:</b> {success}\n"
             f"<b>Gagal:</b> {failed}"
+          )
 
 
 PY.UBOT("pcopy")
