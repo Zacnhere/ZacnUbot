@@ -295,24 +295,24 @@ async def copy_callback_msg(client, callback_query):
 async def copy_private_channel(client: Client, message: Message):
     reply = message.reply_to_message
     if not reply:
-        await message.reply_text("Reply pesan channel private.")
+        await message.reply_text("ʀᴇᴘʟʏ ᴘᴇsᴀɴ ᴄʜᴀɴɴᴇʟ ᴘʀɪᴠᴀᴛᴇ")
         return
 
     link = reply.text.strip()
     if not link.startswith("https://t.me/c/"):
-        await message.reply_text("Bukan termasuk link channel private.")
+        await message.reply_text("ʙᴜᴋᴀɴ ᴛᴇʀᴍᴀsᴜᴋ ᴄʜᴀɴɴᴇʟ ᴘʀɪᴠᴀᴛᴇ")
         return
 
     try:
         chat_id = int("-100" + link.split("/")[-2])
         msg_id = int(link.split("/")[-1]) 
 
-        await message.reply_text("⏳Processing..")
+        await message.reply_text("⏳ᴘʀᴏᴄᴇssɪɴɢ..")
 
         get = await client.get_messages(chat_id, msg_id)
 
         if not get.media:
-            await message.reply_text("Tidak ada media dalam pesan ini.")
+            await message.reply_text("ᴍᴇᴅɪᴀ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ")
             return
 
         media = await client.download_media(get)
@@ -320,10 +320,10 @@ async def copy_private_channel(client: Client, message: Message):
         await client.send_video(
             message.chat.id, 
             video=media,
-            caption="Berhasil menyalin konten private."
+            caption="ʙᴇʀʜᴀsɪʟ ᴍᴇɴʏᴀʟɪɴ ᴋᴏɴᴛᴇɴ ᴘʀɪᴠᴀᴛᴇ"
         )
 
     
     except Exception as e:
-        await message.reply_text(f"Gagal mengambil media{(e)}")
+        await message.reply_text(f"ɢᴀɢᴀʟ ᴍᴇɴɢᴀᴍʙɪʟ ᴍᴇᴅɪᴀ{(e)}")
       
