@@ -12,7 +12,7 @@ from PyroUbot import *
 
 
 @PY.BOT("eval")
-@PY.UBOT("eval, e")
+@PY.UBOT("eval|e")
 @PY.OWNER
 async def _(client, message):
     if not get_arg(message):
