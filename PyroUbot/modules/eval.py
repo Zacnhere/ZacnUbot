@@ -12,50 +12,41 @@ from PyroUbot import *
 
 
 @PY.BOT("eval")
-@PY.UBOT("eval")
+@PY.UBOT("eval, e")
 @PY.OWNER
 async def _(client, message):
     if not get_arg(message):
         return
-    TM = await message.reply_text("Processing ...")
-    cmd = message.text.split(" ", maxsplit=1)[1]
+    TM = await message.reply("none")
     reply_to_ = message.reply_to_message or message
-    old_stderr = sys.stderr
-    old_stdout = sys.stdout
-    redirected_output = sys.stdout = StringIO()
-    redirected_error = sys.stderr = StringIO()
-    stdout, stderr, exc = None, None, None
     try:
-        await aexec(cmd, client, message)
-    except Exception:
-        exc = traceback.format_exc()
-    stdout = redirected_output.getvalue()
-    stderr = redirected_error.getvalue()
-    sys.stdout = old_stdout
-    sys.stderr = old_stderr
-    evaluation = ""
-    if exc:
-        evaluation = exc
-    elif stderr:
-        evaluation = stderr
-    elif stdout:
-        evaluation = stdout
-    else:
-        evaluation = "Success"
-    final_output = "<b>OUTPUT</b>:\n"
-    final_output += f"<b>{evaluation.strip()}</b>"
+        cmd = message.text.split(maxsplit=1)[1]
+    except IndexError:
+        return await TM.edit("No code provided to evaluate!")
+    reply_to_ = message.reply_to_message or message
+    file = io.StringIO()
+    eval_vars = {
+        "c": client,
+        "m": message,
+        "reply": message.reply_to_message,
+        "ubot": Ubot,
+        "bot": Bot,
+    }
+    file = io.StringIO()
+    with contextlib.redirect_stdout(file):
+        try:
+            meval_out = await meval(cmd, globals(), **eval_vars)
+            print_out = file.getvalue().strip() or str(meval_out) or "None"
+        except Exception as e:
+            print_out = str(e)
+    final_output = f"<pre language=input>{cmd}</pre>\n"
+    final_output += f"<pre language=python>{html.escape(print_out)}</pre>\n"
     if len(final_output) > 4096:
-        with BytesIO(str.encode(final_output)) as out_file:
-            out_file.name = "eval.text"
-            await reply_to_.reply_document(
-                document=out_file,
-                caption=cmd[: 4096 // 4 - 1],
-                disable_notification=True,
-                quote=True,
-            )
+        with io.BytesIO(str.encode(final_output)) as out_file:
+            out_file.name = str(uuid.uuid4()).split("-")[0].upper() + ".TXT"
     else:
         await reply_to_.reply_text(final_output, quote=True)
-    await TM.delete()
+    await message.delete()
 
 
 @PY.UBOT("trash")
