@@ -190,7 +190,6 @@ async def _(client, message):
 
 
 @PY.UBOT("pin|unpin")
-@PY.GROUP
 async def _(client, message):
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
