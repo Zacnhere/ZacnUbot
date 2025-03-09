@@ -146,18 +146,21 @@ async def _(client, message):
 
 @PY.UBOT("song")
 async def song_cmd(client, message):
+    ggl = await EMO.GAGAL(client)
+    sks = await EMO.BERHASIL(client)
+    prs = await EMO.PROSES(client)
     if len(message.command) < 2:
         return await message.reply_text(
-            "<b><emoji id=6161479118413106534>❌</emoji>ᴀᴜᴅɪᴏ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ,</b>\nᴍᴏʜᴏɴ ᴍᴀsᴜᴋᴀɴ ᴊᴜᴅᴜʟ ᴠɪᴅᴇᴏ ᴅᴇɴɢᴀɴ ʙᴇɴᴀʀ.",
+            f"<blockquote>{ggl}<b>ᴀᴜᴅɪᴏ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ ! ᴍᴏʜᴏɴ ᴍᴀsᴜᴋᴀɴ ᴊᴜᴅᴜʟ ᴠɪᴅᴇᴏ ᴅᴇɴɢᴀɴ ʙᴇɴᴀʀ</b></blockquote>",
         )
-    infomsg = await message.reply_text("<b><emoji id=5188217332748527444>🔍</emoji>ᴘᴇɴᴄᴀʀɪᴀɴ...</b>", quote=False)
+    infomsg = await message.reply_text(f"{prs}<b>ᴘᴇɴᴄᴀʀɪᴀɴ...</b>", quote=False)
     try:
         search = VideosSearch(message.text.split(None, 1)[1], limit=1).result()[
             "result"
         ][0]
         link = f"https://youtu.be/{search['id']}"
     except Exception as error:
-        return await infomsg.edit(f"<emoji id=5188217332748527444>🔍</emoji><b>ᴘᴇɴᴄᴀʀɪᴀɴ...\n\n{error}</b>")
+        return await infomsg.edit(f"{prs}pencarian...\n\n{error}")
     try:
         (
             file_name,
@@ -170,7 +173,7 @@ async def song_cmd(client, message):
             data_ytp,
         ) = await YoutubeDownload(link, as_video=False)
     except Exception as error:
-        return await infomsg.edit(f"<b>ᴅᴏᴡɴʟᴏᴀᴅᴇʀ...\n\n{error}</b>")
+        return await infomsg.edit(f"{ggl}downloader..\n\n{error}")
     thumbnail = wget.download(thumb)
     await client.send_audio(
         message.chat.id,
@@ -180,7 +183,7 @@ async def song_cmd(client, message):
         performer=channel,
         duration=duration,
         caption=data_ytp.format(
-            "ᴀᴜᴅɪᴏ",
+            "audio",
             title,
             timedelta(seconds=duration),
             views,
@@ -192,7 +195,7 @@ async def song_cmd(client, message):
         progress_args=(
             infomsg,
             time(),
-            "<b>ᴅᴏᴡɴʟᴏᴀᴅᴇʀ...</b>",
+            f"{prs}proccesing...",
             f"{search['id']}.mp3",
         ),
         reply_to_message_id=message.id,
