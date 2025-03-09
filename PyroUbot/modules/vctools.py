@@ -56,10 +56,14 @@ from pyrogram.enums import ChatType
 from PyroUbot import *
 
 
+
 def run_sync(func, *args, **kwargs):
-    return get_event_loop().run_in_executor(None, partial(func, *args, **kwargs))
+    """Menjalankan fungsi secara sinkron dalam event loop."""
+    loop = asyncio.get_running_loop()
+    return loop.run_in_executor(None, partial(func, *args, **kwargs))
 
 async def YoutubeDownload(url, as_video=False):
+    """Mengunduh audio/video dari YouTube."""
     ydl_opts = {
         "quiet": True,
         "no_warnings": True,
@@ -67,26 +71,31 @@ async def YoutubeDownload(url, as_video=False):
         "outtmpl": "downloads/%(id)s.%(ext)s",
         "nocheckcertificate": True,
         "geo_bypass": True,
-        "cookiefile": "cookies.txt",
+        "cookiefile": "cookies.txt" if os.path.exists("cookies.txt") else None,  # Pastikan file cookie ada
     }
-    data_ytp = "<blockquote><b><emoji id=6005994005148471369>💡</emoji> ᴍᴇᴍᴜᴛᴀʀ {}\n\n<emoji id=5904544038643569182>🏷</emoji> ɴᴀᴍᴀ: {}\n<emoji id=6030547358222127917>🧭</emoji> ᴅᴜʀᴀsɪ: {}\n<emoji id=5233246225146332642>👀</emoji> ᴅɪʟɪʜᴀᴛ: {}\n<emoji id=6005896024059547548>📢</emoji> ᴄʜᴀɴɴᴇʟ: {}\n<emoji id=6005993794695076239>🔗</emoji> ᴛᴀᴜᴛᴀɴ: <a href={}>youtube</a>\n\n<emoji id=5801170880272797821>⚡</emoji> ᴘᴏᴡᴇʀᴇᴅ ʙʏ: {}</b></blockquote>"
-    ydl = YoutubeDL(ydl_opts)
-    ytdl_data = await run_sync(ydl.extract_info, url, download=True)
-    file_name = ydl.prepare_filename(ytdl_data)
-    videoid = ytdl_data["id"]
-    title = ytdl_data["title"]
-    url = f"https://youtu.be/{videoid}"
-    duration = ytdl_data["duration"]
-    channel = ytdl_data["uploader"]
-    views = f"{ytdl_data['view_count']:,}".replace(",", ".")
-    thumb = f"https://img.youtube.com/vi/{videoid}/hqdefault.jpg"
-    return file_name, title, url, duration, views, channel, thumb, data_ytp
+    
+    try:
+        ydl = YoutubeDL(ydl_opts)
+        ytdl_data = await run_sync(ydl.extract_info, url, download=True)
+        file_name = ydl.prepare_filename(ytdl_data)
+        videoid = ytdl_data.get("id", "")
+        title = ytdl_data.get("title", "Unknown")
+        url = f"https://youtu.be/{videoid}"
+        duration = ytdl_data.get("duration", 0)
+        channel = ytdl_data.get("uploader", "Unknown")
+        views = f"{ytdl_data.get('view_count', 0):,}".replace(",", ".")
+        thumb = f"https://img.youtube.com/vi/{videoid}/hqdefault.jpg"
+        
+        return file_name, title, url, duration, views, channel, thumb
+    except Exception as e:
+        return None, None, None, None, None, None, None, str(e)
 
-async def playing_cmd(client, message):
+async def playing_cmd(client, message: Message):
+    """Memainkan audio dari YouTube atau file lokal."""
     ggl = await EMO.GAGAL(client)
     sks = await EMO.BERHASIL(client)
     prs = await EMO.PROSES(client)
-    
+
     if message.reply_to_message and message.reply_to_message.audio:
         audio = message.reply_to_message.audio
         infomsg = await message.reply_text(f"{prs}<b>ᴍᴇɴᴅᴏᴡɴʟᴏᴀᴅ ᴀᴜᴅɪᴏ...</b>", quote=False)
@@ -99,55 +108,54 @@ async def playing_cmd(client, message):
         thumb = None
     else:
         if len(message.command) < 2:
-            return await message.reply_text(
-                f"<blockquote>{ggl}<b>ᴀᴜᴅɪᴏ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ! ᴍᴏʜᴏɴ ᴍᴀsᴜᴋᴀɴ ᴊᴜᴅᴜʟ ᴠɪᴅᴇᴏ ᴅᴇɴɢᴀɴ ʙᴇɴᴀʀ</b></blockquote>",
-            )
+            return await message.reply_text(f"<blockquote>{ggl}<b>Masukkan judul video dengan benar.</b></blockquote>")
+        
         infomsg = await message.reply_text(f"{prs}<b>ᴘᴇɴᴄᴀʀɪᴀɴ...</b>", quote=False)
         try:
             search = VideosSearch(message.text.split(None, 1)[1], limit=1).result()["result"][0]
             link = f"https://youtu.be/{search['id']}"
         except Exception as error:
-            return await infomsg.edit(f"{prs}pencarian...\n\n{error}")
+            return await infomsg.edit(f"{prs}pencarian gagal...\n\n{error}")
+        
         try:
-            file_name, title, url, duration, views, channel, thumb, data_ytp = await YoutubeDownload(link, as_video=False)
+            file_name, title, url, duration, views, channel, thumb = await YoutubeDownload(link, as_video=False)
+            if not file_name:
+                raise Exception("Gagal mengunduh video.")
         except Exception as error:
-            return await infomsg.edit(f"{ggl}downloader..\n\n{error}")
+            return await infomsg.edit(f"{ggl}downloader gagal..\n\n{error}")
 
-    await client.call_py.play(message.chat.id, MediaStream(
-        file_name,
-        video_flags=MediaStream.Flags.IGNORE,
-        audio_parameters=AudioQuality.STUDIO,
-        ),
+    await client.call_py.play(
+        message.chat.id, 
+        MediaStream(file_name, video_flags=MediaStream.Flags.IGNORE, audio_parameters=AudioQuality.STUDIO)
     )
 
     if message.reply_to_message and message.reply_to_message.audio:
-        await infomsg.edit(f"{sks}<b>ᴍᴇᴍᴜᴛᴀʀ ᴀᴜᴅɪᴏ:</b> {title}")
+        await infomsg.edit(f"{sks}<b>Memutar audio:</b> {title}")
     else:
         await infomsg.delete()
-        await message.reply_text(data_ytp.format(
-            "audio",
-            title,
-            timedelta(seconds=duration),
-            views,
-            channel,
-            url,
-            bot.me.mention),
+        await message.reply_text(
+            f"<b>Memutar Audio:</b> {title}\n"
+            f"<b>Durasi:</b> {timedelta(seconds=duration)}\n"
+            f"<b>Views:</b> {views}\n"
+            f"<b>Channel:</b> {channel}\n"
+            f"<b>Link:</b> <a href='{url}'>YouTube</a>",
             disable_web_page_preview=True,
         )
+
     for files in (thumb, file_name):
-        if files and os.path.exists(files):
+        if files and os.path.isfile(files):
             os.remove(files)
 
-
-async def check_gcch(client, message):
+async def check_gcch(client, message: Message):
+    """Memeriksa apakah perintah dijalankan di grup atau channel."""
     ggl = await EMO.GAGAL(client)
-    chat_id = message.chat.id
     if message.chat.type not in (ChatType.GROUP, ChatType.SUPERGROUP, ChatType.CHANNEL):
-        return await message.reply_text(f"<blockquote><b>{ggl}ɢᴜɴᴀᴋᴀɴ ᴅɪ ɢʀᴜᴘ ᴀᴛᴀᴜ ᴄʜᴀɴɴᴇʟ !</b></blockquote>")
+        return await message.reply_text(f"<blockquote><b>{ggl}Gunakan di grup atau channel!</b></blockquote>")
     return None
 
 @PY.UBOT("play")
-async def play_music(client, message):
+async def play_music(client, message: Message):
+    """Perintah untuk memainkan musik."""
     result = await check_gcch(client, message)
     if result:
         return
@@ -160,11 +168,12 @@ async def play_music(client, message):
     if chat_call:
         status = chat_call.status
         if status == Call.Status.IDLE:
-            return await message.reply(f"<blockquote><b>{ggl}ᴀᴋᴜɴ ᴋᴀᴍᴜ sᴇᴅᴀɴɢ ʙᴇʀᴀᴅᴀ ᴅɪ ᴏʙʀᴏʟᴀɴ\nᴍᴏʜᴏɴ ɢᴜɴᴀᴋᴀɴ ʟᴠᴄ !</b></blockquote>")
+            return await message.reply(f"<blockquote><b>{ggl}Sedang berada di obrolan. Gunakan di LVC!</b></blockquote>")
         elif status in (Call.Status.PLAYING, Call.Status.PAUSED):
-            return await message.reply(f"<blockquote><b>{ggl}ʜᴀʀᴀᴘ ᴛᴜɴɢɢᴜ ʟᴀɢᴜɴʏᴀ sᴇʟᴇsᴀɪ !</b></blockquote>")
+            return await message.reply(f"<blockquote><b>{ggl}Harap tunggu lagu selesai!</b></blockquote>")
     else:
         await playing_cmd(client, message)
+
 
 
 @PY.UBOT("lvc")
