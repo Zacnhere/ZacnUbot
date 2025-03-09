@@ -17,6 +17,8 @@ requests
 unidecode
 attrify
 uvloop
+meval
+youtubesearchpython
 pySmartDL
 html2text
 removebg
