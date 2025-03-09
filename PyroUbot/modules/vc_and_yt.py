@@ -2,6 +2,7 @@ import math
 import wget
 import os
 import asyncio
+import yt_dlp
 from random import randint
 
 from pyrogram.raw.functions.channels import GetFullChannel
@@ -71,32 +72,33 @@ async def progress(current, total, message, start, type_of_ps, file_name=None):
         except MessageNotModified:
             pass
 
-async def YoutubeDownload(url, as_video=False):
-    """Mengunduh video/audio dari YouTube"""
+
+async def search_youtube(query):
     ydl_opts = {
         "quiet": True,
-        "format": "bestvideo+bestaudio/best" if as_video else "bestaudio",
-        "outtmpl": "downloads/%(id)s.%(ext)s",
-        "nocheckcertificate": True,
-        "geo_bypass": True,
+        "default_search": "ytsearch1",
+        "extract_flat": True,
+        "force_generic_extractor": True,
     }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(query, download=False)
+        if "entries" in info and len(info["entries"]) > 0:
+            video = info["entries"][0]
+            return {"title": video["title"], "id": video["id"], "url": f"https://youtu.be/{video['id']}"}
+    return None
 
-    try:
-        with YoutubeDL(ydl_opts) as ydl:
-            ytdl_data = ydl.extract_info(url, download=True)
-            file_name = ydl.prepare_filename(ytdl_data)
-            return (
-                file_name,
-                ytdl_data.get("title", "Unknown"),
-                f"https://youtu.be/{ytdl_data.get('id', '')}",
-                ytdl_data.get("duration", 0),
-                f"{ytdl_data.get('view_count', 0):,}".replace(",", "."),
-                ytdl_data.get("uploader", "Unknown"),
-                f"https://img.youtube.com/vi/{ytdl_data.get('id', '')}/hqdefault.jpg",
-                "{0} - {1}\nDurasi: {2}\nViews: {3}\nChannel: {4}\nLink: {5}\nRequested by: {6}",
-            )
-    except Exception as e:
-        return None, None, None, None, None, None, None, str(e)
+async def vsong_cmd(client, message):
+    if len(message.command) < 2:
+        return await message.reply_text("❌ Masukkan judul video dengan benar.")
+
+    infomsg = await message.reply_text("🔍 Mencari...", quote=False)
+
+    search = await search_youtube(message.text.split(None, 1)[1])
+    if not search:
+        return await infomsg.edit("❌ Pencarian gagal.")
+
+    link = search["url"]
+        
 
 async def vsong_cmd(client, message):
     """Mengunduh dan mengirim video YouTube"""
