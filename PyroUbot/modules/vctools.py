@@ -287,7 +287,7 @@ async def _(client, message):
 
 @PY.UBOT("jvc")
 @PY.GROUP
-async def _(client, message):
+async def _(client, message: Message):
     brhsl = await EMO.BERHASIL(client)
     ggl = await EMO.GAGAL(client)
     prs = await EMO.PROSES(client)
@@ -296,43 +296,45 @@ async def _(client, message):
     try:
         # Mendapatkan ID grup dari argumen atau gunakan grup saat ini
         args = message.text.split()
-        if len(args) > 1:
-            target_group_id = int(args[1])
-            chat = await client.get_chat(target_group_id)
-        else:
-            target_group_id = message.chat.id
-            chat = message.chat
+        target_group_id = int(args[1]) if len(args) > 1 else message.chat.id
+        chat = await client.get_chat(target_group_id)
 
         # Kirim pesan pemrosesan
         mex = await message.reply(f"{prs}<b>ᴘʀᴏᴄᴄᴇsɪɴɢ...</b>")
 
         # Cek apakah file media tersedia
-        if not os.path.exists("storage/vc.mp3"):
+        file_path = "storage/vc.mp3"
+        if not os.path.exists(file_path):
             await mex.edit(f"{ggl}<b>Error:</b> Media file not found.")
             return
 
         # Memulai Voice Chat di grup target
-        await client.call_py.play(target_group_id, MediaStream("storage/vc.mp3"))
+        await client.call_py.play(target_group_id, MediaStream(file_path))
         await client.call_py.mute_stream(target_group_id)
 
         # Kirim pesan sukses
         await mex.edit(
-            f"<blockquote>{brhsl}<b>╭sᴜᴄᴄᴇss ᴊᴏɪɴ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ</b>\n"
-            f"{grp}<b>╰ɢʀᴏᴜᴘ :</b> <code>{chat.title}</code></blockquote>"
+            f"<blockquote>{brhsl}<b>╭ sᴜᴄᴄᴇss ᴊᴏɪɴ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ</b>\n"
+            f"{grp}<b>╰ ɢʀᴏᴜᴘ :</b> <code>{chat.title}</code></blockquote>"
         )
+
     except ChatAdminRequired:
         await mex.edit(
-            f"<blockquote>{ggl}<b>sᴏʀʀʏ, ɪ ᴄᴀɴ'ᴛ ᴊᴏɪɴ ᴛʜᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ. ᴀᴅᴍɪɴ ᴘᴇʀᴍɪssɪᴏɴ ʀᴇQᴜɪʀᴇᴅ.</b></blockquote>"
+            f"<blockquote>{ggl}<b>❌ ɪ ᴄᴀɴ'ᴛ ᴊᴏɪɴ ᴛʜᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ. ᴀᴅᴍɪɴ ᴘᴇʀᴍɪssɪᴏɴ ʀᴇQᴜɪʀᴇᴅ.</b></blockquote>"
         )
+
     except ValueError:
         await mex.edit(f"{ggl}<b>Error:</b> Invalid group ID.")
+
     except UserBannedInChannel:
         await mex.edit(f"{ggl}<b>Error:</b> You are banned from the channel.")
-    except Exception as r:
+
+    except Exception as e:
         await mex.edit(
-            f"{ggl}<b>Failed to join the voice chat.</b>\n<code>{r}</code>"
+            f"{ggl}<b>❌ Failed to join the voice chat.</b>\n<code>{e}</code>"
         )
-        logging.error(f"Error in joining VC for group {target_group_id}:", exc_info=True)
+        logging.error(f"Error in joining VC for group {target_group_id}: {e}", exc_info=True)
+     
 
 
 @PY.UBOT("stream")
