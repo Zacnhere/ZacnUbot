@@ -55,26 +55,21 @@ from youtubesearchpython import VideosSearch
 from pyrogram.enums import ChatType
 from PyroUbot import *
 
+
+def run_sync(func, *args, **kwargs):
+    return get_event_loop().run_in_executor(None, partial(func, *args, **kwargs))
+
 async def YoutubeDownload(url, as_video=False):
-    if as_video:
-        ydl_opts = {
-            "quiet": True,
-            "no_warnings": True,
-            "format": "(bestvideo[height<=?720][width<=?1280][ext=mp4])+(bestaudio[ext=m4a])",
-            "outtmpl": "downloads/%(id)s.%(ext)s",
-            "nocheckcertificate": True,
-            "geo_bypass": True,
-        }
-    else:
-        ydl_opts = {
-            "quiet": True,
-            "no_warnings": True,
-            "format": "bestaudio[ext=m4a]",
-            "outtmpl": "downloads/%(id)s.%(ext)s",
-            "nocheckcertificate": True,
-            "geo_bypass": True,
-        }
-    data_ytp = "<b><emoji id=6005994005148471369>💡</emoji> ʙᴇʀʜᴀsɪʟ ᴍᴇᴍᴜᴛᴀʀ ᴍᴜsɪᴄ {}</b>\n\n<b><emoji id=5904544038643569182>🏷</emoji> ɴᴀᴍᴀ:</b> {}<b>\n<b><emoji id=6030547358222127917>🧭</emoji> ᴅᴜʀᴀsɪ:</b> {}\n<b><emoji id=5233246225146332642>👀</emoji> ᴅɪʟɪʜᴀᴛ:</b> {}\n<b><emoji id=6005896024059547548>📢</emoji> ᴄʜᴀɴɴᴇʟ:</b> {}\n<b><emoji id=6005993794695076239>🔗</emoji> ᴛᴀᴜᴛᴀɴ:</b> <a href={}>ʏᴏᴜᴛᴜʙᴇ</a>\n\n<b><emoji id=5801170880272797821>⚡</emoji> ᴘᴏᴡᴇʀᴇᴅ ʙʏ:</b> {}"
+    ydl_opts = {
+        "quiet": True,
+        "no_warnings": True,
+        "format": "(bestvideo[height<=?720][width<=?1280][ext=mp4])+(bestaudio[ext=m4a])" if as_video else "bestaudio[ext=m4a]",
+        "outtmpl": "downloads/%(id)s.%(ext)s",
+        "nocheckcertificate": True,
+        "geo_bypass": True,
+        "cookiefile": "cookies.txt",
+    }
+    data_ytp = "<blockquote><b><emoji id=6005994005148471369>💡</emoji> ᴍᴇᴍᴜᴛᴀʀ {}\n\n<emoji id=5904544038643569182>🏷</emoji> ɴᴀᴍᴀ: {}\n<emoji id=6030547358222127917>🧭</emoji> ᴅᴜʀᴀsɪ: {}\n<emoji id=5233246225146332642>👀</emoji> ᴅɪʟɪʜᴀᴛ: {}\n<emoji id=6005896024059547548>📢</emoji> ᴄʜᴀɴɴᴇʟ: {}\n<emoji id=6005993794695076239>🔗</emoji> ᴛᴀᴜᴛᴀɴ: <a href={}>youtube</a>\n\n<emoji id=5801170880272797821>⚡</emoji> ᴘᴏᴡᴇʀᴇᴅ ʙʏ: {}</b></blockquote>"
     ydl = YoutubeDL(ydl_opts)
     ytdl_data = await run_sync(ydl.extract_info, url, download=True)
     file_name = ydl.prepare_filename(ytdl_data)
@@ -87,156 +82,89 @@ async def YoutubeDownload(url, as_video=False):
     thumb = f"https://img.youtube.com/vi/{videoid}/hqdefault.jpg"
     return file_name, title, url, duration, views, channel, thumb, data_ytp
 
-
-def humanbytes(size):
-    if not size:
-        return ""
-    power = 2**10
-    raised_to_pow = 0
-    dict_power_n = {0: "", 1: "kb", 2: "mb", 3: "gb", 4: "tb"}
-    while size > power:
-        size /= power
-        raised_to_pow += 1
-    return f"{str(round(size, 2))} {dict_power_n[raised_to_pow]}"
-
-
-def time_formatter(milliseconds: int) -> str:
-    seconds, milliseconds = divmod(milliseconds, 1000)
-    minutes, seconds = divmod(seconds, 60)
-    hours, minutes = divmod(minutes, 60)
-    days, hours = divmod(hours, 24)
-    tmp = (
-        (f"{str(days)} hari, " if days else "")
-        + (f"{str(hours)} jam, " if hours else "")
-        + (f"{str(minutes)} menit, " if minutes else "")
-        + (f"{str(seconds)} detik, " if seconds else "")
-        + (f"{str(milliseconds)} mikrodetik, " if milliseconds else "")
-    )
-    return tmp[:-2]
-
-
-async def progress(current, total, message, start, type_of_ps, file_name=None):
-    now = time()
-    diff = now - start
-    if round(diff % 10.00) == 0 or current == total:
-        percentage = current * 100 / total
-        speed = current / diff
-        elapsed_time = round(diff) * 1000
-        if elapsed_time == 0:
-            return
-        time_to_completion = round((total - current) / speed) * 1000
-        estimated_total_time = elapsed_time + time_to_completion
-        progress_str = "{0}{1} {2}%\n".format(
-            "".join("⊯" for _ in range(math.floor(percentage / 10))),
-            "".join("~" for _ in range(10 - math.floor(percentage / 10))),
-            round(percentage, 2),
-        )
-        tmp = progress_str + "{0} of {1}\nestimasi: {2}".format(
-            humanbytes(current), humanbytes(total), time_formatter(estimated_total_time)
-        )
-        if file_name:
-            try:
-                await message.edit(
-                    f"""
-<b>{type_of_ps}</b>
-
-<b>file_id:</b> <code>{file_name}</code>
-
-<b>{tmp}</b>
-"""
-                )
-            except FloodWait as e:
-                await asyncio.sleep(e.x)
-            except MessageNotModified:
-                pass
-        else:
-            try:
-                await message.edit(f"{type_of_ps}\n{tmp}")
-            except FloodWait as e:
-                await asyncio.sleep(e.x)
-            except MessageNotModified:
-                pass
-
-async def check_admin_permissions(client, chat_id):
-    member = await client.get_chat_member(chat_id, client.me.id)
-    return member.status == "administrator" and member.can_manage_voice_chats
- 
-
-@PY.UBOT("play")
-@PY.GROUP
-@PY.ULTRA
-async def play_handler(client: Client, message: Message):
-    brhsl = await EMO.BERHASIL(client)
+async def playing_cmd(client, message):
     ggl = await EMO.GAGAL(client)
+    sks = await EMO.BERHASIL(client)
     prs = await EMO.PROSES(client)
-    if len(message.command) < 2 or message.command[1] == '':
-        return await message.reply_text(
-            f"{ggl}<b>ᴀᴜᴅɪᴏ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ\nᴍᴏʜᴏɴ ᴍᴀsᴜᴋᴀɴ ᴊᴜᴅᴜʟ ᴠɪᴅᴇᴏ ᴅᴇɴɢᴀɴ ʙᴇɴᴀʀ</b>",
-        )
-    await message.delete()
-    infomsg = await message.reply_text(f"<b>{prs}ᴘᴇɴᴄᴀʀɪᴀɴ...</b>", quote=False)
-    try:
-        search = VideosSearch(message.text.split(None, 1)[1], limit=1).result()[
-            "result"
-        ][0]
-        link = f"https://youtu.be/{search['id']}"
-    except Exception as error:
-        return await infomsg.edit(f"<b>{prs}ᴘᴇɴᴄᴀʀɪᴀɴ...</b>\n\n{error}")
-    try:
-        (
-            file_name,
-            title,
-            url,
-            duration,
-            views,
-            channel,
-            thumb,
-            data_ytp,
-        ) = await YoutubeDownload(link, as_video=False)
-    except Exception as error:
-        return await infomsg.edit(f"<b>{prs}ᴅᴏᴡɴʟᴏᴀᴅᴇʀ...\n\n{error}</b>")
-    thumbnail = wget.download(thumb)
-    await client.send_message(
-        message.chat.id,
-        text=data_ytp.format(
+    
+    if message.reply_to_message and message.reply_to_message.audio:
+        audio = message.reply_to_message.audio
+        infomsg = await message.reply_text(f"{prs}<b>ᴍᴇɴᴅᴏᴡɴʟᴏᴀᴅ ᴀᴜᴅɪᴏ...</b>", quote=False)
+        file_name = await client.download_media(audio)
+        title = audio.title or "Audio"
+        duration = audio.duration or 0
+        url = audio.file_id
+        channel = "Local Audio"
+        views = "N/A"
+        thumb = None
+    else:
+        if len(message.command) < 2:
+            return await message.reply_text(
+                f"<blockquote>{ggl}<b>ᴀᴜᴅɪᴏ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ! ᴍᴏʜᴏɴ ᴍᴀsᴜᴋᴀɴ ᴊᴜᴅᴜʟ ᴠɪᴅᴇᴏ ᴅᴇɴɢᴀɴ ʙᴇɴᴀʀ</b></blockquote>",
+            )
+        infomsg = await message.reply_text(f"{prs}<b>ᴘᴇɴᴄᴀʀɪᴀɴ...</b>", quote=False)
+        try:
+            search = VideosSearch(message.text.split(None, 1)[1], limit=1).result()["result"][0]
+            link = f"https://youtu.be/{search['id']}"
+        except Exception as error:
+            return await infomsg.edit(f"{prs}pencarian...\n\n{error}")
+        try:
+            file_name, title, url, duration, views, channel, thumb, data_ytp = await YoutubeDownload(link, as_video=False)
+        except Exception as error:
+            return await infomsg.edit(f"{ggl}downloader..\n\n{error}")
+
+    await client.call_py.play(message.chat.id, MediaStream(
+        file_name,
+        video_flags=MediaStream.Flags.IGNORE,
+        audio_parameters=AudioQuality.STUDIO,
+        ),
+    )
+
+    if message.reply_to_message and message.reply_to_message.audio:
+        await infomsg.edit(f"{sks}<b>ᴍᴇᴍᴜᴛᴀʀ ᴀᴜᴅɪᴏ:</b> {title}")
+    else:
+        await infomsg.delete()
+        await message.reply_text(data_ytp.format(
             "audio",
             title,
             timedelta(seconds=duration),
             views,
             channel,
             url,
-            bot.me.mention,
-        ),
-        reply_to_message_id=message.id,
-        disable_web_page_preview=True,
-    )
-    await infomsg.delete()
-    await client.call_py.play(
-        message.chat.id,
-        MediaStream(
-        file_name,
-        AudioQuality.STUDIO,
-        ),
-    )
-    for files in (thumbnail, file_name):
+            bot.me.mention),
+            disable_web_page_preview=True,
+        )
+    for files in (thumb, file_name):
         if files and os.path.exists(files):
             os.remove(files)
 
-async def get_group_call(client, message):
-    chat_peer = await client.resolve_peer(message.chat.id)
-    if isinstance(chat_peer, (InputPeerChannel, InputPeerChat)):
-        if isinstance(chat_peer, InputPeerChannel):
-            full_chat = (
-                await client.invoke(GetFullChannel(channel=chat_peer))
-            ).full_chat
-        elif isinstance(chat_peer, InputPeerChat):
-            full_chat = (
-                await client.invoke(GetFullChat(chat_id=chat_peer.chat_id))
-            ).full_chat
-        if full_chat is not None:
-            return full_chat.call
-    await message.reply("<b>ɴᴏ ɢʀᴏᴜᴘ ᴄᴀʟʟ</b>")
-    return False
+
+async def check_gcch(client, message):
+    ggl = await EMO.GAGAL(client)
+    chat_id = message.chat.id
+    if message.chat.type not in (ChatType.GROUP, ChatType.SUPERGROUP, ChatType.CHANNEL):
+        return await message.reply_text(f"<blockquote><b>{ggl}ɢᴜɴᴀᴋᴀɴ ᴅɪ ɢʀᴜᴘ ᴀᴛᴀᴜ ᴄʜᴀɴɴᴇʟ !</b></blockquote>")
+    return None
+
+@PY.UBOT("play")
+async def play_music(client, message):
+    result = await check_gcch(client, message)
+    if result:
+        return
+
+    ggl = await EMO.GAGAL(client)
+    chat_id = message.chat.id
+    calls = await client.call_py.calls
+    chat_call = calls.get(chat_id)
+
+    if chat_call:
+        status = chat_call.status
+        if status == Call.Status.IDLE:
+            return await message.reply(f"<blockquote><b>{ggl}ᴀᴋᴜɴ ᴋᴀᴍᴜ sᴇᴅᴀɴɢ ʙᴇʀᴀᴅᴀ ᴅɪ ᴏʙʀᴏʟᴀɴ\nᴍᴏʜᴏɴ ɢᴜɴᴀᴋᴀɴ ʟᴠᴄ !</b></blockquote>")
+        elif status in (Call.Status.PLAYING, Call.Status.PAUSED):
+            return await message.reply(f"<blockquote><b>{ggl}ʜᴀʀᴀᴘ ᴛᴜɴɢɢᴜ ʟᴀɢᴜɴʏᴀ sᴇʟᴇsᴀɪ !</b></blockquote>")
+    else:
+        await playing_cmd(client, message)
 
 
 @PY.UBOT("lvc")
