@@ -11,7 +11,7 @@ async def main():
         try:
             await asyncio.wait_for(ubot_.start(), timeout=10)
             await ubot_.join_chat("ZacnnSupport")
-            await ubot_.join_chat("ETHEREALROLEPLAY")
+            await ubot_.join_chat("TraderSignaltrading")
         except asyncio.TimeoutError:
             print(f"Timeout: Ubot {int(_ubot['name'])} terjadi timeout!")
         except Exception:
