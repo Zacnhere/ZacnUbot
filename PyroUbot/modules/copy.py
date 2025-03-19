@@ -21,7 +21,7 @@ __HELP__ = """
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}copy</code> [ᴜʀʟ]
    <i>untuk mengambil konten channel publik</i>
 
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}salincv</code> [ᴜʀʟ]
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}cprivate</code> [ᴜʀʟ]
    <i>untuk mengambil konten channel private</i>
    <i>note : hanya untuk owner bot</i>
 
@@ -289,41 +289,72 @@ async def copy_callback_msg(client, callback_query):
         await callback_query.edit_message_text(f"<code>{error}</code>")
 
 
-
-@PY.UBOT("salincv")
+@PY.UBOT("cprivate")
 @PY.OWNER
-async def copy_private_channel(client: Client, message: Message):
+async def copy_private_content(client: Client, message: Message):
+    """Menyalin konten media (foto/video) dari channel atau grup private."""
     reply = message.reply_to_message
-    if not reply:
-        await message.reply_text("ʀᴇᴘʟʏ ᴘᴇsᴀɴ ᴄʜᴀɴɴᴇʟ ᴘʀɪᴠᴀᴛᴇ")
+    if not reply or not reply.text:
+        await message.reply_text("⚠️ Mohon reply ke pesan yang berisi link dari grup atau channel private.")
         return
 
     link = reply.text.strip()
-    if not link.startswith("https://t.me/c/"):
-        await message.reply_text("ʙᴜᴋᴀɴ ᴛᴇʀᴍᴀsᴜᴋ ᴄʜᴀɴɴᴇʟ ᴘʀɪᴠᴀᴛᴇ")
+    if not link.startswith("https://t.me/c/") and not link.startswith("https://t.me/"):
+        await message.reply_text("⚠️ Link tidak valid. Harap gunakan link dari grup atau channel private.")
         return
 
     try:
-        chat_id = int("-100" + link.split("/")[-2])
-        msg_id = int(link.split("/")[-1]) 
-
-        await message.reply_text("⏳ᴘʀᴏᴄᴇssɪɴɢ..")
-
-        get = await client.get_messages(chat_id, msg_id)
-
-        if not get.media:
-            await message.reply_text("ᴍᴇᴅɪᴀ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ")
+        # Ekstrak chat_id & msg_id dari link
+        parts = link.split("/")
+        if len(parts) < 3:
+            await message.reply_text("⚠️ Format link salah.")
             return
 
-        media = await client.download_media(get)
+        chat_id = int("-100" + parts[-2])  # ID Channel atau Grup
+        msg_id = int(parts[-1])  # ID Pesan
 
-        await client.send_video(
-            message.chat.id, 
-            video=media,
-            caption="ʙᴇʀʜᴀsɪʟ ᴍᴇɴʏᴀʟɪɴ ᴋᴏɴᴛᴇɴ ᴘʀɪᴠᴀᴛᴇ"
-        )
+        await message.reply_text("⏳ Memproses, harap tunggu...")
 
-    
+        # Ambil pesan dari grup atau channel private
+        get = await client.get_messages(chat_id, msg_id)
+
+        if not get or not get.media:
+            await message.reply_text("❌ Tidak ada media dalam pesan ini.")
+            return
+
+        # Jika ada banyak media dalam satu pesan
+        if get.media_group_id:
+            media_group = await client.get_media_group(chat_id, msg_id)
+
+            files = []
+            for media in media_group:
+                file_path = await client.download_media(media)
+                if file_path:
+                    files.append(file_path)
+
+            # Kirim ulang media ke pengguna
+            for file in files:
+                await client.send_document(
+                    chat_id=message.chat.id,
+                    document=file,
+                    caption="✅ Berhasil menyalin konten private."
+                )
+                os.remove(file)  # Hapus file setelah dikirim
+
+        else:
+            # Jika hanya satu media
+            media = await client.download_media(get)
+            if not media:
+                await message.reply_text("❌ Gagal mengunduh media.")
+                return
+
+            await client.send_document(
+                chat_id=message.chat.id,
+                document=media,
+                caption="✅ Berhasil menyalin konten private."
+            )
+
+            os.remove(media)  # Hapus file setelah dikirim
+
     except Exception as e:
-        await message.reply_text(f"ɢᴀɢᴀʟ ᴍᴇɴɢᴀᴍʙɪʟ ᴍᴇᴅɪᴀ{(e)}")
-      
+        await message.reply_text(f"❌ Gagal mengambil media: {str(e)}")
