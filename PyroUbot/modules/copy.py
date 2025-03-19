@@ -21,7 +21,7 @@ __HELP__ = """
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}copy</code> [ᴜʀʟ]
    <i>untuk mengambil konten channel publik</i>
 
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}copypv</code> [ᴜʀʟ]
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}salincv</code> [ᴜʀʟ]
    <i>untuk mengambil konten channel private</i>
    <i>note : hanya untuk owner bot</i>
 
@@ -290,7 +290,7 @@ async def copy_callback_msg(client, callback_query):
 
 
 
-@PY.UBOT("copypv")
+@PY.UBOT("salincv")
 @PY.OWNER
 async def copy_private_channel(client: Client, message: Message):
     reply = message.reply_to_message
