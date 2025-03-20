@@ -527,3 +527,47 @@ async def _(client, message):
         )
     except Exception as error:
         return await msg.edit(error)
+
+@PY.UBOT("ultrabot")
+@PY.SELLER
+async def _(client, message):
+    prs = await EMO.PROSES(client)
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
+    ktrng = await EMO.BL_KETERANGAN(client)
+    
+    msg = await message.reply(f"{prs}<b>sᴇᴅᴀɴɢ ᴍᴇᴍᴘʀᴏsᴇs...</b>")
+    user_id = await extract_user(message)
+    
+    if not user_id:
+        return await msg.edit(
+            f"{ggl}<code>{message.text}</code> <b>ᴜsᴇʀ_ɪᴅ/ᴜsᴇʀɴᴀᴍᴇ</b>"
+        )
+
+    try:
+        user = await client.get_users(user_id)
+    except Exception as error:
+        return await msg.edit(error)
+
+    ultra_users = await get_list_from_vars(bot.me.id, "ULTRA_PREM")
+
+    if user.id in ultra_users:
+        return await msg.edit(f"""
+<blockquote><b>{ktrng}💬 ɪɴғᴏʀᴍᴀᴛɪᴏɴ</b>
+<b>ɴᴀᴍᴇ:</b> [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})
+<b>ɪᴅ:</b> {user.id}
+<b>ᴋᴇᴛᴇʀᴀɴɢᴀɴ:</b> {ggl}<b>sᴜᴅᴀʜ ᴅᴀʟᴀᴍ ᴅᴀғᴛᴀʀ ᴜʟᴛʀᴀᴘʀᴇᴍ</b></blockquote>
+"""
+        )
+
+    try:
+        await add_to_vars(bot.me.id, "ULTRA_PREM", user.id)
+        return await msg.edit(f"""
+<blockquote><b>{ktrng}💬 ɪɴғᴏʀᴍᴀᴛɪᴏɴ</b>
+<b>ɴᴀᴍᴇ:</b> [{user.first_name} {user.last_name or ''}](tg://user?id={user.id})
+<b>ɪᴅ:</b> {user.id}
+<b>ᴋᴇᴛᴇʀᴀɴɢᴀɴ:</b> {brhsl}<b>ᴜʟᴛʀᴀᴘʀᴇᴍ</b></blockquote>
+"""
+        )
+    except Exception as error:
+        return await msg.edit(error)
