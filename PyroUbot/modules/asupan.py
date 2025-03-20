@@ -77,6 +77,7 @@ async def photo_cowok(client, message):
         await y.edit(error)
 
 @PY.UBOT("bokep")
+@PY.ULTRA
 async def video_bokep(client, message):
     prs = await EMO.PROSES(client)
     y = await message.reply_text(f"<b>{prs}ᴍᴇɴᴄᴀʀɪ ᴠɪᴅᴇᴏ ʙᴏᴋᴇᴘ...</b>")
@@ -100,6 +101,7 @@ async def video_bokep(client, message):
     await client.leave_chat(-1002292016820)
 
 @PY.UBOT("bokep2")
+@PY.ULTRA
 async def video_bokep2(client, message):
     prs = await EMO.PROSES(client)
     y = await message.reply_text(f"<b>{prs}ᴍᴇɴᴄᴀʀɪ ᴠɪᴅᴇᴏ ʙᴏᴋᴇᴘ2...</b>")
