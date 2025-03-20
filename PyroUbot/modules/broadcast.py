@@ -288,7 +288,6 @@ LT = []
 
 
 @PY.UBOT("auto_gcast")
-@PY.ULTRA
 async def _(client, message):
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
