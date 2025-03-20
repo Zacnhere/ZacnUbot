@@ -61,7 +61,6 @@ async def process_message(client, message):
 
 
 @PY.UBOT("protect")
-@PY.ULTRA
 @PY.GROUP
 async def _(client, message):
     brhsl = await EMO.BERHASIL(client)
@@ -90,7 +89,6 @@ async def _(client, message):
 
 
 @PY.UBOT("word")
-@PY.ULTRA
 @PY.GROUP
 async def _(client, message):
     brhsl = await EMO.BERHASIL(client)
@@ -114,7 +112,6 @@ async def _(client, message):
     return await message.reply(response)
 
 @PY.UBOT("listword")
-@PY.ULTRA
 @PY.GROUP
 async def _(client, message):
     brhsl = await EMO.BERHASIL(client)
@@ -133,7 +130,6 @@ async def _(client, message):
 
 
 @PY.UBOT("delword")
-@PY.ULTRA
 @PY.GROUP
 async def _(client, message):
     brhsl = await EMO.BERHASIL(client)
