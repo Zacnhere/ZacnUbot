@@ -41,7 +41,6 @@ from PyroUbot import *
 from pyrogram.errors.exceptions import FloodWait
 
 @PY.UBOT("antiuser")
-@PY.ULTRA
 async def _(client, message):
     ggl = await EMO.GAGAL(client)
     sks = await EMO.BERHASIL(client)
@@ -58,7 +57,6 @@ async def _(client, message):
 
 
 @PY.UBOT("dor")
-@PY.ULTRA
 async def add_user_to_blacklist(c, m):
     brhsl = await EMO.BERHASIL(c)
     ggl = await EMO.GAGAL(c)
@@ -82,7 +80,6 @@ async def add_user_to_blacklist(c, m):
         await m.reply_text(f"<blockquote>{ggl}<b>sᴜᴅᴀʜ ᴀᴅᴀ ᴅɪ ᴀɴᴛɪᴜsᴇʀ!!</b></blockquote>", quote=True)
 
 @PY.UBOT("undor")
-@PY.ULTRA
 async def remove_user_from_blacklist(c, m):
     brhsl = await EMO.BERHASIL(c)
     ggl = await EMO.GAGAL(c)
@@ -105,7 +102,6 @@ async def remove_user_from_blacklist(c, m):
         await m.reply_text(f"<blockquote>{ggl}<b>ᴜsᴇʀ ᴛᴇʀsᴇʙᴜᴛ ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴅᴀʟᴀᴍ ᴅᴀғᴛᴀʀ ᴀɴᴛɪɢᴄᴀsᴛ</b></blockquote>", quote=True)
 
 @PY.UBOT("getuser")
-@PY.ULTRA
 @PY.TOP_CMD
 async def display_blacklist(client, message):
     sks = await EMO.BERHASIL(client)
