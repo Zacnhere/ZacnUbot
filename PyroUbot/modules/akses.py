@@ -1,7 +1,7 @@
 from PyroUbot import *
 
 @PY.UBOT("ultraprem")
-@PY.SELLER
+@PY.ULTRA
 async def _(client, message):
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
@@ -35,7 +35,7 @@ async def _(client, message):
 
 
 @PY.UBOT("delultra")
-@PY.SELLER
+@PY.ULTRA
 async def _(client, message):
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
@@ -69,7 +69,7 @@ async def _(client, message):
 
 
 @PY.UBOT("getultraprem")
-@PY.SELLER
+@PY.ULTRA
 async def _(client, message):
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
