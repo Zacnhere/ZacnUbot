@@ -434,66 +434,75 @@ async def add_auto_text(client, text):
     await set_vars(client.me.id, "AUTO_TEXT", auto_text)
 
 
-@PY.UBOT("auto_fwd")
-async def auto_forward(client, message):
-    user_id = client.me.id
+AG = []  # List untuk menyimpan user yang mengaktifkan Auto GCast
+FORWARD_DATA = {}  # Dictionary untuk menyimpan pesan yang akan diteruskan
+
+@PY.UBOT("auto_fwd"))
+async def auto_gcast(client, message):
+    global FORWARD_DATA
+    command = message.text.split(maxsplit=1)
+    msg = await message.reply("<b>Memproses perintah...</b>")
     
-    if len(message.command) < 2:
-        return await message.reply("<b>Gunakan:</b> <code>auto_fwd on/off add [chat_id] remove [chat_id] list</code>")
+    if len(command) < 2:
+        return await msg.edit("<b>Gunakan: /auto_gcast [on/off/forward]</b>")
     
-    cmd = message.command[1]
+    action = command[1].lower()
     
-    if cmd == "on":
-        if user_id in AUTO_FWD:
-            return await message.reply("<b>Auto Forward sudah aktif!</b>")
-        AUTO_FWD.append(user_id)
-        await message.reply("<b>Auto Forward diaktifkan!</b>")
-    
-    elif cmd == "off":
-        if user_id in AUTO_FWD:
-            AUTO_FWD.remove(user_id)
-            await message.reply("<b>Auto Forward dinonaktifkan!</b>")
+    if action == "on":
+        if client.me.id not in AG:
+            if client.me.id not in FORWARD_DATA:
+                return await msg.edit("<b>Harap simpan pesan terlebih dahulu dengan /auto_gcast forward</b>")
+            
+            AG.append(client.me.id)
+            await msg.edit("<b>Auto Forward GCast diaktifkan!</b>")
+            done = 0
+            
+            while client.me.id in AG:
+                delay = 5  # Atur delay antar forward
+                group_count = 0
+                
+                async for dialog in client.get_dialogs():
+                    if dialog.chat.type in (ChatType.GROUP, ChatType.SUPERGROUP):
+                        try:
+                            await asyncio.sleep(1)
+                            await client.forward_messages(
+                                dialog.chat.id,  # Tujuan forward
+                                FORWARD_DATA[client.me.id]["chat_id"],  # Chat asal pesan
+                                FORWARD_DATA[client.me.id]["message_id"]  # ID pesan yang diteruskan
+                            )
+                            group_count += 1
+                        except FloodWait as e:
+                            await asyncio.sleep(e.value)
+                        except Exception:
+                            pass
+                
+                done += 1
+                await msg.reply(
+                    f"<b>Auto Forward GCast Terkirim</b>\n"
+                    f"<b>Putaran:</b> {done}\n"
+                    f"<b>Berhasil ke:</b> {group_count} grup\n"
+                    f"<b>Menunggu:</b> {delay} menit"
+                )
+                await asyncio.sleep(delay * 60)
         else:
-            await message.reply("<b>Auto Forward belum diaktifkan!</b>")
+            return await msg.delete()
     
-    elif cmd == "add" and len(message.command) > 2:
-        chat_id = int(message.command[2])
-        if user_id not in FORWARD_TARGETS:
-            FORWARD_TARGETS[user_id] = []
-        if chat_id not in FORWARD_TARGETS[user_id]:
-            FORWARD_TARGETS[user_id].append(chat_id)
-            await message.reply(f"<b>Berhasil menambahkan target forward ke {chat_id}</b>")
+    elif action == "off":
+        if client.me.id in AG:
+            AG.remove(client.me.id)
+            return await msg.edit("<b>Auto Forward GCast dinonaktifkan!</b>")
         else:
-            await message.reply("<b>Chat sudah ada dalam daftar!</b>")
+            return await msg.delete()
     
-    elif cmd == "remove" and len(message.command) > 2:
-        chat_id = int(message.command[2])
-        if user_id in FORWARD_TARGETS and chat_id in FORWARD_TARGETS[user_id]:
-            FORWARD_TARGETS[user_id].remove(chat_id)
-            await message.reply(f"<b>Target forward {chat_id} dihapus!</b>")
-        else:
-            await message.reply("<b>Chat tidak ditemukan dalam daftar!</b>")
-    
-    elif cmd == "list":
-        targets = FORWARD_TARGETS.get(user_id, [])
-        if not targets:
-            await message.reply("<b>Tidak ada target forward!</b>")
-        else:
-            target_list = "\n".join([f"- {chat}" for chat in targets])
-            await message.reply(f"<b>Daftar Target Forward:</b>\n{target_list}")
+    elif action == "forward":
+        if not message.reply_to_message:
+            return await msg.edit("<b>Reply ke pesan yang ingin disimpan untuk diteruskan!</b>")
+        
+        FORWARD_DATA[client.me.id] = {
+            "chat_id": message.chat.id,
+            "message_id": message.reply_to_message.message_id
+        }
+        return await msg.edit("<b>Pesan berhasil disimpan untuk diteruskan dalam auto GCast!</b>")
     
     else:
-        await message.reply("<b>Perintah tidak dikenali!</b>")
-
-@Client.on_message(filters.private & filters.incoming)
-async def forward_messages(client, message):
-    user_id = client.me.id
-    if user_id in AUTO_FWD and user_id in FORWARD_TARGETS:
-        for chat_id in FORWARD_TARGETS[user_id]:
-            try:
-                await message.forward(chat_id)
-                await asyncio.sleep(1)  # Hindari spam
-            except FloodWait as e:
-                await asyncio.sleep(e.value)
-            except Exception:
-                pass
+        return await msg.edit("<b>Perintah tidak dikenal! Gunakan: /auto_gcast [on/off/forward]</b>")
