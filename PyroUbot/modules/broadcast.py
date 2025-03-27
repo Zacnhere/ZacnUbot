@@ -437,7 +437,7 @@ async def add_auto_text(client, text):
 AG = []  # List untuk menyimpan user yang mengaktifkan Auto GCast
 FORWARD_DATA = {}  # Dictionary untuk menyimpan pesan yang akan diteruskan
 
-@PY.UBOT("auto_fwd"))
+@PY.UBOT("auto_fwd")
 async def auto_gcast(client, message):
     global FORWARD_DATA
     command = message.text.split(maxsplit=1)
