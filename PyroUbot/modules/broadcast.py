@@ -432,3 +432,68 @@ async def add_auto_text(client, text):
     auto_text = await get_vars(client.me.id, "AUTO_TEXT") or []
     auto_text.append(text)
     await set_vars(client.me.id, "AUTO_TEXT", auto_text)
+
+
+@PY.UBOT("auto_fwd")
+async def auto_forward(client, message):
+    user_id = client.me.id
+    
+    if len(message.command) < 2:
+        return await message.reply("<b>Gunakan:</b> <code>auto_fwd on/off add [chat_id] remove [chat_id] list</code>")
+    
+    cmd = message.command[1]
+    
+    if cmd == "on":
+        if user_id in AUTO_FWD:
+            return await message.reply("<b>Auto Forward sudah aktif!</b>")
+        AUTO_FWD.append(user_id)
+        await message.reply("<b>Auto Forward diaktifkan!</b>")
+    
+    elif cmd == "off":
+        if user_id in AUTO_FWD:
+            AUTO_FWD.remove(user_id)
+            await message.reply("<b>Auto Forward dinonaktifkan!</b>")
+        else:
+            await message.reply("<b>Auto Forward belum diaktifkan!</b>")
+    
+    elif cmd == "add" and len(message.command) > 2:
+        chat_id = int(message.command[2])
+        if user_id not in FORWARD_TARGETS:
+            FORWARD_TARGETS[user_id] = []
+        if chat_id not in FORWARD_TARGETS[user_id]:
+            FORWARD_TARGETS[user_id].append(chat_id)
+            await message.reply(f"<b>Berhasil menambahkan target forward ke {chat_id}</b>")
+        else:
+            await message.reply("<b>Chat sudah ada dalam daftar!</b>")
+    
+    elif cmd == "remove" and len(message.command) > 2:
+        chat_id = int(message.command[2])
+        if user_id in FORWARD_TARGETS and chat_id in FORWARD_TARGETS[user_id]:
+            FORWARD_TARGETS[user_id].remove(chat_id)
+            await message.reply(f"<b>Target forward {chat_id} dihapus!</b>")
+        else:
+            await message.reply("<b>Chat tidak ditemukan dalam daftar!</b>")
+    
+    elif cmd == "list":
+        targets = FORWARD_TARGETS.get(user_id, [])
+        if not targets:
+            await message.reply("<b>Tidak ada target forward!</b>")
+        else:
+            target_list = "\n".join([f"- {chat}" for chat in targets])
+            await message.reply(f"<b>Daftar Target Forward:</b>\n{target_list}")
+    
+    else:
+        await message.reply("<b>Perintah tidak dikenali!</b>")
+
+@Client.on_message(filters.private & filters.incoming)
+async def forward_messages(client, message):
+    user_id = client.me.id
+    if user_id in AUTO_FWD and user_id in FORWARD_TARGETS:
+        for chat_id in FORWARD_TARGETS[user_id]:
+            try:
+                await message.forward(chat_id)
+                await asyncio.sleep(1)  # Hindari spam
+            except FloodWait as e:
+                await asyncio.sleep(e.value)
+            except Exception:
+                pass
