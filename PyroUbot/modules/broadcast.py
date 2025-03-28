@@ -437,72 +437,60 @@ async def add_auto_text(client, text):
 AG = []  # List untuk menyimpan user yang mengaktifkan Auto GCast
 FORWARD_DATA = {}  # Dictionary untuk menyimpan pesan yang akan diteruskan
 
-@PY.UBOT("auto_fwd")
-async def auto_gcast(client, message):
-    global FORWARD_DATA
-    command = message.text.split(maxsplit=1)
-    msg = await message.reply("<b>Memproses perintah...</b>")
+
+@PY.UBOT("autofd")
+async def _(client, message):
+    prs = await EMO.PROSES(client)
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
+    bcs = await EMO.BROADCAST(client)
     
-    if len(command) < 2:
-        return await msg.edit("<b>Gunakan: /auto_gcast [on/off/forward]</b>")
-    
-    action = command[1].lower()
-    
-    if action == "on":
-        if client.me.id not in AG:
-            if client.me.id not in FORWARD_DATA:
-                return await msg.edit("<b>Harap simpan pesan terlebih dahulu dengan /auto_gcast forward</b>")
-            
-            AG.append(client.me.id)
-            await msg.edit("<b>Auto Forward GCast diaktifkan!</b>")
-            done = 0
-            
-            while client.me.id in AG:
-                delay = 5  # Atur delay antar forward
-                group_count = 0
-                
-                async for dialog in client.get_dialogs():
-                    if dialog.chat.type in (ChatType.GROUP, ChatType.SUPERGROUP):
-                        try:
-                            await asyncio.sleep(1)
-                            await client.forward_messages(
-                                dialog.chat.id,  # Tujuan forward
-                                FORWARD_DATA[client.me.id]["chat_id"],  # Chat asal pesan
-                                FORWARD_DATA[client.me.id]["message_id"]  # ID pesan yang diteruskan
-                            )
-                            group_count += 1
-                        except FloodWait as e:
-                            await asyncio.sleep(e.value)
-                        except Exception:
-                            pass
-                
+    _msg = f"<b>{prs}ᴍᴇᴍᴘʀᴏsᴇs...</b>"
+    gcs = await message.reply(_msg)
+
+    try:
+        args = message.text.split()
+        delay = int(args[1])
+        repeat = int(args[2])
+        command, text = extract_type_and_msg(message)
+    except (IndexError, ValueError):
+        return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴅᴇʟᴀʏ] [ᴄᴏᴜɴᴛ] [ᴛʏᴘᴇ] [ʀᴇᴘʟʏ]</b>")
+
+    if command not in ["group", "users", "all"] or not text:
+        return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴅᴇʟᴀʏ] [ᴄᴏᴜɴᴛ] [ᴛʏᴘᴇ] [ʀᴇᴘʟʏ]</b>")
+
+    if not message.reply_to_message:
+        return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴅᴇʟᴀʏ] [ᴄᴏᴜɴᴛ] [ᴛʏᴘᴇ] [ʀᴇᴘʟʏ]</b>")
+
+    chats = await get_data_id(client, command)
+    blacklist = await get_list_from_vars(client.me.id, "BL_ID")
+
+    done = 0
+    failed = 0
+    for _ in range(repeat):
+        for chat_id in chats:
+            if chat_id in blacklist or chat_id in BLACKLIST_CHAT:
+                continue
+
+            try:
+                if message.reply_to_message:
+                    await message.reply_to_message.forward(chat_id)
+                else:
+                    await text.forward(chat_id)
                 done += 1
-                await msg.reply(
-                    f"<b>Auto Forward GCast Terkirim</b>\n"
-                    f"<b>Putaran:</b> {done}\n"
-                    f"<b>Berhasil ke:</b> {group_count} grup\n"
-                    f"<b>Menunggu:</b> {delay} menit"
-                )
-                await asyncio.sleep(delay * 60)
-        else:
-            return await msg.delete()
-    
-    elif action == "off":
-        if client.me.id in AG:
-            AG.remove(client.me.id)
-            return await msg.edit("<b>Auto Forward GCast dinonaktifkan!</b>")
-        else:
-            return await msg.delete()
-    
-    elif action == "forward":
-        if not message.reply_to_message:
-            return await msg.edit("<b>Reply ke pesan yang ingin disimpan untuk diteruskan!</b>")
-        
-        FORWARD_DATA[client.me.id] = {
-            "chat_id": message.chat.id,
-            "message_id": message.reply_to_message.message_id
-        }
-        return await msg.edit("<b>Pesan berhasil disimpan untuk diteruskan dalam auto GCast!</b>")
-    
-    else:
-        return await msg.edit("<b>Perintah tidak dikenal! Gunakan: /auto_gcast [on/off/forward]</b>")
+            except FloodWait as e:
+                await asyncio.sleep(e.value)
+                continue
+            except Exception:
+                failed += 1
+                pass
+
+            await asyncio.sleep(delay)
+
+    await gcs.delete()
+    _gcs = f"""
+<i> <b>{bcs}ʙʀᴏᴀᴅᴄᴀsᴛ ғᴏʀᴡᴀʀᴅ ꜱᴇɴᴛ</b> </i>
+<i> <b>{brhsl}ꜱᴜᴄᴄᴇꜱ {done} ɢʀᴏᴜᴘ</b> </i>
+<i> <b>{ggl}ꜰᴀɪʟᴇᴅ {failed} ɢʀᴏᴜᴘ</b> </i>
+"""
+    return await message.reply(_gcs)
