@@ -439,6 +439,7 @@ FORWARD_DATA = {}  # Dictionary untuk menyimpan pesan yang akan diteruskan
 
 
 @PY.UBOT("autofd")
+@PY.UBOT("bcfd|cfd")
 async def _(client, message):
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
@@ -453,7 +454,7 @@ async def _(client, message):
         delay = int(args[1])
         repeat = int(args[2])
     except (IndexError, ValueError):
-        return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>Reply pesan [ᴅᴇʟᴀʏ] [ᴄᴏᴜɴᴛ]</b>")
+        return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>Replay pesan [ᴅᴇʟᴀʏ] [ᴄᴏᴜɴᴛ]</b>")
 
     if not message.reply_to_message:
         return await gcs.edit(f"{ggl}Harap reply ke pesan yang ingin dikirimkan.")
@@ -463,25 +464,22 @@ async def _(client, message):
 
     done = 0
     failed = 0
-    while True:
-        for _ in range(repeat):
-            for chat_id in chats:
-                if chat_id in blacklist or chat_id in BLACKLIST_CHAT:
-                    continue
+    for _ in range(repeat):
+        for chat_id in chats:
+            if chat_id in blacklist or chat_id in BLACKLIST_CHAT:
+                continue
 
-                try:
-                    await message.reply_to_message.forward(chat_id)
-                    done += 1
-                except FloodWait as e:
-                    await asyncio.sleep(e.value)
-                    continue
-                except Exception:
-                    failed += 1
-                    pass
+            try:
+                await message.reply_to_message.forward(chat_id)
+                done += 1
+            except FloodWait as e:
+                await asyncio.sleep(e.value)
+                continue
+            except Exception:
+                failed += 1
+                pass
 
-                await asyncio.sleep(delay)
-
-        await asyncio.sleep(delay)
+            await asyncio.sleep(delay)
 
     await gcs.delete()
     _gcs = f"""
