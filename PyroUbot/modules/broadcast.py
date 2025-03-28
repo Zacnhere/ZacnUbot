@@ -452,40 +452,36 @@ async def _(client, message):
         args = message.text.split()
         delay = int(args[1])
         repeat = int(args[2])
-        command, text = extract_type_and_msg(message)
     except (IndexError, ValueError):
-        return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴅᴇʟᴀʏ] [ᴄᴏᴜɴᴛ] [ᴛʏᴘᴇ] [ʀᴇᴘʟʏ]</b>")
-
-    if command not in ["group", "users", "all"] or not text:
-        return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴅᴇʟᴀʏ] [ᴄᴏᴜɴᴛ] [ᴛʏᴘᴇ] [ʀᴇᴘʟʏ]</b>")
+        return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴅᴇʟᴀʏ] [ᴄᴏᴜɴᴛ] [ʀᴇᴘʟʏ]</b>")
 
     if not message.reply_to_message:
-        return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴅᴇʟᴀʏ] [ᴄᴏᴜɴᴛ] [ᴛʏᴘᴇ] [ʀᴇᴘʟʏ]</b>")
+        return await gcs.edit(f"{ggl}Harap reply ke pesan yang ingin dikirimkan.")
 
-    chats = await get_data_id(client, command)
+    chats = await get_data_id(client, "group")
     blacklist = await get_list_from_vars(client.me.id, "BL_ID")
 
     done = 0
     failed = 0
-    for _ in range(repeat):
-        for chat_id in chats:
-            if chat_id in blacklist or chat_id in BLACKLIST_CHAT:
-                continue
+    while True:
+        for _ in range(repeat):
+            for chat_id in chats:
+                if chat_id in blacklist or chat_id in BLACKLIST_CHAT:
+                    continue
 
-            try:
-                if message.reply_to_message:
+                try:
                     await message.reply_to_message.forward(chat_id)
-                else:
-                    await text.forward(chat_id)
-                done += 1
-            except FloodWait as e:
-                await asyncio.sleep(e.value)
-                continue
-            except Exception:
-                failed += 1
-                pass
+                    done += 1
+                except FloodWait as e:
+                    await asyncio.sleep(e.value)
+                    continue
+                except Exception:
+                    failed += 1
+                    pass
 
-            await asyncio.sleep(delay)
+                await asyncio.sleep(delay)
+
+        await asyncio.sleep(delay)
 
     await gcs.delete()
     _gcs = f"""
