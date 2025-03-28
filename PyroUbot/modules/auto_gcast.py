@@ -16,6 +16,8 @@ __HELP__ = """
 <blockquote>
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}auto_gcast</code>
    <i>mengirim pesan siaran secara otomatis</i>
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}autofd</code>
+   <i>mengirim pesan terusan secara otomatis</i>
 <b>ǫᴜᴇʀʏ:</b>
  ● <code>on</code>
  ● <code>off</code>
