@@ -453,7 +453,7 @@ async def _(client, message):
         delay = int(args[1])
         repeat = int(args[2])
     except (IndexError, ValueError):
-        return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>[ᴅᴇʟᴀʏ] [ᴄᴏᴜɴᴛ] [ʀᴇᴘʟʏ]</b>")
+        return await gcs.edit(f"{ggl}<code>{message.text.split()[0]}</code> <b>Reply pesan [ᴅᴇʟᴀʏ] [ᴄᴏᴜɴᴛ]</b>")
 
     if not message.reply_to_message:
         return await gcs.edit(f"{ggl}Harap reply ke pesan yang ingin dikirimkan.")
