@@ -14,8 +14,6 @@ OWNER_ID = int(os.getenv("OWNER_ID", "1361379181"))
 
 BLACKLIST_CHAT = list(map(int, os.getenv("BLACKLIST_CHAT", "-1002166782827").split()))
 
-BLACKLIST_CHAT = list(map(int, os.getenv("BLACKLIST_CHAT", "-1002404887725").split()))
-
 RMBG_API = os.getenv("RMBG_API", "a6qxsmMJ3CsNo7HyxuKGsP1o")
 
 OPENAI_KEY = os.getenv(
