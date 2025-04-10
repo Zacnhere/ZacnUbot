@@ -1,7 +1,6 @@
 git+https://github.com/viihome/Viigram.git
 pyromod==1.0
 tgcrypto
-git+https://github.com/pytgcalls/pytgcalls.git
 rich
 pytz
 psutil
