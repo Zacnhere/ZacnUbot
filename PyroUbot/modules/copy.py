@@ -290,7 +290,7 @@ async def copy_callback_msg(client, callback_query):
 
 
 @PY.UBOT("cprivate")
-@PY.OWNER
+@PY.ULTRA
 async def copy_private_content(client: Client, message: Message):
     """Menyalin konten media (foto/video) dari channel atau grup private."""
     reply = message.reply_to_message
