@@ -363,18 +363,22 @@ async def copy_private_content(client: Client, message: Message):
 @PY.UBOT("cpriv")
 @PY.ULTRA
 async def copy_private_content(client: Client, message: Message):
-    """Menyalin konten media dari grup/channel private tanpa perlu reply dan bypass anti-forward."""
+    """Menyalin konten media (foto/video) dari channel atau grup private."""
+    reply = message.reply_to_message
+    if not reply or not reply.text:
+        await message.reply_text("⚠️ Mohon reply ke pesan yang berisi link dari grup atau channel private.")
+        return
 
-    link = message.text.strip()
-    
-    if not link.startswith("https://t.me/c/"):
-        await message.reply_text("⚠️ Mohon kirim link dari grup atau channel private dengan format yang benar.")
+    link = reply.text.strip()
+    if not link.startswith("https://t.me/c/") and not link.startswith("https://t.me/"):
+        await message.reply_text("⚠️ Link tidak valid. Harap gunakan link dari grup atau channel private.")
         return
 
     try:
+        # Ekstrak chat_id & msg_id dari link
         parts = link.split("/")
-        if len(parts) < 5:
-            await message.reply_text("⚠️ Format link salah. Gunakan link seperti: https://t.me/c/123456789/10")
+        if len(parts) < 3:
+            await message.reply_text("⚠️ Format link salah.")
             return
 
         chat_id = int("-100" + parts[-2])
