@@ -2,6 +2,7 @@ import asyncio
 import os
 import logging
 import re
+import mimetypes
 from gc import get_objects
 from time import time
 from pyrogram import Client, filters
