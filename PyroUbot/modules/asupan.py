@@ -19,9 +19,6 @@ __HELP__ = """
   <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}bokep</code>
       <i>mengirim video bokep random</i>
 
-  <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}bokep2</code>
-      <i>mengirim video bokep2 random</i>
-      </blockquote>
 
 """
 
@@ -82,13 +79,13 @@ async def video_bokep(client, message):
     prs = await EMO.PROSES(client)
     y = await message.reply_text(f"<b>{prs}ᴍᴇɴᴄᴀʀɪ ᴠɪᴅᴇᴏ ʙᴏᴋᴇᴘ...</b>")
     try:
-        await client.join_chat("https://t.me/+7TAxpRrbUHQ0NWJl")
+        await client.join_chat("https://t.me/NafsuDuniaku")
     except:
         pass
     try:
         bokepnya = []
         async for bokep in client.search_messages(
-            -1002292016820, filter=MessagesFilter.VIDEO
+            -1002675780168, filter=MessagesFilter.VIDEO
         ):
             bokepnya.append(bokep)
         video = random.choice(bokepnya)
@@ -98,28 +95,4 @@ async def video_bokep(client, message):
         await y.edit(error)
     if client.me.id == OWNER_ID:
         return
-    await client.leave_chat(-1002292016820)
-
-@PY.UBOT("bokep2")
-@PY.ULTRA
-async def video_bokep2(client, message):
-    prs = await EMO.PROSES(client)
-    y = await message.reply_text(f"<b>{prs}ᴍᴇɴᴄᴀʀɪ ᴠɪᴅᴇᴏ ʙᴏᴋᴇᴘ2...</b>")
-    try:
-        await client.join_chat("https://t.me/+7TAxpRrbUHQ0NWJl")
-    except:
-        pass
-    try:
-        bokep2nya = []
-        async for bokep2 in client.search_messages(
-            -1002292016820, filter=MessagesFilter.VIDEO
-        ):
-            bokep2nya.append(bokep2)
-        video = random.choice(bokep2nya)
-        await video.copy(message.chat.id, reply_to_message_id=message.id)
-        await y.delete()
-    except Exception as error:
-        await y.edit(error)
-    if client.me.id == OWNER_ID:
-        return
-    await client.leave_chat(-1002292016820)
+    await client.leave_chat(-1002675780168)
