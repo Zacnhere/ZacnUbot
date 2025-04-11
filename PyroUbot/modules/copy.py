@@ -363,7 +363,6 @@ async def copy_private_content(client: Client, message: Message):
 @PY.UBOT("cpriv")
 @PY.ULTRA
 async def copy_private_content(client: Client, message: Message):
-    """Menyalin konten media (foto/video) dari channel atau grup private."""
     reply = message.reply_to_message
     if not reply or not reply.text:
         await message.reply_text("⚠️ Mohon reply ke pesan yang berisi link dari grup atau channel private.")
@@ -375,53 +374,87 @@ async def copy_private_content(client: Client, message: Message):
         return
 
     try:
-        # Ekstrak chat_id & msg_id dari link
+        # Ekstrak chat_id dan msg_id
         parts = link.split("/")
-        if len(parts) < 3:
-            await message.reply_text("⚠️ Format link salah.")
+        if "c" in parts:
+            index = parts.index("c")
+            chat_id = int("-100" + parts[index + 1])
+            msg_id = int(parts[index + 2])
+        else:
+            await message.reply_text("⚠️ Link bukan dari grup/channel private.")
             return
 
-        chat_id = int("-100" + parts[-2])
-        msg_id = int(parts[-1])
+        await message.reply_text("⏳ Mengambil konten, mohon tunggu...")
 
-        await message.reply_text("⏳ Mengambil konten, harap tunggu...")
+        # Ambil pesan
+        get_msg = await client.get_messages(chat_id, msg_id)
 
-        msg = await client.get_messages(chat_id, msg_id)
-
-        if not msg or not msg.media:
+        if not get_msg or not get_msg.media:
             await message.reply_text("❌ Tidak ada media dalam pesan ini.")
             return
 
-        # Jika media grup
-        if msg.media_group_id:
+        # Jika media group (album)
+        if get_msg.media_group_id:
             media_group = await client.get_media_group(chat_id, msg_id)
 
             for media in media_group:
                 file_path = await client.download_media(media)
                 if not file_path:
-                    await message.reply_text("⚠️ Gagal mengunduh salah satu media.")
                     continue
 
-                await client.send_document(
-                    chat_id=message.chat.id,
-                    document=file_path,
-                    caption=media.caption or "✅ Konten berhasil disalin (media grup)."
-                )
+                mime, _ = mimetypes.guess_type(file_path)
+
+                if mime and mime.startswith("image"):
+                    await client.send_photo(
+                        chat_id=message.chat.id,
+                        photo=file_path,
+                        caption="✅ Berhasil menyalin foto."
+                    )
+                elif mime and mime.startswith("video"):
+                    await client.send_video(
+                        chat_id=message.chat.id,
+                        video=file_path,
+                        caption="✅ Berhasil menyalin video."
+                    )
+                else:
+                    await client.send_document(
+                        chat_id=message.chat.id,
+                        document=file_path,
+                        caption="✅ Berhasil menyalin dokumen."
+                    )
+
                 os.remove(file_path)
+
         else:
-            # Satu media
-            file_path = await client.download_media(msg)
+            # Media tunggal
+            file_path = await client.download_media(get_msg)
             if not file_path:
                 await message.reply_text("❌ Gagal mengunduh media.")
                 return
 
-            await client.send_document(
-                chat_id=message.chat.id,
-                document=file_path,
-                caption=msg.caption or "✅ Konten berhasil disalin."
-            )
+            mime, _ = mimetypes.guess_type(file_path)
+
+            if mime and mime.startswith("image"):
+                await client.send_photo(
+                    chat_id=message.chat.id,
+                    photo=file_path,
+                    caption="✅ Berhasil menyalin foto."
+                )
+            elif mime and mime.startswith("video"):
+                await client.send_video(
+                    chat_id=message.chat.id,
+                    video=file_path,
+                    caption="✅ Berhasil menyalin video."
+                )
+            else:
+                await client.send_document(
+                    chat_id=message.chat.id,
+                    document=file_path,
+                    caption="✅ Berhasil menyalin dokumen."
+                )
+
             os.remove(file_path)
 
     except Exception as e:
-        await message.reply_text(f"❌ Gagal mengambil media: {str(e)}")
+        await message.reply_text(f"❌ Gagal mengambil media: {e}")
       
