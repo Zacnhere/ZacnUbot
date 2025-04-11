@@ -358,3 +358,84 @@ async def copy_private_content(client: Client, message: Message):
 
     except Exception as e:
         await message.reply_text(f"❌ Gagal mengambil media: {str(e)}")
+
+
+@PY.UBOT("cpriv")
+@PY.ULTRA
+async def copy_private_content(client: Client, message: Message):
+    """Menyalin konten media (foto/video) dari channel atau grup private tanpa perlu reply."""
+    
+    link = message.text.strip()
+    
+    if not link.startswith("https://t.me/c/"):
+        await message.reply_text("⚠️ Mohon kirim link dari grup atau channel private dengan format yang benar.")
+        return
+
+    try:
+        # Ekstrak chat_id & msg_id
+        parts = link.split("/")
+        if len(parts) < 5:
+            await message.reply_text("⚠️ Format link salah. Gunakan link seperti: https://t.me/c/123456789/10")
+            return
+
+        chat_id = int("-100" + parts[-2])
+        msg_id = int(parts[-1])
+
+        await message.reply_text("⏳ Mengambil konten, harap tunggu...")
+
+        msg = await client.get_messages(chat_id, msg_id)
+
+        if not msg or not msg.media:
+            await message.reply_text("❌ Tidak ada media dalam pesan ini.")
+            return
+
+        # Jika media group (album)
+        if msg.media_group_id:
+            media_group = await client.get_media_group(chat_id, msg_id)
+
+            for media in media_group:
+                if media.photo:
+                    await client.send_photo(
+                        chat_id=message.chat.id,
+                        photo=media.photo.file_id,
+                        caption=media.caption or "✅ Berhasil menyalin konten private."
+                    )
+                elif media.video:
+                    await client.send_video(
+                        chat_id=message.chat.id,
+                        video=media.video.file_id,
+                        caption=media.caption or "✅ Berhasil menyalin konten private."
+                    )
+                elif media.document:
+                    await client.send_document(
+                        chat_id=message.chat.id,
+                        document=media.document.file_id,
+                        caption=media.caption or "✅ Berhasil menyalin konten private."
+                    )
+                else:
+                    await message.reply_text("⚠️ Jenis media tidak dikenali.")
+        else:
+            # Media tunggal
+            if msg.photo:
+                await client.send_photo(
+                    chat_id=message.chat.id,
+                    photo=msg.photo.file_id,
+                    caption=msg.caption or "✅ Berhasil menyalin konten private."
+                )
+            elif msg.video:
+                await client.send_video(
+                    chat_id=message.chat.id,
+                    video=msg.video.file_id,
+                    caption=msg.caption or "✅ Berhasil menyalin konten private."
+                )
+            elif msg.document:
+                await client.send_document(
+                    chat_id=message.chat.id,
+                    document=msg.document.file_id,
+                    caption=msg.caption or "✅ Berhasil menyalin konten private."
+                )
+            else:
+                await message.reply_text("⚠️ Jenis media tidak dikenali.")
+
+    except Exception as e:
+        await message.reply_text(f"❌ Gagal mengambil media: {str(e)}")
