@@ -291,76 +291,6 @@ async def copy_callback_msg(client, callback_query):
         await callback_query.edit_message_text(f"<code>{error}</code>")
 
 
-@PY.UBOT("cprivate")
-@PY.ULTRA
-async def copy_private_content(client: Client, message: Message):
-    """Menyalin konten media (foto/video) dari channel atau grup private."""
-    reply = message.reply_to_message
-    if not reply or not reply.text:
-        await message.reply_text("⚠️ Mohon reply ke pesan yang berisi link dari grup atau channel private.")
-        return
-
-    link = reply.text.strip()
-    if not link.startswith("https://t.me/c/") and not link.startswith("https://t.me/"):
-        await message.reply_text("⚠️ Link tidak valid. Harap gunakan link dari grup atau channel private.")
-        return
-
-    try:
-        # Ekstrak chat_id & msg_id dari link
-        parts = link.split("/")
-        if len(parts) < 3:
-            await message.reply_text("⚠️ Format link salah.")
-            return
-
-        chat_id = int("-100" + parts[-2])  # ID Channel atau Grup
-        msg_id = int(parts[-1])  # ID Pesan
-
-        await message.reply_text("⏳ Memproses, harap tunggu...")
-
-        # Ambil pesan dari grup atau channel private
-        get = await client.get_messages(chat_id, msg_id)
-
-        if not get or not get.media:
-            await message.reply_text("❌ Tidak ada media dalam pesan ini.")
-            return
-
-        # Jika ada banyak media dalam satu pesan
-        if get.media_group_id:
-            media_group = await client.get_media_group(chat_id, msg_id)
-
-            files = []
-            for media in media_group:
-                file_path = await client.download_media(media)
-                if file_path:
-                    files.append(file_path)
-
-            # Kirim ulang media ke pengguna
-            for file in files:
-                await client.send_document(
-                    chat_id=message.chat.id,
-                    document=file,
-                    caption="✅ Berhasil menyalin konten private."
-                )
-                os.remove(file)  # Hapus file setelah dikirim
-
-        else:
-            # Jika hanya satu media
-            media = await client.download_media(get)
-            if not media:
-                await message.reply_text("❌ Gagal mengunduh media.")
-                return
-
-            await client.send_document(
-                chat_id=message.chat.id,
-                document=media,
-                caption="✅ Berhasil menyalin konten private."
-            )
-
-            os.remove(media)  # Hapus file setelah dikirim
-
-    except Exception as e:
-        await message.reply_text(f"❌ Gagal mengambil media: {str(e)}")
-
 
 def get_video_info_and_thumbnail(path):
     try:
@@ -383,7 +313,7 @@ def get_video_info_and_thumbnail(path):
     except:
         return 0, 0, 0, None
 
-@PY.UBOT("cpv")
+@PY.UBOT("cprivate")
 @PY.ULTRA
 async def copy_private_content(client: Client, message: Message):
     reply = message.reply_to_message
