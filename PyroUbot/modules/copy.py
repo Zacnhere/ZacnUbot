@@ -363,10 +363,10 @@ async def copy_private_content(client: Client, message: Message):
 @PY.UBOT("cpriv")
 @PY.ULTRA
 async def copy_private_content(client: Client, message: Message):
-    """Menyalin konten media dari grup/channel private dengan deteksi media otomatis."""
+    """Menyalin konten media dari grup/channel private tanpa perlu reply dan bypass anti-forward."""
 
     link = message.text.strip()
-
+    
     if not link.startswith("https://t.me/c/"):
         await message.reply_text("⚠️ Mohon kirim link dari grup atau channel private dengan format yang benar.")
         return
@@ -388,7 +388,7 @@ async def copy_private_content(client: Client, message: Message):
             await message.reply_text("❌ Tidak ada media dalam pesan ini.")
             return
 
-        # Album / media group
+        # Jika media grup
         if msg.media_group_id:
             media_group = await client.get_media_group(chat_id, msg_id)
 
@@ -398,56 +398,26 @@ async def copy_private_content(client: Client, message: Message):
                     await message.reply_text("⚠️ Gagal mengunduh salah satu media.")
                     continue
 
-                # Kirim berdasarkan jenis media
-                if media.photo:
-                    await client.send_photo(
-                        chat_id=message.chat.id,
-                        photo=file_path,
-                        caption=media.caption or "✅ Konten berhasil disalin."
-                    )
-                elif media.video:
-                    await client.send_video(
-                        chat_id=message.chat.id,
-                        video=file_path,
-                        caption=media.caption or "✅ Konten berhasil disalin."
-                    )
-                else:
-                    await client.send_document(
-                        chat_id=message.chat.id,
-                        document=file_path,
-                        caption=media.caption or "✅ Konten berhasil disalin."
-                    )
-
+                await client.send_document(
+                    chat_id=message.chat.id,
+                    document=file_path,
+                    caption=media.caption or "✅ Konten berhasil disalin (media grup)."
+                )
                 os.remove(file_path)
-
         else:
-            # Media tunggal
+            # Satu media
             file_path = await client.download_media(msg)
             if not file_path:
                 await message.reply_text("❌ Gagal mengunduh media.")
                 return
 
-            if msg.photo:
-                await client.send_photo(
-                    chat_id=message.chat.id,
-                    photo=file_path,
-                    caption=msg.caption or "✅ Konten berhasil disalin."
-                )
-            elif msg.video:
-                await client.send_video(
-                    chat_id=message.chat.id,
-                    video=file_path,
-                    caption=msg.caption or "✅ Konten berhasil disalin."
-                )
-            else:
-                await client.send_document(
-                    chat_id=message.chat.id,
-                    document=file_path,
-                    caption=msg.caption or "✅ Konten berhasil disalin."
-                )
-
+            await client.send_document(
+                chat_id=message.chat.id,
+                document=file_path,
+                caption=msg.caption or "✅ Konten berhasil disalin."
+            )
             os.remove(file_path)
 
     except Exception as e:
         await message.reply_text(f"❌ Gagal mengambil media: {str(e)}")
-                  
+      
