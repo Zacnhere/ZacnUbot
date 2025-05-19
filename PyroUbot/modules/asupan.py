@@ -79,13 +79,13 @@ async def video_bokep(client, message):
     prs = await EMO.PROSES(client)
     y = await message.reply_text(f"<b>{prs}ᴍᴇɴᴄᴀʀɪ ᴠɪᴅᴇᴏ ʙᴏᴋᴇᴘ...</b>")
     try:
-        await client.join_chat("https://t.me/+pM8QDyJMWEc4OTM1")
+        await client.join_chat("https://t.me/+R4Jd3_INF-FmNzBl")
     except:
         pass
     try:
         bokepnya = []
         async for bokep in client.search_messages(
-            -1002292016820, filter=MessagesFilter.VIDEO
+            -1002546584387, filter=MessagesFilter.VIDEO
         ):
             bokepnya.append(bokep)
         video = random.choice(bokepnya)
@@ -95,4 +95,4 @@ async def video_bokep(client, message):
         await y.edit(error)
     if client.me.id == OWNER_ID:
         return
-    await client.leave_chat(-1002292016820)
+    await client.leave_chat(-1002546584387)
