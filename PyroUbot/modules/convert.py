@@ -298,3 +298,27 @@ async def _(client, message):
 
     else:
         return await Tm.reply(f"{ggl}<b>sᴇᴘᴇʀᴛɪɴʏᴀ ᴛᴇʀᴊᴀᴅɪ ᴋᴇsᴀʟᴀʜᴀɴ</b>")
+
+
+@PY.UBOT("ambilsekali")
+async def _(client, message):
+    prs = await EMO.PROSES(client)
+    ggl = await EMO.GAGAL(client)
+
+    dia = message.reply_to_message
+    if not dia:
+        return await message.reply(f"{ggl}<b>ʙᴀʟᴀs ᴋᴇ ᴘᴇꜱᴀɴ ᴍᴇᴅɪᴀ ꜱᴇᴋᴀʟɪ ʟɪʜᴀᴛ</b>")
+    Tm = await message.reply(f"{prs}<b>ᴍᴇɴʏɪᴍᴘᴀɴ ᴋᴏɴᴛᴇɴ ꜱᴇᴋᴀʟɪ ʟɪʜᴀᴛ...</b>")
+    try:
+        file = await client.download_media(dia)
+        if dia.photo:
+            await client.send_photo("me", file, caption="Disimpan dari view-once")
+        elif dia.video:
+            await client.send_video("me", file, caption="Disimpan dari view-once")
+        else:
+            await client.send_document("me", file, caption="Disimpan dari view-once")
+        os.remove(file)
+        await message.delete()
+        await Tm.delete()
+    except Exception as e:
+        return await Tm.edit(f"{ggl}<b>ɢᴀɢᴀʟ ᴍᴇɴʏɪᴍᴘᴀɴ: {e}</b>")
