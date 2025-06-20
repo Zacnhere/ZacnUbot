@@ -23,7 +23,7 @@ __HELP__ = """
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}copy</code> [ᴜʀʟ]
    <i>untuk mengambil konten channel publik</i>
 
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}cprivate</code> [ᴜʀʟ]
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}copypv</code> [ᴜʀʟ]
    <i>untuk mengambil konten channel private</i>
    <i>note : hanya untuk owner bot</i>
 
