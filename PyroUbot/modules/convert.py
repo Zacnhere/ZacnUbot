@@ -251,7 +251,7 @@ async def _(client, message):
 
 @PY.UBOT("ambil")
 async def _(client, message):
-    prs = await EMO.PROSES(client)
+    prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
     ggl = await EMO.GAGAL(client)
 
