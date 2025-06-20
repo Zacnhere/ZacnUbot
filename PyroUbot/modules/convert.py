@@ -284,6 +284,7 @@ async def _(client, message):
 
 
 @PY.UBOT("ambilsekali")
+@PY.ULTRA
 async def _(client, message):
     prs = await EMO.PROSES(client)
     ggl = await EMO.GAGAL(client)
