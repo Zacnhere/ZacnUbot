@@ -313,7 +313,7 @@ def get_video_info_and_thumbnail(path):
     except:
         return 0, 0, 0, None
 
-@PY.UBOT("cprivate")
+@PY.UBOT("copypv")
 @PY.ULTRA
 async def copy_private_content(client: Client, message: Message):
     reply = message.reply_to_message
