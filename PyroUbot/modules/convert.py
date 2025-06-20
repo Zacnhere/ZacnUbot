@@ -252,73 +252,59 @@ async def _(client, message):
 @PY.UBOT("ambil")
 async def _(client, message):
     prs = await EMO.PROSES(client)
-    brhsl = await EMO.BERHASIL(client)
-    ggl = await EMO.GAGAL(client)
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
 
-    dia = message.reply_to_message
-    if not dia:
-        return await message.reply(f"{ggl}<b>ᴍᴏʜᴏɴ ʙᴀʟᴀs ᴋᴇ ᴍᴇᴅɪᴀ</b>")
-    anjing = dia.caption or ""
-    Tm = await message.reply(f"{prs}<b>ᴘʀᴏᴄᴇssɪɴɢ...</b>")
+    dia = message.reply_to_message
+    if not dia:
+        return await message.reply(f"{ggl}<b>ᴍᴏʜᴏɴ ʙᴀʟᴀs ᴋᴇ ᴍᴇᴅɪᴀ</b>")
 
-    if dia.photo:
-        anu = await client.download_media(dia)
-        await client.send_photo(client.me.id, anu, anjing)
-        os.remove(anu)
-        await message.delete()
-        return await Tm.delete()
+    anjing = dia.caption or ""
+    Tm = await message.reply(f"{prs}<b>ᴘʀᴏᴄᴇssɪɴɢ...</b>")
 
-    if dia.video:
-        anu = await client.download_media(dia)
-        await client.send_video(client.me.id, anu, anjing)
-        os.remove(anu)
-        await message.delete()
-        return await Tm.delete()
-
-    if dia.audio:
-        anu = await client.download_media(dia)
-        await client.send_audio(client.me.id, anu, anjing)
-        os.remove(anu)
-        await message.delete()
-        return await Tm.delete()
-
-    if dia.voice:
-        anu = await client.download_media(dia)
-        await client.send_voice(client.me.id, anu, anjing)
-        os.remove(anu)
-        await message.delete()
-        return await Tm.delete()
-
-    if dia.document:
-        anu = await client.download_media(dia)
-        await client.send_document(client.me.id, anu, anjing)
-        os.remove(anu)
-        await message.delete()
-        return await Tm.delete()
-
-    else:
-        return await Tm.reply(f"{ggl}<b>sᴇᴘᴇʀᴛɪɴʏᴀ ᴛᴇʀᴊᴀᴅɪ ᴋᴇsᴀʟᴀʜᴀɴ</b>")
+    try:
+        file = await client.download_media(dia)
+        if dia.photo:
+            await client.send_photo("me", file, caption=anjing)
+        elif dia.video:
+            await client.send_video("me", file, caption=anjing)
+        elif dia.audio:
+            await client.send_audio("me", file, caption=anjing)
+        elif dia.voice:
+            await client.send_voice("me", file, caption=anjing)
+        elif dia.document:
+            await client.send_document("me", file, caption=anjing)
+        else:
+            return await Tm.edit(f"{ggl}<b>sᴇᴘᴇʀᴛɪɴʏᴀ ᴛɪᴅᴀᴋ ᴅɪᴅᴜᴋᴜɴɢ</b>")
+        os.remove(file)
+        await message.delete()
+        await Tm.delete()
+    except Exception as e:
+        return await Tm.edit(f"{ggl}<b>ᴛᴇʀᴊᴀᴅɪ ᴋᴇꜱᴀʟᴀʜᴀɴ: {e}</b>")
 
 
 @PY.UBOT("ambilsekali")
 async def _(client, message):
-    prs = await EMO.PROSES(client)
-    ggl = await EMO.GAGAL(client)
+    prs = await EMO.PROSES(client)
+    ggl = await EMO.GAGAL(client)
 
-    dia = message.reply_to_message
-    if not dia:
-        return await message.reply(f"{ggl}<b>ʙᴀʟᴀs ᴋᴇ ᴘᴇꜱᴀɴ ᴍᴇᴅɪᴀ ꜱᴇᴋᴀʟɪ ʟɪʜᴀᴛ</b>")
-    Tm = await message.reply(f"{prs}<b>ᴍᴇɴʏɪᴍᴘᴀɴ ᴋᴏɴᴛᴇɴ ꜱᴇᴋᴀʟɪ ʟɪʜᴀᴛ...</b>")
-    try:
-        file = await client.download_media(dia)
-        if dia.photo:
-            await client.send_photo("me", file, caption="Disimpan dari view-once")
-        elif dia.video:
-            await client.send_video("me", file, caption="Disimpan dari view-once")
-        else:
-            await client.send_document("me", file, caption="Disimpan dari view-once")
-        os.remove(file)
-        await message.delete()
-        await Tm.delete()
-    except Exception as e:
-        return await Tm.edit(f"{ggl}<b>ɢᴀɢᴀʟ ᴍᴇɴʏɪᴍᴘᴀɴ: {e}</b>")
+    dia = message.reply_to_message
+    if not dia:
+        return await message.reply(f"{ggl}<b>ʙᴀʟᴀs ᴋᴇ ᴘᴇꜱᴀɴ ᴍᴇᴅɪᴀ ꜱᴇᴋᴀʟɪ ʟɪʜᴀᴛ</b>")
+    
+    Tm = await message.reply(f"{prs}<b>ᴍᴇɴʏɪᴍᴘᴀɴ ᴋᴏɴᴛᴇɴ ꜱᴇᴋᴀʟɪ ʟɪʜᴀᴛ...</b>")
+    
+    try:
+        file = await client.download_media(dia)
+        if dia.photo:
+            await client.send_photo("me", file, caption="Disimpan dari view-once")
+        elif dia.video:
+            await client.send_video("me", file, caption="Disimpan dari view-once")
+        else:
+            await client.send_document("me", file, caption="Disimpan dari view-once")
+        os.remove(file)
+        await message.delete()
+        await Tm.delete()
+    except Exception as e:
+        return await Tm.edit(f"{ggl}<b>ɢᴀɢᴀʟ ᴍᴇɴʏɪᴍᴘᴀɴ: {e}</b>")
+       
