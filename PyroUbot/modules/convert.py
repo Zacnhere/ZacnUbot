@@ -247,3 +247,54 @@ async def _(client, message):
         return await Tm.delete()
     else:
         return await Tm.reply(f"{ggl}<b>sᴇᴘᴇʀᴛɪɴʏᴀ ᴛᴇʀᴊᴀᴅɪ ᴋᴇsᴀʟᴀʜᴀɴ</b>")
+
+
+@PY.UBOT("ambil")
+async def _(client, message):
+    prs = await EMO.PROSES(client)
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
+
+    dia = message.reply_to_message
+    if not dia:
+        return await message.reply(f"{ggl}<b>ᴍᴏʜᴏɴ ʙᴀʟᴀs ᴋᴇ ᴍᴇᴅɪᴀ</b>")
+    anjing = dia.caption or ""
+    Tm = await message.reply(f"{prs}<b>ᴘʀᴏᴄᴇssɪɴɢ...</b>")
+
+    if dia.photo:
+        anu = await client.download_media(dia)
+        await client.send_photo(client.me.id, anu, anjing)
+        os.remove(anu)
+        await message.delete()
+        return await Tm.delete()
+
+    if dia.video:
+        anu = await client.download_media(dia)
+        await client.send_video(client.me.id, anu, anjing)
+        os.remove(anu)
+        await message.delete()
+        return await Tm.delete()
+
+    if dia.audio:
+        anu = await client.download_media(dia)
+        await client.send_audio(client.me.id, anu, anjing)
+        os.remove(anu)
+        await message.delete()
+        return await Tm.delete()
+
+    if dia.voice:
+        anu = await client.download_media(dia)
+        await client.send_voice(client.me.id, anu, anjing)
+        os.remove(anu)
+        await message.delete()
+        return await Tm.delete()
+
+    if dia.document:
+        anu = await client.download_media(dia)
+        await client.send_document(client.me.id, anu, anjing)
+        os.remove(anu)
+        await message.delete()
+        return await Tm.delete()
+
+    else:
+        return await Tm.reply(f"{ggl}<b>sᴇᴘᴇʀᴛɪɴʏᴀ ᴛᴇʀᴊᴀᴅɪ ᴋᴇsᴀʟᴀʜᴀɴ</b>")
