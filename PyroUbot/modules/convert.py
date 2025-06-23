@@ -194,62 +194,62 @@ async def _(client, message):
         return await Tm.edit("<b>ᴍᴏʜᴏɴ ʙᴀʟᴀs ᴋᴇ ᴠɪᴅᴇᴏ</b>")
 
 
-@PY.UBOT("colong")
-async def _(client, message):
-    prs = await EMO.PROSES(client)
-    brhsl = await EMO.BERHASIL(client)
-    ggl = await EMO.GAGAL(client)
+#@PY.UBOT("colong")
+#async def _(client, message):
+    #prs = await EMO.PROSES(client)
+    #brhsl = await EMO.BERHASIL(client)
+    #ggl = await EMO.GAGAL(client)
 
-    dia = message.reply_to_message
-    if not dia:
-        return await message.reply(f"{ggl}<b>ᴍᴏʜᴏɴ ʙᴀʟᴀs ᴋᴇ ᴍᴇᴅɪᴀ</b>")
-    anjing = dia.caption or ""
-    Tm = await message.reply(f"{prs}<b>ᴘʀᴏᴄᴇssɪɴɢ...</b>")
-    if dia.photo:
-        if message.reply_to_message.photo.file_size > 10000000:
-            return await Tm.edit(f"{ggl}<b>ꜰɪʟᴇ ᴅɪ ᴀᴛᴀs 10ᴍʙ ᴛɪᴅᴀᴋ ᴅɪ ɪᴢɪɴᴋᴀɴ</b>")
-        anu = await client.download_media(dia)
-        await client.send_photo(client.me.id, anu, anjing)
-        os.remove(anu)
-        await message.delete()
-        return await Tm.delete()
-    if dia.video:
-        if message.reply_to_message.video.file_size > 10000000:
-            return await Tm.edit(f"{ggl}<b>ꜰɪʟᴇ ᴅɪ ᴀᴛᴀs 10ᴍʙ ᴛɪᴅᴀᴋ ᴅɪ ɪᴢɪɴᴋᴀɴ</b>")
-        anu = await client.download_media(dia)
-        await client.send_video(client.me.id, anu, anjing)
-        os.remove(anu)
-        await message.delete()
-        return await Tm.delete()
-    if dia.audio:
-        if message.reply_to_message.audio.file_size > 10000000:
-            return await Tm.edit(f"{ggl}<b>ꜰɪʟᴇ ᴅɪ ᴀᴛᴀs 10ᴍʙ ᴛɪᴅᴀᴋ ᴅɪ ɪᴢɪɴᴋᴀɴ</b>")
-        anu = await client.download_media(dia)
-        await client.send_audio(client.me.id, anu, anjing)
-        os.remove(anu)
-        await message.delete()
-        return await Tm.delete()
-    if dia.voice:
-        if message.reply_to_message.voice.file_size > 10000000:
-            return await Tm.edit(f"{ggl}<b>ꜰɪʟᴇ ᴅɪ ᴀᴛᴀs 10ᴍʙ ᴛɪᴅᴀᴋ ᴅɪ ɪᴢɪɴᴋᴀɴ</b>")
-        anu = await client.download_media(dia)
-        await client.send_voice(client.me.id, anu, anjing)
-        os.remove(anu)
-        await message.delete()
-        return await Tm.delete()
-    if dia.document:
-        if message.reply_to_message.document.file_size > 10000000:
-            return await Tm.edit(f"{ggl}<b>ꜰɪʟᴇ ᴅɪ ᴀᴛᴀs 10ᴍʙ ᴛɪᴅᴀᴋ ᴅɪ ɪᴢɪɴᴋᴀɴ</b>")
-        anu = await client.download_media(dia)
-        await client.send_document(client.me.id, anu, anjing)
-        os.remove(anu)
-        await message.delete()
-        return await Tm.delete()
-    else:
-        return await Tm.reply(f"{ggl}<b>sᴇᴘᴇʀᴛɪɴʏᴀ ᴛᴇʀᴊᴀᴅɪ ᴋᴇsᴀʟᴀʜᴀɴ</b>")
+    #dia = message.reply_to_message
+    #if not dia:
+        #return await message.reply(f"{ggl}<b>ᴍᴏʜᴏɴ ʙᴀʟᴀs ᴋᴇ ᴍᴇᴅɪᴀ</b>")
+    #anjing = dia.caption or ""
+    #Tm = await message.reply(f"{prs}<b>ᴘʀᴏᴄᴇssɪɴɢ...</b>")
+    #if dia.photo:
+        #if message.reply_to_message.photo.file_size > 10000000:
+            #return await Tm.edit(f"{ggl}<b>ꜰɪʟᴇ ᴅɪ ᴀᴛᴀs 10ᴍʙ ᴛɪᴅᴀᴋ ᴅɪ ɪᴢɪɴᴋᴀɴ</b>")
+        #anu = await client.download_media(dia)
+        #await client.send_photo(client.me.id, anu, anjing)
+        #os.remove(anu)
+        #await message.delete()
+        #return await Tm.delete()
+    #if dia.video:
+        #if message.reply_to_message.video.file_size > 10000000:
+            #return await Tm.edit(f"{ggl}<b>ꜰɪʟᴇ ᴅɪ ᴀᴛᴀs 10ᴍʙ ᴛɪᴅᴀᴋ ᴅɪ ɪᴢɪɴᴋᴀɴ</b>")
+        #anu = await client.download_media(dia)
+        #await client.send_video(client.me.id, anu, anjing)
+        #os.remove(anu)
+        #await message.delete()
+        #return await Tm.delete()
+    #if dia.audio:
+        #if message.reply_to_message.audio.file_size > 10000000:
+            #return await Tm.edit(f"{ggl}<b>ꜰɪʟᴇ ᴅɪ ᴀᴛᴀs 10ᴍʙ ᴛɪᴅᴀᴋ ᴅɪ ɪᴢɪɴᴋᴀɴ</b>")
+        #anu = await client.download_media(dia)
+        #await client.send_audio(client.me.id, anu, anjing)
+        #os.remove(anu)
+        #await message.delete()
+        #return await Tm.delete()
+    #if dia.voice:
+        #if message.reply_to_message.voice.file_size > 10000000:
+            #return await Tm.edit(f"{ggl}<b>ꜰɪʟᴇ ᴅɪ ᴀᴛᴀs 10ᴍʙ ᴛɪᴅᴀᴋ ᴅɪ ɪᴢɪɴᴋᴀɴ</b>")
+        #anu = await client.download_media(dia)
+        #await client.send_voice(client.me.id, anu, anjing)
+        #os.remove(anu)
+        #await message.delete()
+        #return await Tm.delete()
+    #if dia.document:
+        #if message.reply_to_message.document.file_size > 10000000:
+            #return await Tm.edit(f"{ggl}<b>ꜰɪʟᴇ ᴅɪ ᴀᴛᴀs 10ᴍʙ ᴛɪᴅᴀᴋ ᴅɪ ɪᴢɪɴᴋᴀɴ</b>")
+        #anu = await client.download_media(dia)
+        #await client.send_document(client.me.id, anu, anjing)
+        #os.remove(anu)
+        #await message.delete()
+        #return await Tm.delete()
+    #else:
+        #return await Tm.reply(f"{ggl}<b>sᴇᴘᴇʀᴛɪɴʏᴀ ᴛᴇʀᴊᴀᴅɪ ᴋᴇsᴀʟᴀʜᴀɴ</b>")
 
 
-@PY.UBOT("ambil")
+@PY.UBOT("simpan")
 async def _(client, message):
     prs = await EMO.PROSES(client)
     brhsl = await EMO.BERHASIL(client)
@@ -283,7 +283,7 @@ async def _(client, message):
         return await Tm.edit(f"{ggl}<b>ᴛᴇʀᴊᴀᴅɪ ᴋᴇꜱᴀʟᴀʜᴀɴ: {e}</b>")
 
 
-@PY.UBOT("ambilsekali")
+@PY.UBOT("ambil")
 @PY.ULTRA
 async def _(client, message):
     prs = await EMO.PROSES(client)
