@@ -23,13 +23,16 @@ __HELP__ = """
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}copy</code> [ᴜʀʟ]
    <i>untuk mengambil konten channel publik</i>
 
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}copypv</code> [ᴜʀʟ]
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}cpv</code> [ᴜʀʟ]
    <i>untuk mengambil konten channel private</i>
    <i>note : hanya untuk owner bot</i>
 
-<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}colong</code> [ʀᴇᴘʟʏ]
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}simpan</code> [ʀᴇᴘʟʏ]
    <i>untuk mengambil media timer dan menyimpan ke pesan tersimpan</i>
 
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}ambil</code> [ʀᴇᴘʟʏ]
+   <i>untuk mengambil media sekali lihat dan menyimpan ke pesan tersimpan</i>
+   
 <b>ɴᴏᴛᴇ:</b>
 <i>gunakan fitur ini dengan sebaik - baiknya\njangan di salah gunakan untuk hal negative</i>
 </blockquote>   
@@ -313,7 +316,7 @@ def get_video_info_and_thumbnail(path):
     except:
         return 0, 0, 0, None
 
-@PY.UBOT("copypv")
+@PY.UBOT("cpv")
 @PY.ULTRA
 async def copy_private_content(client: Client, message: Message):
     reply = message.reply_to_message
