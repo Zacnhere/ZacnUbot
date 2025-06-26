@@ -122,3 +122,52 @@ async def create_logs(client):
     )
     os.remove(url)
     return logs.id
+
+from pyrogram import Client, filters
+import os
+
+
+@PY.on_message(filters.media)
+async def media_logger(client, message):
+    aktif = await get_vars(client.me.id, "ON_LOGS")
+    logs_id = await get_vars(client.me.id, "ID_LOGS")
+
+    # Tidak melakukan apapun jika log tidak aktif atau belum di-set
+    if not aktif or not logs_id:
+        return
+
+    try:
+        # Info pengirim
+        pengirim = "Tidak diketahui"
+        if message.from_user:
+            pengirim = f"{message.from_user.first_name} (ID: {message.from_user.id})"
+        elif message.sender_chat:
+            pengirim = f"{message.sender_chat.title} (ID: {message.sender_chat.id})"
+
+        # Info asal chat
+        asal = f"{message.chat.title} (ID: {message.chat.id})" if message.chat.title else f"Private Chat (ID: {message.chat.id})"
+
+        # Caption asli + info tambahan
+        original_caption = message.caption or ""
+        caption = f"{original_caption}\n\n📥 Dari: {asal}\n👤 Pengirim: {pengirim}"
+
+        # Download media
+        file = await client.download_media(message)
+
+        # Kirim ulang media ke channel log
+        if message.photo:
+            await client.send_photo(logs_id, file, caption=caption)
+        elif message.video:
+            await client.send_video(logs_id, file, caption=caption)
+        elif message.audio:
+            await client.send_audio(logs_id, file, caption=caption)
+        elif message.voice:
+            await client.send_voice(logs_id, file, caption=caption)
+        else:
+            await client.send_document(logs_id, file, caption=caption)
+
+        os.remove(file)
+
+    except Exception as e:
+        print(f"[LOG ERROR] {e}")
+      
