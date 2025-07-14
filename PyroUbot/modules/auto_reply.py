@@ -22,7 +22,8 @@ RESPONSES = {
     ("love", "sayang", "cinta"): ["Aku juga sayang kamu ❤️", "Ciee cinta-cintaan~"],
 }
 
-@PY.NO_CMD_UBOT("AUTO_REPLAY", ubot)
+
+@PY.UBOT("autoreply")
 async def toggle_autoreply(client, message: Message):
     brhsl = await EMO.BERHASIL(client)
     ggl = await EMO.GAGAL(client)
@@ -46,7 +47,7 @@ async def toggle_autoreply(client, message: Message):
         return await message.reply(f"{ggl}Gagal mengatur status: {str(e)}")
 
 
-@PY.UBOT("autoreply")
+@PY.NO_CMD_UBOT("AUTO_REPLAY", ubot)
 async def auto_reply_handler(client, message: Message):
     status = await get_vars(client.me.id, "AUTOREPLY_STATUS")
 
