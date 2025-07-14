@@ -3,9 +3,23 @@ from pyrogram import filters
 from random import choice
 
 from PyroUbot import PY
-from PyroUbot.helpers.tools import get_vars, set_vars
+from PyroUbot.helpers.tools import (
+    get_arg,
+    get_size,
+    get_text,
+    get_message,
+    encode,
+    decode,
+    extract_user,
+    extract_user_and_reason,
+    extract_type_and_msg,
+    extract_type_and_text,
+    list_admins,
+    eor,
+)
 from PyroUbot.helpers.basic import edit_or_reply
-from PyroUbot.helpers.types import EMO
+from PyroUbot.helpers.types import EMO  # asumsi: types.py punya EMO
+
 
 
 # === Data balasan chatbot ===
