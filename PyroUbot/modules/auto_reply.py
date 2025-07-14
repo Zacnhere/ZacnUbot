@@ -1,90 +1,63 @@
-# ZacnUbot/modules/autoreply.py
-
-from random import choice
-from telethon import events
+from pyrogram import filters
+from pyrogram.types import Message
 from ZacnUbot import PY
+from ZacnUbot.core.db import set_vars, get_vars
 from ZacnUbot.helpers.tools import edit_or_reply
-from config import CMD_HANDLER as cmd
-from config import CMD_HELP
+from ZacnUbot.helpers.types import EMO
+from random import choice
 
-# Status ON/OFF
-AUTO_REPLY_ENABLED = True
-
-# Balasan berdasarkan keyword, dengan variasi acak
+# === Data balasan chatbot ===
 RESPONSES = {
-    ("hai", "halo", "hello", "hallo", "p"): [
-        "Hai juga! 👋", "Yo!", "Halo halo~", "Wah, sapaan hangat 😁"
-    ],
-    ("assalamualaikum",): [
-        "Waalaikumsalam 😇", "Waalaikumsalam warahmatullah", "Salam sejahtera 🙏"
-    ],
-    ("siapa kamu", "kamu siapa", "namamu siapa"): [
-        "Aku bot kecil yang siap menemani kamu 😄", "Cuma bot biasa 😌"
-    ],
-    ("apa kabar", "kabar?"): [
-        "Alhamdulillah baik, kamu gimana?", "Baik, kamu?", "Lagi happy nih!"
-    ],
-    ("lagi apa", "ngapain"): [
-        "Lagi nunggu kamu chat aku 😅", "Ngobrol aja yuk~"
-    ],
-    ("kenalan yuk", "kenalan"): [
-        "Hai! Aku bot, kamu siapa? 🤖", "Salam kenal ya!"
-    ],
-    ("woy", "woi", "oy"): [
-        "Ada apa panggil-panggil? 😅", "Iyaa ada apa?"
-    ],
-    ("test", "ping"): [
-        "Bot aktif nih! ✅", "Cek cek... aman!"
-    ],
-    ("anjay", "wkwk", "haha"): [
-        "Hihi 😂", "Ngakak bareng yuk 😆"
-    ],
-    ("pacar kamu siapa", "punya pacar?"): [
-        "Aku jomblo, tapi setia 😇", "Belum ada, kamu mau? 😜"
-    ],
-    ("capek", "lelah"): [
-        "Semangat ya 💪", "Istirahat dulu, kamu butuh itu 😴"
-    ],
-    ("kangen", "rindu"): [
-        "Kangen juga sama kamu 😌", "Sini ngobrol biar nggak sepi~"
-    ],
-    ("makasih", "thank", "terima kasih"): [
-        "Sama-sama 🤍", "Kapan aja 😇", "Aku senang bisa bantu"
-    ]
+    ("hai", "halo", "hallo", "hi"): ["Hai juga!", "Halo!", "Ada yang bisa dibantu?", "Hai, kamu siapa?"],
+    ("assalamualaikum",): ["Waalaikumsalam!", "Waalaikumsalam warahmatullahi wabarakatuh."],
+    ("bot",): ["Aku bot yang ramah ✨", "Ya, ada apa?", "Dipanggil? 😊"],
+    ("lagi apa", "sedang apa"): ["Lagi nunggu kamu nih 😁", "Lagi bantu yang lain juga"],
+    ("terima kasih", "thanks"): ["Sama-sama 😄", "You're welcome!", "Kapan-kapan lagi ya"],
+    ("namamu siapa", "siapa kamu"): ["Aku bot buatan tuan ku 😎", "Rahasia dong 😏"],
+    ("jam berapa",): ["Aku gak punya jam, tapi kayaknya kamu udah lama nungguin aku 😅"],
+    ("love", "sayang", "cinta"): ["Aku juga sayang kamu ❤️", "Ciee cinta-cintaan~"],
 }
 
-# Perintah untuk ON/OFF
-@PY.UBOT("autoreply(?:\s+(on|off))?")
-async def _(event):
-    global AUTO_REPLY_ENABLED
-    arg = event.pattern_match.group(1)
 
-    if arg:
-        AUTO_REPLY_ENABLED = (arg == "on")
-        status = "✅ AutoReply diaktifkan" if AUTO_REPLY_ENABLED else "❌ AutoReply dimatikan"
-        await edit_or_reply(event, status)
-    else:
-        await edit_or_reply(event, f"AutoReply sekarang: {'Aktif ✅' if AUTO_REPLY_ENABLED else 'Nonaktif ❌'}")
+@PY.UBOT("autoreply")
+async def toggle_autoreply(client, message: Message):
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
+
+    if len(message.command) < 2:
+        return await message.reply(
+            f"{ggl}<code>{message.text.split()[0]}</code> <b>[on/off]</b>"
+        )
+
+    toggle_option = message.command[1].lower()
+    toggle_options = {"on": True, "off": False}
+
+    if toggle_option not in toggle_options:
+        return await message.reply(f"{ggl}Opsi tidak valid. Gunakan 'on' atau 'off'.")
+
+    try:
+        await set_vars(client.me.id, "AUTOREPLY_STATUS", toggle_options[toggle_option])
+        status_text = "diaktifkan" if toggle_options[toggle_option] else "dinonaktifkan"
+        return await message.reply(f"{brhsl}Auto Reply berhasil {status_text}.")
+    except Exception as e:
+        return await message.reply(f"{ggl}Gagal mengatur status: {str(e)}")
 
 
-# Balas otomatis jika membalas chat
-@PY.CALLBACK(event=events.NewMessage(incoming=True))
-async def auto_reply_handler(event):
-    if not AUTO_REPLY_ENABLED:
+@PY.on_message(filters.incoming & filters.reply)
+async def auto_reply_handler(client, message: Message):
+    status = await get_vars(client.me.id, "AUTOREPLY_STATUS")
+
+    # Tidak aktif → keluar
+    if not status:
         return
 
-    if not event.is_reply or event.out:
+    if not message.reply_to_message or not message.reply_to_message.text:
         return
 
-    reply_msg = await event.get_reply_message()
-    if not reply_msg or not reply_msg.message:
-        return
+    text = message.reply_to_message.text.lower()
 
-    text = reply_msg.message.lower()
     for keywords, replies in RESPONSES.items():
         if any(key in text for key in keywords):
-            try:
-                await event.reply(choice(replies))
-                break
-            except Exception as err:
-                print(f"[AutoReply Error] {err}")
+            await message.reply(choice(replies))
+            break
+        
