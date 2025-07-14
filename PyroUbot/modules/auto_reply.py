@@ -1,10 +1,12 @@
-from pyrogram import filters
 from pyrogram.types import Message
-from ZacnUbot import PY
-from ZacnUbot.core.db import set_vars, get_vars
-from ZacnUbot.helpers.tools import edit_or_reply
-from ZacnUbot.helpers.types import EMO
+from pyrogram import filters
 from random import choice
+
+from PyroUbot import PY
+from PyroUbot.helpers.tools import get_vars, set_vars
+from PyroUbot.helpers.basic import edit_or_reply
+from PyroUbot.helpers.types import EMO
+
 
 # === Data balasan chatbot ===
 RESPONSES = {
