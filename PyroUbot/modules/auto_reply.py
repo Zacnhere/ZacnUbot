@@ -1,7 +1,9 @@
 import wget
-
+from pyrogram import filters
+from pyrogram.types import Message
+from random import choice
+import re
 from gc import get_objects
-
 from pykeyboard import InlineKeyboard
 from pyrogram.types import (InlineKeyboardButton, InlineQueryResultArticle,
                             InlineQueryResultPhoto, InputTextMessageContent)
@@ -50,18 +52,15 @@ async def toggle_autoreply(client, message: Message):
 @PY.AUTO_REPLAY("AUTOREPLAY", ubot)
 async def auto_reply_handler(client, message: Message):
     status = await get_vars(client.me.id, "AUTOREPLY_STATUS")
-
-    # Tidak aktif → keluar
     if not status:
         return
 
-    if not message.reply_to_message or not message.reply_to_message.text:
+    text = message.text.lower() if message.text else None
+    if not text:
         return
 
-    text = message.reply_to_message.text.lower()
-
     for keywords, replies in RESPONSES.items():
-        if any(key in text for key in keywords):
+        # Cocokkan menggunakan regex agar lebih akurat (cocok utuh per kata)
+        if any(re.search(rf"\b{re.escape(key)}\b", text) for key in keywords):
             await message.reply(choice(replies))
             break
-        
