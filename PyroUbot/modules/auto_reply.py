@@ -47,7 +47,7 @@ async def toggle_autoreply(client, message: Message):
         return await message.reply(f"{ggl}Gagal mengatur status: {str(e)}")
 
 
-@PY.NO_CMD_UBOT("AUTO_REPLAY", ubot)
+@PY.AUTO_REPLAY("AUTOREPLAY", ubot)
 async def auto_reply_handler(client, message: Message):
     status = await get_vars(client.me.id, "AUTOREPLY_STATUS")
 
