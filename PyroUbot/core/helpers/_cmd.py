@@ -335,7 +335,7 @@ def NO_PC(result, ubot):
         return wrapper
 
 @staticmethod
-    def AUTO_REPLAY(AUTOREPLAY):
+def AUTO_REPLAY(AUTOREPLAY):
         def wrapper(func):
             @ubot.on_message(
                 filters.group
