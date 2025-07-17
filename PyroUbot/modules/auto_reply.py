@@ -55,12 +55,8 @@ async def auto_reply_handler(client, message: Message):
     if not status:
         return
 
-    text = message.text.lower() if message.text else None
-    if not text:
-        return
-
-    for keywords, replies in RESPONSES.items():
-        # Cocokkan menggunakan regex agar lebih akurat (cocok utuh per kata)
-        if any(re.search(rf"\b{re.escape(key)}\b", text) for key in keywords):
+    text = message.text.lower() if message.text else ""
+    for pattern, replies in RESPONSES.items():
+        if re.search(pattern, text):
             await message.reply(choice(replies))
             break
