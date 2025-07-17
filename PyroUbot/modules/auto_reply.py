@@ -56,7 +56,13 @@ async def auto_reply_handler(client, message: Message):
         return
 
     text = message.text.lower() if message.text else ""
+    text = text.replace("\n", " ").strip()
+    text = re.sub(r"[^a-z0-9\s]", "", text)
+
     for pattern, replies in RESPONSES.items():
-        if re.search(pattern, text):
-            await message.reply(choice(replies))
-            break
+        try:
+            if re.search(pattern, text, re.IGNORECASE):
+                await message.reply(choice(replies))
+                break
+        except re.error:
+            continue
