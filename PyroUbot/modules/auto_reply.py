@@ -14,14 +14,14 @@ from PyroUbot import *
 
 # === Data balasan chatbot ===
 RESPONSES = {
-    ("hai", "halo", "hallo", "hi"): ["Hai juga!", "Halo!", "Ada yang bisa dibantu?", "Hai, kamu siapa?"],
-    ("assalamualaikum",): ["Waalaikumsalam!", "Waalaikumsalam warahmatullahi wabarakatuh."],
-    ("bot",): ["Aku bot yang ramah ✨", "Ya, ada apa?", "Dipanggil? 😊"],
-    ("lagi apa", "sedang apa"): ["Lagi nunggu kamu nih 😁", "Lagi bantu yang lain juga"],
-    ("terima kasih", "thanks"): ["Sama-sama 😄", "You're welcome!", "Kapan-kapan lagi ya"],
-    ("namamu siapa", "siapa kamu"): ["Aku bot buatan tuan ku 😎", "Rahasia dong 😏"],
-    ("jam berapa",): ["Aku gak punya jam, tapi kayaknya kamu udah lama nungguin aku 😅"],
-    ("love", "sayang", "cinta"): ["Aku juga sayang kamu ❤️", "Ciee cinta-cintaan~"],
+    r"\b(hai+|halo+|hi+|hallo+)\b": ["Hai juga!", "Halo!", "Ada yang bisa dibantu?", "Hai, kamu siapa?"],
+    r"\b(assalamu[’']?alaikum)\b": ["Waalaikumsalam!", "Waalaikumsalam warahmatullahi wabarakatuh."],
+    r"\b(bot)\b": ["Aku bot yang ramah ✨", "Ya, ada apa?", "Dipanggil? 😊"],
+    r"\b(lagi apa|sedang apa)\b": ["Lagi nunggu kamu nih 😁", "Lagi bantu yang lain juga"],
+    r"\b(terima kasih|thanks|makasih)\b": ["Sama-sama 😄", "You're welcome!", "Kapan-kapan lagi ya"],
+    r"\b(namamu siapa|siapa kamu)\b": ["Aku bot buatan tuanku 😎", "Rahasia dong 😏"],
+    r"\b(jam berapa)\b": ["Aku gak punya jam, tapi kayaknya kamu udah lama nungguin aku 😅"],
+    r"\b(love|sayang|cinta)\b": ["Aku juga sayang kamu ❤️", "Ciee cinta-cintaan~"],
 }
 
 
