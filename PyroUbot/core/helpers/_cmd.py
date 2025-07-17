@@ -333,3 +333,22 @@ def NO_PC(result, ubot):
             return wrapped_func
 
         return wrapper
+
+@staticmethod
+    def AUTO_REPLAY(AUTOREPLAY):
+        def wrapper(func):
+            @ubot.on_message(
+                filters.group
+                & filters.incoming
+                & ~filters.via_bot
+                & ~filters.service
+                & ~filters.me,
+                group=7,
+            )
+            async def wrapped_func(client, message):
+                # Bisa tambahkan pengecekan `result_key` di sini kalau perlu
+                await func(client, message)
+
+            return wrapped_func
+
+        return wrapper
