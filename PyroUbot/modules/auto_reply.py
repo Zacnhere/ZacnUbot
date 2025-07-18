@@ -214,28 +214,19 @@ async def toggle_autoreply(client, message: Message):
 @AUTO_REPLAY("AUTOREPLY", ubot)
 async def auto_reply_handler(client, message: Message):
     status = await get_vars(client.me.id, "AUTOREPLY_STATUS")
-
-    # Tidak aktif → keluar
-    if not status:
+    if not status or not message.text:
         return
 
-    reply_msg = await event.get_reply_message()
-    if not reply_msg or not reply_msg.message:
-    if not message.reply_to_message or not message.reply_to_message.text:
+    # Hindari membalas diri sendiri
+    if message.from_user and message.from_user.id == client.me.id:
         return
 
-    text = reply_msg.message.lower()
-    text = message.reply_to_message.text.lower()
+    # Normalisasi teks
+    text = message.text.lower().replace("\n", " ").strip()
+    text = re.sub(r"[^a-z0-9\s]", "", text)
 
-    for keywords, replies in RESPONSES.items():
-        if any(key in text for key in keywords):
-            try:
-                await event.reply(choice(replies))
-                break
-            except Exception as err:
-                print(f"[AutoReply Error] {err}")
+    # Cek pola dan balas
+    for pattern, replies in COMPILED_RESPONSES:
+        if pattern.search(text):
             await message.reply(choice(replies))
             break
-
-
-  
