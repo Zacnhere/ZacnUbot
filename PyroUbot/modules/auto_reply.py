@@ -231,5 +231,4 @@ async def auto_reply_handler(client, message: Message):
             print(f"[DEBUG] Match found! Replying with: {reply_text}")
             await message.reply(reply_text)
             break
-        except re.error:
             continue
