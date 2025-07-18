@@ -12,47 +12,6 @@ from pyrogram.types import (InlineKeyboardButton, InlineQueryResultArticle,
 from PyroUbot import *
 
 
-@PY.UBOT("autoreply")
-async def toggle_autoreply(client, message: Message):
-    brhsl = await EMO.BERHASIL(client)
-    ggl = await EMO.GAGAL(client)
-
-    if len(message.command) < 2:
-        return await message.reply(
-            f"{ggl}<code>{message.text.split()[0]}</code> <b>[on/off]</b>"
-        )
-
-    toggle_option = message.command[1].lower()
-    toggle_options = {"on": True, "off": False}
-
-    if toggle_option not in toggle_options:
-        return await message.reply(f"{ggl}Opsi tidak valid. Gunakan 'on' atau 'off'.")
-
-    try:
-        await set_vars(client.me.id, "AUTOREPLY_STATUS", toggle_options[toggle_option])
-        status_text = "diaktifkan" if toggle_options[toggle_option] else "dinonaktifkan"
-        return await message.reply(f"{brhsl}Auto Reply berhasil {status_text}.")
-    except Exception as e:
-        return await message.reply(f"{ggl}Gagal mengatur status: {str(e)}")
-
-          
-@AUTO_REPLAY("AUTOREPLY", ubot)
-async def auto_reply_handler(client, message: Message):
-    status = await get_vars(client.me.id, "AUTOREPLY_STATUS")
-    if not status or not message.text:
-        return
-
-    # Normalisasi teks
-    text = message.text.lower()
-    text = text.replace("\n", " ").strip()
-    text = re.sub(r"[^a-z0-9\s]", "", text)
-
-    # Cek pola dan balas
-    for pattern, replies in COMPILED_RESPONSES:
-        if pattern.search(text):
-            await message.reply(choice(replies))
-            break
-
 
 
 RESPONSES = {
@@ -221,4 +180,48 @@ RESPONSES = {
         "Malam ini aku jagain dari jauh 😇",
         "Good night. Jangan mimpiin yang lain 😏"
     ],
-              }
+}
+
+
+
+
+@PY.UBOT("autoreply")
+async def toggle_autoreply(client, message: Message):
+    brhsl = await EMO.BERHASIL(client)
+    ggl = await EMO.GAGAL(client)
+
+    if len(message.command) < 2:
+        return await message.reply(
+            f"{ggl}<code>{message.text.split()[0]}</code> <b>[on/off]</b>"
+        )
+
+    toggle_option = message.command[1].lower()
+    toggle_options = {"on": True, "off": False}
+
+    if toggle_option not in toggle_options:
+        return await message.reply(f"{ggl}Opsi tidak valid. Gunakan 'on' atau 'off'.")
+
+    try:
+        await set_vars(client.me.id, "AUTOREPLY_STATUS", toggle_options[toggle_option])
+        status_text = "diaktifkan" if toggle_options[toggle_option] else "dinonaktifkan"
+        return await message.reply(f"{brhsl}Auto Reply berhasil {status_text}.")
+    except Exception as e:
+        return await message.reply(f"{ggl}Gagal mengatur status: {str(e)}")
+
+          
+@AUTO_REPLAY("AUTOREPLY", ubot)
+async def auto_reply_handler(client, message: Message):
+    status = await get_vars(client.me.id, "AUTOREPLY_STATUS")
+    if not status or not message.text:
+        return
+
+    # Normalisasi teks
+    text = message.text.lower()
+    text = text.replace("\n", " ").strip()
+    text = re.sub(r"[^a-z0-9\s]", "", text)
+
+    # Cek pola dan balas
+    for pattern, replies in COMPILED_RESPONSES:
+        if pattern.search(text):
+            await message.reply(choice(replies))
+            break
