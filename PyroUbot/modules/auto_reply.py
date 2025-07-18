@@ -38,21 +38,30 @@ async def toggle_autoreply(client, message: Message):
           
 @AUTO_REPLAY("AUTOREPLY", ubot)
 async def auto_reply_handler(client, message: Message):
+    # Ambil status ON/OFF
     status = await get_vars(client.me.id, "AUTOREPLY_STATUS")
     if not status:
         return
 
+    # Ambil dan bersihkan teks
     text = message.text.lower() if message.text else ""
-    text = text.replace("\n", " ").strip()
-    text = re.sub(r"[^a-z0-9\s]", "", text)
+    text = re.sub(r"[^\w\s]", "", text).strip()
 
+    matched = []  # tampung semua pattern yg cocok
+
+    # Cek pattern yang cocok
     for pattern, replies in RESPONSES.items():
         try:
             if re.search(pattern, text, re.IGNORECASE):
-                await message.reply(choice(replies))
-                break
+                matched.append((pattern, replies))
         except re.error:
-            continue    
+            continue
+
+    # Kalau ada yang cocok, ambil satu pattern acak dan balas salah satu respons-nya
+    if matched:
+        pattern, replies = choice(matched)
+        response = choice(replies)
+        await message.reply(responses)
 
 
 
