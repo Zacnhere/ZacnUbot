@@ -1,3 +1,4 @@
+import os
 import wget
 from pyrogram import filters
 from pyrogram.types import Message
