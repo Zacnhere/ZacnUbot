@@ -222,7 +222,7 @@ async def auto_reply_handler(client, message: Message):
         return
 
     if not AUTOREPLY_STATUS.get(message.chat.id, False):
-        return
+        return
 
     # Normalisasi teks
     text = message.text.lower().replace("\n", " ").strip()
