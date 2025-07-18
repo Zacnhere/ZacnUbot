@@ -12,8 +12,6 @@ from pyrogram.types import (InlineKeyboardButton, InlineQueryResultArticle,
 from PyroUbot import *
 
 
-
-
 RESPONSES = {
     # === Romantis / Lucu / Cuek / Cool: Sapaan
     r"\b(hai+|halo+|hi+|hallo+|hey+|hay+)\b": [
@@ -183,6 +181,10 @@ RESPONSES = {
 }
 
 
+COMPILED_RESPONSES = [
+    (re.compile(pattern, re.IGNORECASE), replies)
+    for pattern, replies in RESPONSES.items()
+]
 
 
 @PY.UBOT("autoreply")
@@ -212,16 +214,20 @@ async def toggle_autoreply(client, message: Message):
 @AUTO_REPLAY("AUTOREPLY", ubot)
 async def auto_reply_handler(client, message: Message):
     status = await get_vars(client.me.id, "AUTOREPLY_STATUS")
+    print(f"[DEBUG] AUTOREPLY_STATUS: {status}")
+    
     if not status or not message.text:
         return
 
-    # Normalisasi teks
     text = message.text.lower()
     text = text.replace("\n", " ").strip()
     text = re.sub(r"[^a-z0-9\s]", "", text)
+    print(f"[DEBUG] Cleaned message text: '{text}'")
 
-    # Cek pola dan balas
     for pattern, replies in COMPILED_RESPONSES:
+        print(f"[DEBUG] Checking pattern: {pattern.pattern}")
         if pattern.search(text):
-            await message.reply(choice(replies))
+            reply_text = choice(replies)
+            print(f"[DEBUG] Match found! Replying with: {reply_text}")
+            await message.reply(reply_text)
             break
