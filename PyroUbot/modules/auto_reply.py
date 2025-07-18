@@ -61,7 +61,7 @@ async def auto_reply_handler(client, message: Message):
     if matched:
         pattern, replies = choice(matched)
         response = choice(replies)
-        await message.reply(responses)
+        await message.reply(response)
 
 
 
