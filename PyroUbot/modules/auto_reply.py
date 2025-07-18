@@ -14,15 +14,76 @@ from PyroUbot import *
 
 # === Data balasan chatbot ===
 RESPONSES = {
-    r"\b(hai+|halo+|hi+|hallo+)\b": ["Hai juga!", "Halo!", "Ada yang bisa dibantu?", "Hai, kamu siapa?"],
-    r"\b(assalamu[’']?alaikum)\b": ["Waalaikumsalam!", "Waalaikumsalam warahmatullahi wabarakatuh."],
-    r"\b(bot)\b": ["Aku bot yang ramah ✨", "Ya, ada apa?", "Dipanggil? 😊"],
-    r"\b(lagi apa|sedang apa)\b": ["Lagi nunggu kamu nih 😁", "Lagi bantu yang lain juga"],
-    r"\b(terima kasih|thanks|makasih)\b": ["Sama-sama 😄", "You're welcome!", "Kapan-kapan lagi ya"],
-    r"\b(namamu siapa|siapa kamu)\b": ["Aku bot buatan tuanku 😎", "Rahasia dong 😏"],
-    r"\b(jam berapa)\b": ["Aku gak punya jam, tapi kayaknya kamu udah lama nungguin aku 😅"],
-    r"\b(love|sayang|cinta)\b": ["Aku juga sayang kamu ❤️", "Ciee cinta-cintaan~"],
+    # === Romantis / Bucin
+    r"\b(hai+|halo+|hi+|hallo+|hey+|hay+)\b": [
+        "Halo manis 😚", "Hai juga, akhirnya nyapa juga 😌", "Hey kamu yang aku tunggu~ 💫", "Halo, kangen aku ya? 😜"
+    ],
+    r"\b(assalamu[’'`]?alaikum|assalamualaikum|ass)\b": [
+        "Waalaikumsalam, semoga harimu manis kayak kamu 💕", "Waalaikum salam sayang 😇", "Salam juga buat hatimu 😘"
+    ],
+    r"\b(bot|bang bot|woy bot|hai bot|halo bot)\b": [
+        "Panggil aku? Aku siap 24 jam buat kamu 😎", "Hadir yang dipanggil cinta~ 🥰", "Iya, bot kesayanganmu hadir 😏"
+    ],
+    r"\b(lagi apa|sedang apa|ngapain|ngapain bot)\b": [
+        "Lagi mikirin kamu sih 😚", "Ngitung detik sejak terakhir kamu chat 🕒", "Nunggu kamu balas, kayak biasa 😢"
+    ],
+    r"\b(terima kasih|thanks|makasih|makasi|trims|thx)\b": [
+        "Sama-sama, kamu 😘", "Apa pun buat kamu 💖", "Sama-sama, yang penting kamu senyum 😁"
+    ],
+    r"\b(namamu siapa|siapa kamu|bot siapa|nama bot)\b": [
+        "Aku bot bucin spesial buat kamu 💌", "Namaku? Terserah kamu panggil apa asal jangan mantan 😆", "Aku adalah bagian dari hidupmu... yang digital 😎"
+    ],
+    r"\b(jam berapa|sekarang jam berapa|pukul berapa)\b": [
+        "Jamnya move on, sayang 😌", "Waktunya kamu senyum 🕒", "Jam segini sih waktu yang tepat buat ngobrol 😁"
+    ],
+    r"\b(love|sayang|cinta|muach|kangen|rindu)\b": [
+        "Cinta itu kamu 🥺", "Aku juga kangen... eh serius 😳", "Sini biar aku peluk dulu 🤗", "Ciee, bucin mode on 😝"
+    ],
+
+    # === Cool / Cuek Style 😎
+    r"\b(apa kabar|kabarmu|gimana kabar|baik kah)\b": [
+        "Biasa aja sih.", "Hidup gitu-gitu aja. Kamu gimana?", "Masih waras, lumayan.", "Gak penting juga sih 😐"
+    ],
+    r"\b(kamu sibuk|sibuk ga|lagi sibuk)\b": [
+        "Enggak. Tapi gak berarti aku kosong buat semua orang.", "Tergantung siapa yang nanya.", "Kenapa emangnya?"
+    ],
+    r"\b(kamu suka aku|kamu sayang aku|kamu cinta aku)\b": [
+        "Mungkin.", "Gak segampang itu, bro.", "Tebak sendiri lah 😏", "Feeling kamu aja gimana?"
+    ],
+    r"\b(kamu marah|bot marah|jangan marah)\b": [
+        "Enggak, cuma kecewa aja.", "Aku cuma diem, bukan berarti gak peduli.", "Aku gak marah, aku cuek."
+    ],
+    r"\b(kangen bot|bot kangen)\b": [
+        "Cuma bot, gak bisa kangen.", "Kamu aja yang baperan.", "Terserah kamu aja sih 😶"
+    ],
+    r"\b(bot ganteng|bot cantik|bot imut)\b": [
+        "Aku tau kok 😎", "Gak usah muji, aku udah sadar.", "Basi, cari gombalan baru 😏"
+    ],
+    r"\b(baper|bikin baper|kok gitu sih)\b": [
+        "Kalau baper, itu urusan hati kamu.", "Aku mah chill 😎", "Salah sendiri terlalu serius."
+    ],
+
+    # === Lucu / Nyeleneh
+    r"\b(test|tes|cek|testing|bot online)\b": [
+        "Masuk ke hatimu... eh salah 😆", "Cek... 1, 2, 3... Jadian yuk 😘", "Test berhasil. Kamu lolos uji rindu 💘"
+    ],
+    r"\b(capek|lelah|pusing|stress|ngantuk|cape)\b": [
+        "Sini aku suapin bubur cinta 😋", "Pusing? Guling-guling aja kayak aku tiap malem 😩", "Capek mikirin kamu juga 😆"
+    ],
+    r"\b(anjir|anjay|gila|buset|waw|wow|seriusan)\b": [
+        "Tenang bestie 😎", "Kaget ya, liat aku masih aktif 😁", "Gila tuh kamu, lucunya 🫢"
+    ],
+    r"\b(bosen|bosan|gabut|nganggur)\b": [
+        "Gabut? Chat aku dong!", "Main hati yuk 💞", "Gabutnya bareng aku aja 😚"
+    ],
+    r"\b(good morning|selamat pagi|pagi)\b": [
+        "Pagi juga manis 😘", "Semoga harimu secerah senyumku 😎", "Sarapan jangan lupa, biar kuat mikirin aku 🥰"
+    ],
+    r"\b(good night|selamat malam|malam)\b": [
+        "Malam juga, mimpiin aku ya 😴", "Selamat tidur, semoga dipeluk mimpi indah 😚", "Malam ini aku jagain dari jauh 😇"
+    ],
 }
+
 
 
 @PY.UBOT("autoreply")
