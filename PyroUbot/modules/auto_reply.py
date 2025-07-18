@@ -35,7 +35,25 @@ async def toggle_autoreply(client, message: Message):
         return await message.reply(f"{ggl}Gagal mengatur status: {str(e)}")
 
 
-@AUTO_REPLAY("AUTOREPLAY", ubot)
+def load_responses_from_txt(filepath="responses.txt"):
+    responses = {}
+    current_pattern = None
+
+    with open(filepath, "r", encoding="utf-8") as file:
+        for line in file:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            elif not line.startswith("-"):
+                current_pattern = line
+                responses[current_pattern] = []
+            else:
+                responses[current_pattern].append(line[1:].strip())
+    return responses
+
+RESPONSES = load_responses_from_txt("responses.txt")
+
+@AUTO_REPLAY("AUTOREPLY", ubot)
 async def auto_reply_handler(client, message: Message):
     status = await get_vars(client.me.id, "AUTOREPLY_STATUS")
     if not status:
@@ -51,4 +69,4 @@ async def auto_reply_handler(client, message: Message):
                 await message.reply(choice(replies))
                 break
         except re.error:
-            continue
+            continue     
