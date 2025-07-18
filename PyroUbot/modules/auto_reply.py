@@ -36,7 +36,7 @@ async def toggle_autoreply(client, message: Message):
         return await message.reply(f"{ggl}Gagal mengatur status: {str(e)}")
 
 
-def load_responses_from_txt(filepath="responses.txt"):
+def load_responses_from_txt(filepath="respon.txt"):
     responses = {}
     current_pattern = None
 
@@ -53,7 +53,7 @@ def load_responses_from_txt(filepath="responses.txt"):
     return responses
 
 DIR_PATH = os.path.dirname(__file__)
-RESPONSES = load_responses_from_txt(os.path.join(DIR_PATH, "responses.txt"))
+RESPONSES = load_responses_from_txt(os.path.join(DIR_PATH, "respon.txt"))
 
 @AUTO_REPLAY("AUTOREPLY", ubot)
 async def auto_reply_handler(client, message: Message):
