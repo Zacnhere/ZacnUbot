@@ -11,6 +11,7 @@ from pyrogram.types import (InlineKeyboardButton, InlineQueryResultArticle,
 
 from PyroUbot import *
 
+AUTOREPLY_STATUS = {}
 
 RESPONSES = {
     # === Romantis / Lucu / Cuek / Cool: Sapaan
