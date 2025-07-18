@@ -1,5 +1,4 @@
 import os
-import wget
 from pyrogram import filters
 from pyrogram.types import Message
 from random import choice
@@ -11,7 +10,6 @@ from pyrogram.types import (InlineKeyboardButton, InlineQueryResultArticle,
 
 from PyroUbot import *
 
-AUTOREPLY_STATUS = {}
 
 RESPONSES = {
     # === Romantis / Lucu / Cuek / Cool: Sapaan
@@ -222,8 +220,6 @@ async def auto_reply_handler(client, message: Message):
     if message.from_user and message.from_user.id == client.me.id:
         return
 
-    if not AUTOREPLY_STATUS.get(message.chat.id, False):
-        return
 
     # Normalisasi teks
     text = message.text.lower().replace("\n", " ").strip()
