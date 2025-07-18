@@ -51,9 +51,7 @@ def load_responses_from_txt(filepath="respon.txt"):
             else:
                 responses[current_pattern].append(line[1:].strip())
     return responses
-
-DIR_PATH = os.path.dirname(__file__)
-RESPONSES = load_responses_from_txt(os.path.join(DIR_PATH, "respon.txt"))
+          
 
 @AUTO_REPLAY("AUTOREPLY", ubot)
 async def auto_reply_handler(client, message: Message):
