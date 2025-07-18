@@ -52,7 +52,7 @@ async def auto_reply_handler(client, message: Message):
                 await message.reply(choice(replies))
                 break
         except re.error:
-            continue     
+            continue    
 
 
 
