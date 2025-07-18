@@ -221,6 +221,9 @@ async def auto_reply_handler(client, message: Message):
     if message.from_user and message.from_user.id == client.me.id:
         return
 
+    if not AUTOREPLY_STATUS.get(message.chat.id, False):
+        return
+
     # Normalisasi teks
     text = message.text.lower().replace("\n", " ").strip()
     text = re.sub(r"[^a-z0-9\s]", "", text)
