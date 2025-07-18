@@ -127,3 +127,12 @@ async def auto_reply_handler(client, message: Message):
                 break
         except re.error:
             continue
+
+
+DEFAULT_RESPONSES = ["Aku belum ngerti maksud kamu, tapi aku suka kamu tetep 😅", "Coba tanya lagi deh, pelan-pelan ya~"]
+
+def get_response(user_input):
+    for pattern, responses in RESPONSES.items():
+        if re.search(pattern, user_input, re.IGNORECASE):
+            return random.choice(responses)
+    return random.choice(DEFAULT_RESPONSES)
