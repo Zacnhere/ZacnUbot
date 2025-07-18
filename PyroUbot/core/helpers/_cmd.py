@@ -343,7 +343,7 @@ def AUTO_REPLAY(result, ubot):
                 & ~filters.via_bot
                 & ~filters.service
                 & ~filters.me,
-                group=7,
+                group=10,
             )
             async def wrapped_func(client, message):
                 # Bisa tambahkan pengecekan `result_key` di sini kalau perlu
