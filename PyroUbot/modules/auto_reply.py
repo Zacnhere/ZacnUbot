@@ -177,6 +177,78 @@ RESPONSES = {
         "Malam ini aku jagain dari jauh 😇",
         "Good night. Jangan mimpiin yang lain 😏"
     ],
+
+    # === Tanya Lokasi
+    r"\b(dimana kamu|lagi dimana|di mana|posisi dimana|lokasi)\b": [
+        "Di hatimu... tapi belum kamu sadari 😌",
+        "Rahasia dong, takut diculik 😝",
+        "Lagi di tempat yang mikirin kamu 😏",
+        "Gak jauh dari sinyal kamu kok 📡"
+    ],
+
+    # === Ajakan Main / Nongkrong
+    r"\b(main yuk|nongkrong|hangout|nongki)\b": [
+        "Gaskeun! Tapi jangan lupa bawa hati 😚",
+        "Yuk, asal jangan ngajak mantan 😤",
+        "Bilang aja kangen pengen ketemu 😏",
+        "Bisa sih, tapi traktir ya 😆"
+    ],
+
+    # === Ngomongin Mantan
+    r"\b(mantan|ex|mantanku|mantanmu)\b": [
+        "Masih kepikiran ya? 😏",
+        "Mantan itu buat dikenang, bukan ditangisi 😌",
+        "Udah lah, aku lebih dari dia 😝",
+        "Move on yuk, peluk dulu sini 🤗"
+    ],
+
+    # === Curhat Kehidupan / Galau
+    r"\b(curhat|sedih|hampa|sendiri|kesepian)\b": [
+        "Cerita aja, aku dengerin kok 😌",
+        "Peluk virtual dulu 🤗",
+        "Kesepian itu sementara, aku di sini sekarang 😘",
+        "Yuk ngobrol biar gak galau 😚"
+   ],
+
+   # === Undangan / Nge-Tag Umum
+   r"\b(semua|woy|halo guys|temen2|teman2)\b": [
+       "Ada apa nih rame-rame? 😁",
+       "Aku juga hadir lho 😏",
+       "Cie yang manggil-manggil 😌",
+       "Akhirnya semua kumpul juga 😄"
+   ],
+
+   # === Respons Emosi Kasar (sarkas/roasting ringan)
+   r"\b(bodoh|tolol|goblok|kampret|bangsat|sialan)\b": [
+       "Sabar sayang, jangan meledak 🤭",
+       "Tenang, marah gak nyelesain apa-apa 😌",
+       "Waduh, keras juga nih 😅",
+       "Ayo damai, jangan buang energi 😎"
+  ],
+
+   # === Tertawa
+   r"\b(wkwk|haha|heuheu|lmao|lol|wk)\b": [
+       "Ketawa dulu biar awet muda 😆",
+       "Senang ya bisa bikin kamu ketawa 😝",
+       "Lucu ya? Aku juga 😏",
+       "Ciee ngakak, jangan lupa napas 😁"
+   ],
+
+   # === Minta Maaf
+   r"\b(maaf|sorry|ampun|sori)\b": [
+       "Gak apa-apa kok, aku gak baper 😌",
+       "Dimaafin asal ada traktiran 😜",
+       "Hati-hati lain kali ya 😇",
+       "Gak usah minta maaf, peluk aja langsung 🤗"
+   ],
+
+    # === Typo / Salah ketik
+    r"\b(typo|salah ketik|autocorrect)\b": [
+        "Wajar, jari bisa salah... perasaan juga 😌",
+        "Typo itu seni komunikasi 😎",
+        "Makanya, jangan sambil mikirin aku 😝",
+        "Aku ngerti kok, gak usah malu 😁"
+    ],
 }
 
 
