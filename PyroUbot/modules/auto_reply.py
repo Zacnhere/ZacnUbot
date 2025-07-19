@@ -333,6 +333,54 @@ RESPONSES = {
         "iya hallo",
         "masuk kok beb",
         "gabut yaa?"
+    ],
+    r"\b(oke)\b": [
+        "Oke sip, tapi jangan lupa janji kamu 😏",
+        "Oke... tapi hatiku masih deg-degan 😳",
+        "Oke banget deh kamu mah 😘",
+        "Oke tapi aku baper 😌"
+    ],
+    r"\b(yaudah)\b": [
+        "Kok yaudah sih... jangan gitu dong 😢",
+        "Yaudah tapi jangan beneran pergi ya 🥺",
+        "Sikapmu kaya sinyal 3G... ngilang 😩",
+        "Yaudah? Hati aku gak sekuat itu 😐"
+    ],
+    r"\b(sakit)\b": [
+        "Sakit di mana? Sini aku tiupin 😘",
+        "Minum air putih dulu, terus mikirin aku 😌",
+        "Sakit hati? Peluk yuk 🤗",
+        "Sakit? Jangan nyalahin cinta 😔"
+    ],
+    r"\b(fix)\b": [
+        "Fix kamu emang spesial 😘",
+        "Fix banget ini jatuh hati 😳",
+        "Fix gue gak bisa lupa kamu 😩",
+        "Udah fix belum hati kamu buat aku? 😏"
+    ],
+    r"\b(wow)\b": [
+        "Wow banget kamu hari ini 😍",
+        "Aku juga kaget liat kamu makin lucu 😆",
+        "Wow... kayaknya kamu udah nyangkut 😏",
+        "Jangan ‘wow’ doang, sini ngobrol 😌"
+    ],
+    r"\b(ngantuk)\b": [
+        "Tidur gih, biar mimpiin aku 😴",
+        "Ngantuk itu sinyal rindu lho 😚",
+        "Peluk bantal, tapi jangan lupa peluk aku di mimpi 😌",
+        "Yuk bobo dulu, nanti lanjut baper-baperannya 😏"
+    ],
+    r"\b(typo)\b": [
+        "Wajar, jari bisa salah... perasaan juga 😌",
+        "Typo itu seni komunikasi 😎",
+        "Makanya, jangan sambil mikirin aku 😝",
+        "Aku ngerti kok, gak usah malu 😁"
+    ],
+    r"\b(maaf)\b": [
+        "Gak apa-apa kok, aku gak baper 😌",
+        "Dimaafin asal ada traktiran 😜",
+        "Hati-hati lain kali ya 😇",
+        "Gak usah minta maaf, peluk aja langsung 🤗"
     ]
 }
 
