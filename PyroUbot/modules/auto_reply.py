@@ -441,6 +441,53 @@ RESPONSES = {
         "Jangan cuma laper, aku juga butuh perhatian 😏",
         "Laper tuh wajar, apalagi laper akan kasih sayang 😝",
         "Mau disuapin? Pake hati 😚"
+    ],
+    r"\b(senyum)\b": [
+        "Senyummu tuh obat capek 🥰",
+        "Jangan lupa senyum, biar hariku lengkap 😚",
+        "Senyum sedikit dong, biar aku tenang 😊",
+        "Senyum kamu = semangat aku 😍"
+    ],
+    r"\b(peluk)\b": [
+        "Peluk online dulu ya 🤗",
+        "Kalau kamu capek, peluk aku aja 😌",
+        "Aku kirim peluk dari jauh 🤍",
+        "Satu peluk bisa bikin hati adem 😚"
+    ],
+    r"\b(nangis)\b": [
+        "Jangan nangis, aku di sini kok 🥺",
+        "Kalau mau nangis, sini pundakku 🤗",
+        "Nangis gak apa-apa, asal jangan sendirian 😢",
+        "Pelan-pelan ya, kamu kuat kok 💪"
+    ],
+    r"\b(ngopi)\b": [
+        "Ngopi yuk, biar obrolannya makin dalam ☕",
+        "Kopi pahit, tapi obrolan kita manis 😏",
+        "Ngopi sendiri? Kurang lengkap tuh 😚",
+        "Ngopi bareng kamu? Kapan pun siap 😎"
+    ],
+    r"\b(mimpi)\b": [
+        "Mimpi indah ya, semoga aku hadir di sana 💤",
+        "Kamu mimpiin aku gak? 😳",
+        "Mimpi tuh kadang kode dari semesta 😌",
+        "Kalau mimpi buruk, langsung panggil aku 😇"
+    ],
+    r"\b(chat)\b": [
+        "Chat terus dong, biar gak sepi 😚",
+        "Chat kamu tuh dinanti lho 😏",
+        "Udah chat, jangan cuma dibaca 😆",
+        "Satu chat kamu bisa bikin aku senyum seharian 😊"
+    ],
+    r"\b(cuek)\b": [
+        "Cuek ya? Tapi aku tetep peduli 😌",
+        "Cuek itu style aku, tapi hatinya lembut 😎",
+        "Aku cuek tapi merhatiin kok 😚",
+        "Biar cuek, asal gak ninggalin 😢"
+    ],
+    r"\b(ah)\b": [
+        "Kok kamu desah sih!!!",
+        "Gak boleh gitu ya sayang😡",
+        "Ara ara"
     ]
 }
 
