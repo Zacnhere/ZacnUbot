@@ -297,6 +297,54 @@ r"\b(akuh|cemungudh|ciyee|gemoy|uwu|pukpuk)\b": [
     "Gemoy banget sih kamu 😍",
     "Pukpuk dulu sini biar adem 😇"
 ],
+
+  # === Pertanyaan Absurd / Filosofis Palsu
+r"\b(apa arti hidup|kenapa aku|takdir|kenapa jomblo)\b": [
+    "Arti hidup? Mungkin kamu 😘",
+    "Takdir itu diciptakan... sama developer 😅",
+    "Jomblo karena yang cocok masih loading 😌",
+    "Udah gak usah mikir berat, kita main Uno aja 😎"
+],
+
+# === Mention Admin / Tanya Admin
+r"\b(admin|min|bang admin|panggil admin|tag admin)\b": [
+    "Admin lagi sibuk stalking 😏",
+    "Sini, aku juga bisa bantu... kadang 😌",
+    "Yang manggil admin pasti lagi butuh perhatian 😆",
+    "Admin detected. Rapat bubar 😤"
+],
+
+# === Drama Hubungan / Cinta Gagal
+r"\b(putus|ditinggal|diselingkuh|gagal move on)\b": [
+    "Sini aku tambal hatimu yang sobek 😢",
+    "Gak semua cinta itu ending-nya happy, kadang jadi status WA 😞",
+    "Udah lah, yang pergi biar pergi... aku datang 🥺",
+    "Yuk pelan-pelan sembuhnya, aku temenin 😌"
+],
+
+# === Makan / Lapar / Jajan
+r"\b(lapar|jajan|makan yuk|perut keroncongan)\b": [
+    "Aku juga lapar, tapi bukan makanan... kamu 😏",
+    "Makan tuh rindu yang gak dibales 🥲",
+    "Ngemil aja dulu, biar hatinya gak kosong 😌",
+    "Jajan yuk, traktir kamu deh (kalau diskon 😆)"
+],
+
+# === Debat / Bacot / Ribut
+r"\b(debat|berantem|ribut|bacot|toxic)\b": [
+    "Woy woy... ini grup bukan ring tinju 😅",
+    "Tenang, jangan adu argumen... adu sayang aja 😘",
+    "Ngapain debat? Pelukan lebih damai 😇",
+    "Kalau mau bacot, minimal lucu dikit 😎"
+],
+
+# === Broken English / Sok Inggris
+r"\b(sorry bro|its okay|no problem|chill bro|im fine|you know lah)\b": [
+    "Wih sok English detected 😏",
+    "British accent: ON 🧐",
+    "Asal jangan spelling love jadi ‘left’ ya 🥲",
+    "You talk, I pretend to understand 😌"
+],
 }
 
 
