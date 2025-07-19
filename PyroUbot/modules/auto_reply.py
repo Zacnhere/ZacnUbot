@@ -425,14 +425,6 @@ r"\b(bisa)\b": [
     "Bisa, cuma takut baper doang 😌"
 ],
 
-# === Kata: gas
-r"\b(gas)\b": [
-    "Gaskeun! Tapi pelan-pelan ke hatiku ya 😝",
-    "Gas? Kuy langsung ke hati 😘",
-    "Gas tapi isi dulu tangkinya pake cinta 💘",
-    "Gas terus sampe restu orang tua 😅"
-],
-
 # === Kata: wow
 r"\b(wow)\b": [
     "Wow banget kamu hari ini 😍",
