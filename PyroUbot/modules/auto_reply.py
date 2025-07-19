@@ -381,6 +381,66 @@ RESPONSES = {
         "Dimaafin asal ada traktiran 😜",
         "Hati-hati lain kali ya 😇",
         "Gak usah minta maaf, peluk aja langsung 🤗"
+    ],
+    r"\b(kepo)\b": [
+        "Kepo ya? Wajar sih, aku emang menarik 😏",
+        "Gapapa kok, aku juga sering kepo-in kamu 😚",
+        "Kepo itu bukti perhatian 🥰",
+        "Udah kepo, sekalian aja jatuh cinta 😆"
+    ],
+    r"\b(sadar)\b": [
+        "Sadar kalau kamu lucu banget 😚",
+        "Sadar gak sih, kita udah cocok? 😝",
+        "Sadar dulu dong sebelum baper 😆",
+        "Aku udah sadar... kamu ngangenin 😌"
+    ],
+    r"\b(nonton)\b": [
+        "Nonton bareng yuk? Tapi filmnya tentang kita 😚",
+        "Lagi nonton apa? Boleh aku temenin? 😏",
+        "Nonton sendiri tuh gak asik, bareng aku dong 🎬",
+        "Kalau kamu film, aku penontonnya tiap hari 🥰"
+    ],
+    r"\b(galau)\b": [
+        "Galau ya? Peluk dulu deh 🤗",
+        "Galau tuh cuma sementara, aku permanen 😌",
+        "Galau itu manusiawi, pelan-pelan ya 😊",
+        "Kalo galau, dengerin lagu... atau suara aku 😘"
+    ],
+    r"\b(main)\b": [
+        "Main yuk, asal janganin perasaan 🫣",
+        "Mau main apa? Main hati boleh gak? 😏",
+        "Main tuh asik kalau sama kamu 😚",
+        "Ayo main bareng... di dunia nyata ya 😝"
+    ],
+    r"\b(game)\b": [
+        "Game apa yang kamu suka? Selain tebak perasaan 😜",
+        "Kamu gamer? Aku suka liat kamu fokus 😎",
+        "Main game boleh, tapi jangan lupa aku 😏",
+        "Game over? Sini aku hibur 🥺"
+    ],
+    r"\b(tidur)\b": [
+        "Tidur dulu gih, biar mimpinya indah 😴",
+        "Aku juga ngantuk, tapi nunggu kamu offline dulu 😌",
+        "Tidur itu penting, apalagi mimpiin aku 💤",
+        "Jangan lupa doa sebelum tidur ya 😇"
+    ],
+    r"\b(mager)\b": [
+        "Mager? Ya udah rebahan bareng aku 😏",
+        "Mager itu tanda butuh pelukan 😚",
+        "Mager boleh, asal tetap mikirin aku 😆",
+        "Gue juga mager, tapi mager elegan 😎"
+    ],
+    r"\b(hujan)\b": [
+        "Hujan enaknya diem sambil peluk kamu ☔",
+        "Dingin ya? Sini aku angetin 😘",
+        "Hujan bikin mellow, tapi kamu bikin hangat 🥺",
+        "Hujannya deres, rindunya lebih deras 😚"
+    ],
+    r"\b(laper)\b": [
+        "Laper? Sini aku masakin... cinta 🍜",
+        "Jangan cuma laper, aku juga butuh perhatian 😏",
+        "Laper tuh wajar, apalagi laper akan kasih sayang 😝",
+        "Mau disuapin? Pake hati 😚"
     ]
 }
 
