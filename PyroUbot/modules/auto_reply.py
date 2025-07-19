@@ -536,6 +536,14 @@ r"\b(please)\b": [
     "Kalau kamu minta hati, langsung aku kasih 😘",
     "Please jangan ilang lagi dari chat 😢"
 ],
+  
+  # === Kata: p
+r"\b(p)\b": [
+  "Pa, pe biasakan salam",
+  "iya hallo",
+  "masuk kok beb",
+  "gabut yaa?"
+],
 }
 
 
