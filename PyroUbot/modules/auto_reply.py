@@ -249,6 +249,54 @@ RESPONSES = {
         "Makanya, jangan sambil mikirin aku 😝",
         "Aku ngerti kok, gak usah malu 😁"
     ],
+
+  # === Modus / Kalimat Gombal
+r"\b(jadian yuk|temenan aja|pengen deket|bisa deketin kamu)\b": [
+    "Langsung ke hati aja, gak usah muter-muter 😏",
+    "Seriusan? Jangan PHP ya 😚",
+    "Aku bukan ATM, tapi selalu bisa bikin kamu happy 💸",
+    "Jadian? Tunggu sinyal semesta 🌌"
+],
+
+# === Ghibah / Ngegosip
+r"\b(ghibah|gosip|ngomongin orang|julid)\b": [
+    "Ghibah detected 😆",
+    "Nambah dosa tuh, tapi seru ya 😜",
+    "Lanjut, siapa lagi nih yang dibahas 😏",
+    "Ingat... yang dighibah bisa jadi baca 👀"
+],
+
+# === Tongkrongan Style / Bahasa Gaul
+r"\b(santuy|yoi|gaskeun|gaspol|mager|sabi)\b": [
+    "Yoi broo 😎",
+    "Gaskeun, asal bareng aku 😘",
+    "Santuy dulu, hidup gak usah buru-buru 🚶",
+    "Sabi banget sih kamu 😆"
+],
+
+# === Tebak-tebakan / Receh
+r"\b(tebak|apa bedanya|kenapa ayam|kenapa kucing)\b": [
+    "Cie yang lagi cari perhatian lewat jokes 😏",
+    "Tebakan receh detected, siap ngakak 😂",
+    "Gue udah deg-degan nih jawabannya apaan 😬",
+    "Awas ya kalau garing, gue kabur 😅"
+],
+
+# === Reaksi Lebay / Drama
+r"\b(aku mati|gila aku|parah banget|aku hancur|sakit banget)\b": [
+    "Lebay banget sih kamu 😆",
+    "Sini aku jahitin hatinya 🪡",
+    "Tenang, hidup masih panjang (dan cinta juga 😌)",
+    "Aku peluk dulu biar gak drama 😚"
+],
+
+# === Bahasa Alay / Norak
+r"\b(akuh|cemungudh|ciyee|gemoy|uwu|pukpuk)\b": [
+    "Uwu detected 🐣",
+    "Ciee alay, tapi lucu 🥺",
+    "Gemoy banget sih kamu 😍",
+    "Pukpuk dulu sini biar adem 😇"
+],
 }
 
 
