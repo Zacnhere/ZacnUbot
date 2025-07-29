@@ -18,6 +18,7 @@ __HELP__ = """
 <blockquote>
 <b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}autoreply</code> <b>[ᴏɴ ᴏғғ]</b>
   <i>untuk mengaktifkan dan nonaktifkan balasan otomatis</i>
+
   <b>note: ada beberapa group yang harus mereplay pesan agar aktif</b> </blockquote>
 
 """
