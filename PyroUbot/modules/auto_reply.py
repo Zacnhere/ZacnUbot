@@ -11,6 +11,18 @@ from pyrogram.types import (InlineKeyboardButton, InlineQueryResultArticle,
 from PyroUbot import *
 
 
+__MODULE__ = "balasotomatis"
+__HELP__ = """
+<blockquote>
+<b>『 ʙᴀɴᴛᴜᴀɴ ᴀᴜᴛᴏʀᴇᴘʟʏ 』</b> </blockquote>
+<blockquote>
+<b>➢ ᴘᴇʀɪɴᴛᴀʜ:</b> <code>{0}autoreply</code> <b>[ᴏɴ ᴏғғ]</b>
+  <i>untuk mengaktifkan dan nonaktifkan balasan otomatis</i>
+  <b>note: ada beberapa group yang harus mereplay pesan agar aktif</b> </blockquote>
+
+"""
+
+
 RESPONSES = {
     # === Romantis / Lucu / Cuek / Cool: Sapaan
     r"\b(hai+|halo+|hi+|hallo+|hey+|hay+)\b": [
