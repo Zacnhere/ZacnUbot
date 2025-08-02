@@ -1,4 +1,3 @@
-git+https://github.com/viihome/Viigram.git
 telegraph
 TgCrypto
 tornado
