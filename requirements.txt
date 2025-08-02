@@ -14,7 +14,7 @@ requests
 unidecode
 attrify
 ntgcalls
-pytgcalls
+py-tgcalls
 uvloop
 pySmartDL
 html2text
