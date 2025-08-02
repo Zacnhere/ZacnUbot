@@ -1,0 +1,9 @@
+ffmpeg
+neofetch
+apt-utils
+libmediainfo0v5
+sqlite3
+libgl1-mesa-glx
+libglib2.0-0
+libxml2-dev
+libxslt-dev
