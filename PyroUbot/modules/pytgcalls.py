@@ -3,7 +3,7 @@ from pytgcalls import PyTgCalls
 from pytgcalls.types import ChatUpdate, GroupCallParticipant, MediaStream, Update
 from PyroUbot import *
 from PyroUbot.core.helpers.queues import get_queue, clear_queue
-from PyroUbot.core.function.helpers import skip_current_song
+
 
 @ubot.pytgcalls_decorator()
 async def clear_chat_queue(_, chat_id: int):
