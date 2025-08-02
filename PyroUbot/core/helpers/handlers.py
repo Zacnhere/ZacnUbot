@@ -2,7 +2,7 @@ from PyroUbot import *
 from pytgcalls import PyTgCalls
 from PyroUbot.core.helpers.queues import *
 from pytgcalls.types import ChatUpdate, GroupCallParticipant, MediaStream, Update, VideoQuality, AudioQuality, ChatUpdate
-from pytgcalls.types import StreamAudioEnded
+
 
 
 async def skip_current_song(client, chat_id):
