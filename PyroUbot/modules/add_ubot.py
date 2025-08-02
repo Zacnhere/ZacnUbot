@@ -308,7 +308,6 @@ async def _(client, callback_query):
         """
     await bot_msg.edit(text_done, disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(buttons))
-    await bash("rm -rf *session*")
     await install_my_peer(new_client)
     try:
         await new_client.join_chat("ZacnnSupport")
@@ -500,4 +499,4 @@ async def _(client, callback_query):
         reply_markup=InlineKeyboardMarkup(
             BTN.UBOT(ubot._ubot[count].me.id, count)
         ),
-    )
+        )
