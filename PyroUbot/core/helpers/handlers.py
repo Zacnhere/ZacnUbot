@@ -1,7 +1,6 @@
 from PyroUbot import *
 from pytgcalls import PyTgCalls
-from pytgcalls.types import ChatUpdate, GroupCallParticipant, MediaStream, Update, VideoQuality, AudioQuality, ChatUpdate
-from pytgcalls.types import StreamAudioEnded
+from pytgcalls.types import ChatUpdate, GroupCallParticipant, MediaStream, Update, VideoQuality, AudioQuality
 from PyroUbot.core.helpers.queues import *
 
 async def skip_current_song(client, chat_id):
@@ -56,3 +55,4 @@ async def skip_item(chat_id, h):
             return 0
     else:
         return 0
+                
