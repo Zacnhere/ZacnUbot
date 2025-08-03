@@ -512,6 +512,7 @@ COMPILED_RESPONSES = [
 
 
 @PY.UBOT("autoreply")
+@PY.ULTRA
 async def toggle_autoreply(client, message: Message):
     brhsl = await EMO.BERHASIL(client)
     ggl = await EMO.GAGAL(client)
